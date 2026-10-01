@@ -1,0 +1,39 @@
+{
+ "FAQs": [
+  {
+   "Id": 121,
+   "Title": "O que é o teletrabalho?",
+   "Pergunta": "O que é o teletrabalho?",
+   "Resposta": "<div class=\"ExternalClass8B485D6ABF234CC89A187D66A2A4CE1F\"><div><span style=\"font-size&#58;16px;\">É uma forma de prestação de trabalho em que as funções do trabalhador são desempenhadas fora da empresa com o recurso a tecnologias de informação e de comunicação (por exemplo&#58; a partir de casa com o uso de computador e internet). O trabalhador continua a receber ordens e instruções de trabalho dadas pelo empregador.&#160;​<br></span><br>(​artigo 165.º&#160;​do <span style=\"color&#58;#009aa5;\"><a href=\"https&#58;//dre.pt/dre/legislacao-consolidada/lei/2009-34546475\" target=\"_blank\">Código do Trabalho​</a></span>)<br><br></div></div>",
+   "TemaId": 5,
+   "SubTemaId": null,
+   "Modified": "2023-04-30T13:39:57Z"
+  },
+  {
+   "Id": 411,
+   "Title": null,
+   "Pergunta": "O que deve o trabalhador fazer para poder usufruir deste Fundo?",
+   "Resposta": "<div class=\"ExternalClassAB45FD4C923C427FB7DB9D53401D418E\"><div>O trabalhador deve elaborar um requerimento em modelo próprio, a entregar em qualquer serviço da <a href=\"https&#58;//www.seg-social.pt/servicos-de-atendimento\" target=\"_blank\">Segurança Social​</a> ou em <a href=\"https&#58;//app.seg-social.pt/sso/login?service=https&#58;//app.seg-social.pt/ptss/caslogin\" target=\"_blank\">Segurança Social Direta​</a>&#160;do qual conste a identificação do requerente e do respetivo empregador, bem como a discriminação dos créditos objeto do pedido.<br></div><div><br></div><div>Anexado ao referido requerimento deve ir&#58;</div><div><ul><li>Declaração ou cópia autenticada de documento comprovativo dos créditos reclamados pelo trabalhador, emitida pelo administrador de insolvência ou pelo administrador judicial provisório;</li><li>ou declaração emitida pelo empregador comprovativa da natureza e do montante dos créditos em dívida declarados no requerimento pelo trabalhador, quando o mesmo não seja parte constituída;</li><li>ou declaração de igual teor emitida pela ACT.</li></ul></div><div>O requerimento interposto pelo trabalhador deve ser objeto de resposta no prazo de 30 dias, devendo a decisão final de deferimento total ou parcial conter o montante a pagar, a respetiva forma de pagamento e os valores deduzidos correspondentes às contribuições para a segurança social e à retenção na fonte do imposto sobre o rendimento.<br></div><div><br></div></div>",
+   "TemaId": 22,
+   "SubTemaId": 27,
+   "Modified": "2023-03-13T17:14:58Z"
+  }
+ ],
+ "TemasFAQs": [
+  {
+   "Id": 5,
+   "Title": "Teletrabalho"
+  },
+  {
+   "Id": 22,
+   "Title": "Incumprimento do contrato de trabalho"
+  }
+ ],
+ "SubTemasFAQs": [
+  {
+   "Id": 27,
+   "Title": "Fundo Garantia Salarial",
+   "TemaId": 22
+  }
+ ]
+}

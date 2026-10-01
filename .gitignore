@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.egg-info/
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Secrets
+.env
+
+# Fetched and derived data: rebuilt by scripts, never committed.
+# Rooted, so bench/data (the benchmark itself) stays tracked.
+/data/
+
+# LLM response cache used by eval runs
+.cache/
+
+# Editors
+.vscode/
+.idea/
+
+# The web page: dependencies and build output
+web/node_modules/
+web/dist/
+
+# The Space folder space/assemble.py writes
+/build/

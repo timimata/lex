@@ -1,0 +1,19 @@
+# Local store (ADR 0006). Start with `docker compose up -d`, load with `python -m lex.store load`.
+services:
+  db:
+    image: paradedb/paradedb:0.25.11-pg18
+    environment:
+      POSTGRES_USER: lex
+      POSTGRES_PASSWORD: lex # local only; the port is bound to this machine
+      POSTGRES_DB: lex
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - lex-db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "lex"]
+      interval: 2s
+      retries: 30
+
+volumes:
+  lex-db:

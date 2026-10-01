@@ -1,0 +1,1865 @@
+		 
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>::: Lei n.º 7/2009, de 12 de Fevereiro</TITLE>
+<META http-equiv=Content-Type content="text/html;">
+<META "" name=GENERATOR>
+<LINK href="https://www.pgdlisboa.pt/default.css" type=text/css rel=stylesheet>
+<SCRIPT SRC="https://www.pgdlisboa.pt/javascript.js"></SCRIPT>
+<BODY>
+<script language="javascript" type="text/javascript"
+	src="https://www.pgdlisboa.pt/jquery-1.2.1.min.js"></script>
+
+</HEAD>
+
+<script language="JavaScript">
+
+// val é o artigo_id em exibição
+
+function cria_anotacao(val) {
+      $("#texto_inserir_anotacao").hide();
+      $("#div_cria_anotacao_"+val).empty();
+
+	     var str =' <form name="form_cria_anotacao_'+val+'" id="form_cria_anotacao_'+val+'">';
+         str += '  <div style="margin-left:10px;margin-top:5px;font-family:tahoma;font-size:10px;font-weight:bold;color:#000000;">';
+         str += '   <span style="color:#000000">Insira a anotação:</span>';
+         str += '   </div>';
+
+         str += '   <div style="margin-left:50px;margin-top:3px;font-family:tahoma;font-size:11px;font-weight:bold;color:#234372;">';
+         str += '    Espécie <select id="especie_'+val+'"  name="especie_'+val+'" style="font-size:11px;>';
+         str += '   <option value="0"></option>';
+         str += '   <option value="1">Orientações do MP</option>';
+         str += '    <option value="2">Diversos</option>';
+         str += '   <option value="3">Jurisprudência</option>';
+         str += '   <option value="4">Jurisprudência obrigatória</option>';         
+         str += '   </select>';
+         str += '  </div>';
+         str += '  <div style="margin-top:8px;margin-left:50px;">';
+         str += '  <textarea id="conteudo_'+val+'" name="conteudo_'+val+'" rows="14" cols= "95" style="font-size:11px;"></textarea>';
+	     str += '   </div>';
+
+
+         
+
+
+         str += '  <div style="margin-top:8px;text-align:right">';
+         str += ' <input type="hidden" name="nidlei" value="1047"/>';
+         var valor ="'"+val+"'";;
+	     str+='   <input type="button" name="cancelar" value="Cancelar" onclick="return fecha_cria_anotacao('+valor+');"/>';
+         str += '   <input  type="button"  value="Gravar" name="enviar" onclick="return add_anotacao('+valor+');"/>&nbsp;';
+         str += '   </div>';
+	     str += '  </form>';
+
+         $(str).appendTo("#div_cria_anotacao_"+val);
+
+         $("#div_cria_anotacao_"+val).show();
+}
+
+// val é o artigo_id em exibição
+function fecha_cria_anotacao(val) {
+   document.getElementById('div_cria_anotacao_'+val).style.display="none";
+   document.getElementById('texto_inserir_anotacao').style.display="block";
+}
+
+// val é o artigo_id em exibição
+function add_anotacao(val) {
+  if(valida_anotacao(val) ){
+     var nidlei =  '1047';
+     var artigo_id =  val;
+     var especie =document.getElementById('especie_'+val).value;
+     var anotacao =document.getElementById('conteudo_'+val).value;
+             var confirmada ="N";
+     
+
+     // Para não duplicar um parágrafo simples
+	 anotacao=anotacao.replace(/\n/g, '');
+
+
+     $.post("lei_add_anotacao.php",
+	 	 	 {nidlei: nidlei, especie:especie, conteudo:anotacao, artigo_id:artigo_id, confirmada:confirmada },
+		      function (mostra_anotacao){
+	             fecha_cria_anotacao(val);
+                 ver_anotacoes(val);
+		      }
+		   );
+     return true;
+  }else{
+      return false;
+  }
+
+}
+
+
+function ver_anotacoes(artigo_id) {
+
+     $("#lista_anotacoes_"+artigo_id).empty();
+
+
+      var nidlei=1047
+      $.getJSON("lei_art_anotacoes.php",{artigo_id:artigo_id, nidlei:nidlei},
+       function(json){
+	     var i = 1;
+         var especie_exibida="";
+  	     for(var v in json.anotacoes){
+            var nidanotacoes = json.anotacoes[v].nidanotacoes;
+            var especie = json.anotacoes[v].especie;
+            var anotacao = json.anotacoes[v].conteudo;
+            var confirmada = json.anotacoes[v].confirmada;
+
+            var str ='<div id="div_mostra_anotacao_'+nidanotacoes+'"';
+			str +=" style='margin-top:15px;margin-left:30px;display:block;'>";
+
+                var valor_artigo_id ="'"+artigo_id+"'";
+                var valor_especie= "'"+especie+"'";
+                if(especie=="3"){
+                       var titulo_especie="Jurisprudência";
+                }else if(especie=="1"){
+                       var titulo_especie="Orientações do MP";
+                }else if(especie=="2"){
+                       var titulo_especie="Diversos";
+                }else if(especie=="4"){
+                       var titulo_especie="Jurisprudência obrigatória";
+
+                }
+                 // Se a anotação estiver confirmada, exibe logo para todos
+                if(confirmada=="S"){
+                   if(especie_exibida != especie){
+                       str+="<div style='margin-left:-10px;margin-bottom:5px;font-family:tahoma;font-size:11px;font-weight:bold;color:#35326B'>" + titulo_especie;
+                       especie_exibida=especie;
+                       i=1;
+                       str += "</div>";
+                   }
+                 // Se a anotação não estiver confirmada, só vê quem fez login
+                }else{
+                                    }
+
+		                     if(confirmada=="S"){
+			            str+=  '&nbsp;'+  i++ +'.&nbsp;';
+                 }
+		   		   anotacao=anotacao.replace(/\n/g, '<br>');
+		   // Se a anotação estiver confirmada, todos vêem
+		   if(confirmada=="S"){
+		         str+= '<span style="font-size:10px;font-family:trebuchet ms;color:#7E4F32;line-height:4mm">';
+ 		         str+=anotacao;
+            // Se a anotação não estiver confirmada, só a vêem os que fizeram login
+		   }else{
+                 		         
+		   }
+ 		   str+="</span>";
+ 		   str+='</div>';
+
+             str+='<DIV id ="div_edita_anotacoes_'+nidanotacoes+'" style="display:none;overflow:auto">';
+             str+=' </DIV>';
+
+           $(str).appendTo("#lista_anotacoes_"+artigo_id);
+
+            // Mostra o div da anotação que tenha sido escondido em edita_anotacao()
+           $("#div_mostra_anotacao_"+nidanotacoes).show();
+
+        } // for
+       }// function
+     );  //  $.getJSON
+}
+
+
+function valida_anotacao(val) {
+     var especie =document.getElementById('especie_'+val).value;
+     var conteudo =document.getElementById('conteudo_'+val).value;
+                var confirmada="N";
+     
+     if( especie=="0"){
+         alert (' Escolha a espécie de anotação!');
+         return false;
+     }
+
+     if( LTrim(conteudo)==""){
+         alert (' Introduza os dados!');
+         return false;
+     }
+     
+                  
+     
+
+     if (confirm("Confirma a gravação dos dados?")) {
+	     return true;
+	}else{
+         return false;
+	}
+}
+
+
+
+function edita_anotacao(nidanotacoes,artigo_id, especie) {
+
+      // Esconde o div da anotação que se quer editar para exibir a anotação apenas na form de edição
+     $("#div_mostra_anotacao_"+nidanotacoes).hide();
+
+     $("#texto_inserir_anotacao").hide();
+     $("#div_edita_anotacoes_"+nidanotacoes).empty();
+
+      $.getJSON("lei_mostra_anotacao.php",{nidanotacoes:nidanotacoes},
+         function(json){
+
+           var anotacao = json.anotacao;
+           var confirmada = json.confirmada;
+
+	         var str =' <form name="form_edita_anotacao_'+nidanotacoes+'" id="form_edita_anotacao_'+nidanotacoes+'">';
+             str += '  <div style="margin-left:10px;margin-top:5px;font-family:tahoma;font-size:10px;font-weight:bold;color:#000000;">';
+             str += '   <span style="color:#000000">Editar anotação:</span>';
+             str += '   </div>';
+             str += '   <div style="margin-left:50px;margin-top:3px;font-family:tahoma;font-size:11px;font-weight:bold;color:#234372;">';
+             str += '    Espécie <select id="especie_'+nidanotacoes+'"  name="especie_'+nidanotacoes+'" style="font-size:11px">';
+             if(especie=="3"){
+                 str += '   <option value="3" selected>Jurisprudência</option>';
+                 str += '   <option value="4">Jurisprudência obrigatória</option>';                 
+                 str += '   <option value="1">Orientações do MP</option>';
+                 str += '    <option value="2">Diversos</option>';
+             }else if(especie=="2"){
+                 str += '   <option value="3">Jurisprudência</option>';
+                 str += '   <option value="4">Jurisprudência obrigatória</option>';                                  
+                 str += '   <option value="1">Orientações do MP</option>';
+                 str += '    <option value="2" selected>Diversos</option>';
+             }else if(especie=="1"){
+                 str += '   <option value="3">Jurisprudência</option>';
+                 str += '   <option value="4">Jurisprudência obrigatória</option>';                                  
+                 str += '   <option value="1" selected>Orientações do MP</option>';
+                 str += '    <option value="2">Diversos</option>';
+             }else if(especie=="4"){
+                 str += '   <option value="3">Jurisprudência</option>';
+                 str += '   <option value="4" selected>Jurisprudência obrigatória</option>';                                  
+                 str += '   <option value="1">Orientações do MP</option>';
+                 str += '    <option value="2">Diversos</option>';
+
+             }
+             str += '   </select>';
+             str += '  </div>';
+             str += '  <div style="margin-top:8px;margin-left:50px;">';
+			 anotacao=anotacao.replace(/<br><br><br>/g, '\n');
+			 anotacao=anotacao.replace(/<br><br>/g, '\n');
+			 anotacao=anotacao.replace(/<br>/g, '\n');
+             str += '  <textarea id="conteudo_'+nidanotacoes+'" name="conteudo_'+nidanotacoes+'"  style="font-size:11px" rows="18" cols= "95">'+anotacao+'</textarea>';
+	         str += '   </div>';
+
+         
+	         
+	         
+             str += '  <div style="margin-top:8px;text-align:right">';
+             str += ' <input type="hidden" name="nidlei" value="1047"/>';
+             var valor_nidanotacoes ="'"+nidanotacoes+"'";
+             var valor_artigo_id ="'"+artigo_id+"'";
+	         str+='   <input type="button" name="cancelar" value="Cancelar" onclick="return fecha_edita_anotacao('+valor_nidanotacoes+')"></>';
+             str += '   <input  type="button"  value="Gravar" name="enviar" onclick="return grava_edita_anotacao('+valor_nidanotacoes+','+valor_artigo_id+');"/>&nbsp;';
+             str += '   </div>';
+	         str += '  </form>';
+
+             $(str).appendTo("#div_edita_anotacoes_"+nidanotacoes);
+             $("#div_edita_anotacoes_"+nidanotacoes).show();
+           }
+        )
+
+}
+
+
+function fecha_edita_anotacao(nidanotacoes) {
+     $("#div_mostra_anotacao_"+nidanotacoes).show();
+     $("#texto_inserir_anotacao").show();
+     $("#form_edita_anotacao_"+nidanotacoes).hide();
+}
+
+
+function grava_edita_anotacao(nidanotacoes,artigo_id) {
+     var especie =document.getElementById('especie_'+nidanotacoes).value;
+     var anotacao =document.getElementById('conteudo_'+nidanotacoes).value;
+             var confirmada ="N";
+    
+
+    // Para não duplicar um parágrafo simples
+
+     anotacao=anotacao.replace(/\n/g, '');
+
+       if (confirm("Confirma a gravação das alterações?")) {
+          $.post("lei_gravar_anotacao.php",
+	  			 	{nidanotacoes:nidanotacoes, especie:especie, conteudo:anotacao, confirmada:confirmada },
+		            function (mostra_anotacao){
+              		   fecha_edita_anotacao(nidanotacoes);
+                       ver_anotacoes(artigo_id);
+		            }
+                 );
+             return true;
+		 }else{
+             return false;
+	  	}
+}
+
+
+
+
+function elimina_anotacao(nidanotacoes, artigo_id) {
+   if(confirm("Confirma a eliminação da anotação?")) {
+      $.getJSON("lei_eliminar_anotacao.php",{nidanotacoes:nidanotacoes},
+		      function (mostra_anotacao){
+                 ver_anotacoes(artigo_id);
+		      }
+      );
+   }
+}
+
+function espera() {
+}
+
+
+function confirma() {
+   if(confirm("Confirma a eliminação do  diploma ?"))
+   {
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+}
+
+function goartigo(val) {
+  var art_id=val;
+  var nidlei= "1047";
+  var tabela ="leis";
+  var pagina="1";
+  var ficha="1";
+  var nversao="";
+  var URL = "lei_mostra_articulado.php?artigo_id="+art_id+"&nid="+nidlei+"&tabela="+tabela+"&pagina="+pagina+"&ficha="+ficha+"&so_miolo=&nversao="+nversao+"#artigo";
+  document.location.href = URL;
+  return true;
+}
+</script>
+
+    
+				 
+         	<BODY onload="desactivabusca_leis();">
+				
+
+
+
+
+
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+ <META http-equiv="Pragma" content="no-cache">
+ <META http-equiv="expires" content="0">
+<META name="keywords" content="Minist&eacute;rio P&uacute;blico, procuradoria-geral distrital, lisboa, procuradoria da rep&uacute;blica, c&oacute;digos, legisla&ccedil;&atilde;o penal,  legisla&ccedil;&atilde;o,  jurisprud&ecirc;ncia,  rela&ccedil;&atilde;o de Lisboa, f&oacute;rum jur&iacute;dico, portugal, portugu&ecirc;s, portugueses, supremo tribunal de justi&ccedil;a, tribunal constitucional ">
+<TITLE>Procuradoria-Geral Distrital de Lisboa</TITLE>
+<LINK href="https://www.pgdlisboa.pt/default.css" type="text/css" rel="stylesheet">
+<!-- RightClick - CSS--><link href="https://www.pgdlisboa.pt/rc_styles.css" type="text/css" rel="stylesheet"><!-- RightClick - CSS-->
+
+<SCRIPT src="https://www.pgdlisboa.pt/javascript.js"></SCRIPT>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+</HEAD><BODY>
+
+
+
+<FORM name="busca_tudo" action="https://www.pgdlisboa.pt/buscatudo.php" method="GET">
+
+<!--<div style="position:absolute;left:412px; top:10px; height: 1800px; width:800px;font-size:5px;border:solid 1px;border-color:#eeeeee">-->
+
+
+<!--<DIV align="center"> 
+<DIV style="margin-top:10px; height: 1200px; width:970
+px;font-size:5px;border:solid 1px;border-color:#eeeeee">
+-->
+
+<!-- JAVALI -->
+<header id="header">
+    <div class="center">
+        <div class="region region-header">
+            <div id="block-javali-theme-imagemdemarcadositio" class="block block-system block-system-branding-block">
+                <a aria-label="Página Pessoal" href="/" rel="home" class="site-logo">
+                    <img width="355" height="96" src="/images-mp/mplogo_desktop.png" alt="Início" fetchpriority="high" loading="lazy">
+                </a>
+            </div>
+            <a href="/pgd_login.php?modulo=LEI" class="login">Área reservada</a>
+            <a href="https://simp.pgr.pt/" class="simp">SIMP</a>
+        </div>
+    </div>
+</header>
+
+<div class="micro-header">
+    <div class="region region-post-header">
+        <div id="block-microsite-micrositeheader" class="block block-mp block-microsite-header">
+            <div class="micro-header">
+                <img src="/images-mp/lisboa-157-c.jpg" width="1960" height="180" alt="PGR Lisboa" loading="lazy" class="image-style-microheader">
+                <div class="center">
+                    <h1><a href="/"><p>Procuradoria-Geral Regional</p> <i>de</i> <b>Lisboa</b></a></h1>
+                </div>
+            </div>
+            <div class="micro-header-space"></div>
+        </div>
+    </div>
+</div>
+
+<div class="main-menu">
+    <div class="center">
+        <button aria-controls="region-menu" aria-expanded="false" class="menu-toggler mobile-only" data-once="micromenu">
+            <span class="menu-title">PGR Lisboa</span>
+        </button>
+        <div class="region region-menu" data-once="micromenu_items">
+            <nav aria-labelledby="block-microsite-pgdlisboamain-menu" id="block-microsite-pgdlisboamain" class="block block-menu navigation menu--micro-main-pgd-lisboa">            
+                <ul class="menu">
+                    <li class="">
+                        <a href="https://pgreg-lisboa.ministeriopublico.pt" tabindex="0">PGRL</a>
+                    </li>
+                    <li class="">
+                        <a href="/leis/lei_main.php" tabindex="0">Legislação</a>
+                    </li>
+                    <li class="">
+                        <a href="/jurel/jurisprudencia_main.php" tabindex="0">Jurisprudência</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav aria-labelledby="block-microsite-pgdlisboaapoio-menu" id="block-microsite-pgdlisboaapoio" class="block block-menu navigation menu--micro-apoio-pgd-lisboa">   
+                <ul class="apoio-menu menu">
+                    <li class="">
+                        <a href="https://pgreg-lisboa.ministeriopublico.pt/contactos" tabindex="0">Contactos</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<!-- JAVALI (add caneter class) -->
+<DIV class="center" style="margin-top:25px;font-family:tahoma;font-size:9px;font-weight:bold">
+ 
+
+
+<TABLE id="content-wrapper" border="0" cellspacing="0" cellpadding="0" width="945">
+<TBODY><TR>
+
+<TD valign="top" colspan="3">
+<!-- JAVALI ADD CLASS-->
+<div id="divheader1" class="visually-hidden">
+ 	<div id="divheaderlogo"><a href="https://www.pgdlisboa.pt/"><img src="https://www.pgdlisboa.pt/imagens/logo_pgdl.png" width="169" height="145" border="0"></a></div>
+    <div id="divheader_right">
+ <div id="divferramentastop"> <a href="https://www.pgdlisboa.pt/">Início</a>  //  <a href="https://www.pgdlisboa.pt/indice.php">Índice</a>
+ //  <a href="https://www.pgdlisboa.pt/contactos.php">Contactos</a>
+  //  <a href="https://www.pgdlisboa.pt/links.php">Links</a>
+  
+ 
+    |  <a href="https://www.pgdlisboa.pt/pgd_login.php?modulo=LEI">
+    <img src="https://www.pgdlisboa.pt/imagens/seta.jpg" width="6" height="6" border="0"> Login</a> </div>
+
+ 
+  <div id="divmenu"><a href="https://www.pgdlisboa.pt/novidades/nov_main.php?comarcas=S">Actualidade</a> |
+  <a href="https://www.pgdlisboa.pt/jurel/jurisprudencia_main.php">Jurisprudência</a> |
+   <a href="https://www.pgdlisboa.pt/leis/lei_main.php">Legislação</a> <!--|
+    <a href="https://www.pgdlisboa.pt/forum/for_main.php">Fórum</a> |-->
+    
+    <!-- <a href="#">Institucional</a> | --><span class="pesquisa"> <strong>pesquisa:</strong>
+      <INPUT style="font-family:tahoma; font-size:10.5px;height:18px;" maxlength="150" size="20" name="buscahome" value="">
+  <SELECT name="bases" style="font-family:tahoma; font-weight:normal;font-size:10px;height:18px;">
+					 								        <OPTION value="1">Jurisp. Relação Lisboa</OPTION>
+					  								      <OPTION value="2">Interv. do MP</OPTION>
+			      								      <OPTION value="3">Legislação</OPTION>
+			      								      <OPTION value="4">Peças processuais</OPTION>
+			      							       	<OPTION value="5">Docs. da  PGD</OPTION>
+			      								      <OPTION value="6">Textos</OPTION>
+			      								      <OPTION value="7">Comarcas</OPTION>
+			      								      <OPTION value="8">Actualidade</OPTION>
+			      								      <OPTION value="9">Destaques</OPTION>
+		      </SELECT> <INPUT style="font-family:tahoma; font-size:10px;height:18px;" type="submit" value=" OK " border="0" onClick="return validabusca_tudo();"></SPAN></div>
+  </div>
+
+  </form>
+<!-- FIM RightClick Código-->
+
+
+<!--
+<center><marquee onmouseover="javascript:scroller.stop()" onmouseout="javascript:scroller.start()"
+ id="scroller" direction=left width=770 scrollAmount=3 scrollDelay=80
+        height=24 style="padding-top:6px;background-color:#FBEFFC;border:0px solid black;font-size:11.5px;font-weight:bold;font-family:tahoma;color:#FF0000">
+        Por razões técnicas, este site será interrompido hoje, a partir das 19,00h.</u>
+       O serviço será reposto amanhã de manhã. Pedimos desculpa pelo incómodo causado.
+</marquee>
+
+</center>
+
+    -->
+
+
+  </TD></TR>
+
+
+<TR>
+<TD valign="top" width="185">
+ <div id="divmenu_lateral">
+ <br />
+
+
+                            <div class="seccao"><A href="https://www.pgdlisboa.pt/home.php"> CIDADÃO</A></div>
+                            <ul>
+                            <li><A href="https://www.pgdlisboa.pt/home_cd_dir_fm.php"> Menores e Família</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/home_cd_dir_tr.php"> Trabalho e cível</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/home_cd_dir_df.php"> Incapacidades</A></li>
+</br>
+                            <li><A href="https://www.pgdlisboa.pt/home_cd_agi_st.php"> Em situação de crime</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/home_cd_agi_sm.php"> Em situação de morte</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/home_cd_agi_dc.php"> Em defesa da comunidade</A></li>
+	
+
+
+
+                            </ul>
+<br />
+                            <div class="seccao"><A href="https://www.pgdlisboa.pt/leis/lei_main.php">INFORMAÇÃO JURÍDICA</A></div>
+                            <ul>
+                            <li><A href="https://www.pgdlisboa.pt/leis/lei_main.php"> Legislação</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/jurel/jurisprudencia_main.php"> Jurisprudência</A></li>
+                        <!--    <li><A href="https://www.pgdlisboa.pt/forum/for_main.php"> Fórum</A></li>-->
+                           </ul>
+<br />
+                            <div class="seccao"><A href="https://www.pgdlisboa.pt/interv/pec_main.php">ACTIVIDADE</A></div>
+                            <ul>
+                            <li><A href="https://www.pgdlisboa.pt/docpgd/doc_main.php"> Docs. da PGDL</A></li>
+      <li><A href="https://www.pgdlisboa.pt/docpgd/doc_busca.php?buscajur=&nid_especie=3&nid_subespecie=21&pagina=1&ficha=1"> Cláusulas contratuais nulas</A></li>
+                           <!-- <li><A href="https://www.pgdlisboa.pt/interv/pec_main.php"> MP na Relação de Lisboa</A></li>
+                           </ul> -->
+<br />
+   
+
+<!--
+                            <div class="seccao"><A href="https://www.pgdlisboa.pt/distrito/dis_main.php">O MP NO DISTRITO</A></div>
+                            <ul>
+                            <li><A href="https://www.pgdlisboa.pt/distrito/files/quadro_legal_06.pdf"> Os magistrados</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/distrito/modelounidade.php?pgdl=pgdl&mostramapas=off"> A PGD de Lisboa</A> </li>
+                            <li><A href="https://www.pgdlisboa.pt/distrito/dis_main.php"> Os círculos judiciais</A></li>
+                            <li><A href="https://www.pgdlisboa.pt/distrito/mp_comarcas.php"> As comarcas</A></li>
+                            </ul>
+-->
+                      
+
+
+
+
+</div>
+
+</TD>
+				  <td valign=top><br>    
+<div style="margin-left: 10px; margin-top: 3px; font-size: 9px; font-family: tahoma; font-weight: bold;">
+<a style="color: #2968b4" href="https://www.pgdlisboa.pt/"><u>Início</u></a>&nbsp;<img
+	src="https://www.pgdlisboa.pt/imagens/seta_menu.gif" height=7 border=0> <a
+	style="color: #2968b4" href="https://www.pgdlisboa.pt/leis/lei_main.php"><u>legislação</u></a>&nbsp;<img
+	src="https://www.pgdlisboa.pt/imagens/seta_menu.gif" height=7 border=0> <span
+	style="color: #999999">Exibe diploma</span></div>
+<BR>
+<div style = "height:23px;font-family:verdana;font-size:12px;font-weight:bold;background-color:#ffffff;color:#26397d;" width=62%>&nbsp; <img src="https://www.pgdlisboa.pt/imagens/lista.gif" border=0 width=18 height=17 align=bottom>&nbsp; Legislação     </div>
+<!-- jaavli - add class -->
+<table class="articulado"  border="0" cellspacing="1" cellpadding="0" bgcolor=#e1e1e1	width=100%>
+	<tr>
+	<td bgcolor=#ffffff>
+	
+        
+    
+    
+    
+    
+	<table>
+	<tr>
+	<td class="descricaomodulos">
+	<div style="margin-top:10px;color:#fc7714;font-weight:bold;font-family:tahoma;font-size:11px;">&nbsp;&nbsp;Lei n.º 7/2009, de 12 de Fevereiro</div><div style="margin-top:10px;color:#0554e7;font-weight:bold;font-family:tahoma">&nbsp;&nbsp;CÓDIGO DO TRABALHO<span style="font-weight:normal;margin-left:5px;color:#0554e7;">(versão actualizada)</div></td>
+	</div>
+		<tr>
+	<td bgcolor=#ffffff colspan=2><br>
+	</td>
+	</tr>
+	</table>
+	<table border=0 width=100% cellpadding=2>
+	<td valign=top class=txt_base_n_l width=40%><font color="#387070">&nbsp;&nbsp;&nbsp;
+	
+		          Contém as seguintes alterações: </td>
+		<td valign=top class=txt_base_n_l width=60%><font color="#387070">&nbsp;&nbsp;&nbsp;
+		 
+		       Ver versões do diploma:</font>
+		</td>
+		</tr>
+		<tr>
+		<td colspan=2 valign=top><!--	<div style="height:200px; overflow: auto;
+		margin-left:5px;margin-top:0px;color:#000000;
+		border:solid 0 px;
+		border-color:#1d87de;
+		border-top-width: 0px;
+                    background-color: #ffffff;
+		background-attachment: fixed;
+		border-right-width: 0px;border-left-width: 0px;border-bottom-width: 0px;
+		SCROLLBAR-FACE-COLOR: #f1f1f1;
+		SCROLLBAR-HIGHLIGHT-COLOR:#000000;
+		SCROLLBAR-SHADOW-COLOR: #c2e0f8;
+		SCROLLBAR-3DLIGHT-COLOR: #c2e0f8;
+		SCROLLBAR-ARROW-COLOR: #1d87de;
+		SCROLLBAR-TRACK-COLOR: #8ab6e1;
+		SCROLLBAR-DARKSHADOW-COLOR: #000000;
+		SCROLLBAR-BASE-COLOR: #c2e0f8;" align=left> -->
+		<table border=0 width=100%>
+		<tr>
+		<td valign=top class=txt_base_n_l width=40%>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3908&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 32/2025, de 27/03</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3658&tabela=leis&ficha=1&pagina=1&so_miolo=">Retificação n.º 13/2023, de 29/05</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3628&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 13/2023, de 03/04</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3502&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 1/2022, de 03/01</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3483&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 83/2021, de 06/12</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3395&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 18/2021, de 08/04</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3141&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 90/2019, de 04/09</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=3165&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 93/2019, de 04/09</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2862&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 14/2018, de 19/03</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2778&tabela=leis&ficha=1&pagina=1&so_miolo=">Retificação n.º 28/2017, de 02/10</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2743&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 73/2017, de 16/08</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2593&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 28/2016, de 23/08</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2522&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 8/2016, de 01/04</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2411&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 120/2015, de 01/09</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2317&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 28/2015, de 14/04</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2208&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 55/2014, de 25/08</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=2099&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 27/2014, de 08/05</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1977&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 69/2013, de 30/08</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1789&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 47/2012, de 29/08</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1770&tabela=leis&ficha=1&pagina=1&so_miolo=">Retificação n.º 38/2012, de 23/07</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 23/2012, de 25/06</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1503&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 53/2011, de 14/10</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1136&tabela=leis&ficha=1&pagina=1&so_miolo=">Lei n.º 105/2009, de 14/09</a><br>&nbsp;&nbsp;  - <a  href= "lei_mostra_articulado.php?nid=1060&tabela=leis&ficha=1&pagina=1&so_miolo=">Rect. n.º 21/2009, de 18/03</a><br></td><td valign=top class=txt_base_n_l width=60%><span style="margin-left:14px;font-size:10.5px;font-weight:bold;font-family:tahoma;color:#0259db"><a  style="color:#0259db" href= "lei_mostra_articulado.php?nid=1047&tabela=leis&so_miolo=">- 25ª versão - a mais recente </a></span><span style="color:#696969"> (Lei n.º 32/2025, de 27/03)</span><br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=24&so_miolo=">- 24ª versão </a>(Retificação n.º 13/2023, de 29/05)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=23&so_miolo=">- 23ª versão </a>(Lei n.º 13/2023, de 03/04)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=22&so_miolo=">- 22ª versão </a>(Lei n.º 1/2022, de 03/01)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=21&so_miolo=">- 21ª versão </a>(Lei n.º 83/2021, de 06/12)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=20&so_miolo=">- 20ª versão </a>(Lei n.º 18/2021, de 08/04)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=19&so_miolo=">- 19ª versão </a>(Lei n.º 93/2019, de 04/09)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=18&so_miolo=">- 18ª versão </a>(Lei n.º 90/2019, de 04/09)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=17&so_miolo=">- 17ª versão </a>(Lei n.º 14/2018, de 19/03)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=16&so_miolo=">- 16ª versão </a>(Retificação n.º 28/2017, de 02/10)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=15&so_miolo=">- 15ª versão </a>(Lei n.º 73/2017, de 16/08)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=14&so_miolo=">- 14ª versão </a>(Lei n.º 28/2016, de 23/08)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=13&so_miolo=">- 13ª versão </a>(Lei n.º 8/2016, de 01/04)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=12&so_miolo=">- 12ª versão </a>(Lei n.º 120/2015, de 01/09)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=11&so_miolo=">- 11ª versão </a>(Lei n.º 28/2015, de 14/04)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=10&so_miolo=">- 10ª versão </a>(Lei n.º 55/2014, de 25/08)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=9&so_miolo=">- 9ª versão </a>(Lei n.º 27/2014, de 08/05)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=8&so_miolo=">- 8ª versão </a>(Lei n.º 69/2013, de 30/08)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=7&so_miolo=">- 7ª versão </a>(Lei n.º 47/2012, de 29/08)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=6&so_miolo=">- 6ª versão </a>(Retificação n.º 38/2012, de 23/07)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=5&so_miolo=">- 5ª versão </a>(Lei n.º 23/2012, de 25/06)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=4&so_miolo=">- 4ª versão </a>(Lei n.º 53/2011, de 14/10)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=3&so_miolo=">- 3ª versão </a>(Lei n.º 105/2009, de 14/09)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=2&so_miolo=">- 2ª versão </a>(Rect. n.º 21/2009, de 18/03)<br>&nbsp;&nbsp;&nbsp;&nbsp; <a href= "lei_mostra_articulado.php?nid=1047&tabela=lei_velhas&nversao=1&so_miolo=">- 1ª versão </a>(Lei n.º 7/2009, de 12/02)</td></table>        </td>
+	<tr>
+	<td bgcolor="#ffffff" colspan=2>
+	<div style="margin-top: 0px; margin-left: 6px; font-size: 9px; font-family: tahoma">
+	
+	
+	<form name="busca" action="lei_busca_assunto_diploma.php" method="GET"><b><font color=#993333>
+	Procurar no presente diploma:</b></font><br>
+	<input maxLength=250 size=35 name="buscajur"  onkeydown="return limpartigo();"
+	value=""></> 	<input type="checkbox" name="exacta"><font color=#993333><b>A expressão exacta </b></>
+	 <input type="submit" value="Procurar"	onclick="return validabusca_articulado();"></>
+	  <!-- Select para localização de 1 só artigo -->
+	<br>
+	<br>
+	<b><font color=#993333>Ir para o art.: </b></font><br>
+	<select style="height: 20px; width: 500px; font-size: 10.5px;" name="artigo_id" onchange="return goartigo(this.value);">
+	<option></option>
+				<option value="1047A0001">Artigo 1.º<br> Fontes específicas</option>
+					<option value="1047A0002">Artigo 2.º<br> Instrumentos de regulamentação colectiva de trabalho</option>
+					<option value="1047A0003">Artigo 3.º<br> 
+Relações entre fontes de regulação </option>
+					<option value="1047A0004">Artigo 4.º<br> Igualdade de tratamento de trabalhador estrangeiro ou apátrida</option>
+					<option value="1047A0005">Artigo 5.º<br> 
+Forma e conteúdo de contrato com trabalhador estrangeiro ou apátrida </option>
+					<option value="1047A0006">Artigo 6.º<br> Destacamento em território português</option>
+					<option value="1047A0007">Artigo 7.º<br> Condições de trabalho de trabalhador destacado</option>
+					<option value="1047A0008">Artigo 8.º<br> Destacamento para outro Estado</option>
+					<option value="1047A0009">Artigo 9.º<br> Contrato de trabalho com regime especial</option>
+					<option value="1047A0010">Artigo 10.º<br> 
+Situações equiparadas </option>
+					<option value="1047A0010A">Artigo 10.º-A<br> 
+Representação e negociação colectiva </option>
+					<option value="1047A0010B">Artigo 10.º-B<br> 
+Aplicação do regime de trabalhador independente </option>
+					<option value="1047A0011">Artigo 11.º<br> Noção de contrato de trabalho</option>
+					<option value="1047A0012">Artigo 12.º<br> 
+Presunção de contrato de trabalho </option>
+					<option value="1047A0012A">Artigo 12.º-A<br> 
+Presunção de contrato de trabalho no âmbito de plataforma digital</option>
+					<option value="1047A0013">Artigo 13.º<br> Princípio geral sobre capacidade</option>
+					<option value="1047A0014">Artigo 14.º<br> Liberdade de expressão e de opinião</option>
+					<option value="1047A0015">Artigo 15.º<br> Integridade física e moral</option>
+					<option value="1047A0016">Artigo 16.º<br> Reserva da intimidade da vida privada</option>
+					<option value="1047A0017">Artigo 17.º<br> Protecção de dados pessoais</option>
+					<option value="1047A0018">Artigo 18.º<br> Dados biométricos</option>
+					<option value="1047A0019">Artigo 19.º<br> Testes e exames médicos</option>
+					<option value="1047A0020">Artigo 20.º<br> Meios de vigilância a distância</option>
+					<option value="1047A0021">Artigo 21.º<br> Utilização de meios de vigilância a distância</option>
+					<option value="1047A0022">Artigo 22.º<br> Confidencialidade de mensagens e de acesso a informação</option>
+					<option value="1047A0023">Artigo 23.º<br> Conceitos em matéria de igualdade e não discriminação</option>
+					<option value="1047A0024">Artigo 24.º<br> 
+Direito à igualdade no acesso a emprego e no trabalho </option>
+					<option value="1047A0025">Artigo 25.º<br> 
+Proibição de discriminação </option>
+					<option value="1047A0026">Artigo 26.º<br> Regras contrárias ao princípio da igualdade e não discriminação</option>
+					<option value="1047A0027">Artigo 27.º<br> Medida de acção positiva</option>
+					<option value="1047A0028">Artigo 28.º<br> Indemnização por acto discriminatório</option>
+					<option value="1047A0029">Artigo 29.º<br> 
+Assédio</option>
+					<option value="1047A0030">Artigo 30.º<br> Acesso ao emprego, actividade profissional ou formação</option>
+					<option value="1047A0031">Artigo 31.º<br> Igualdade de condições de trabalho</option>
+					<option value="1047A0032">Artigo 32.º<br> Registo de processos de recrutamento</option>
+					<option value="1047A0033">Artigo 33.º<br> Parentalidade</option>
+					<option value="1047A0033A">Artigo 33.º-A<br> 
+Referências</option>
+					<option value="1047A0034">Artigo 34.º<br> Articulação com regime de protecção social</option>
+					<option value="1047A0035">Artigo 35.º<br> 
+Protecção na parentalidade</option>
+					<option value="1047A0035A">Artigo 35.º-A<br> 
+Proibição de discriminação pelo exercício dos direitos de maternidade e paternidade</option>
+					<option value="1047A0036">Artigo 36.º<br> Conceitos em matéria de protecção da parentalidade</option>
+					<option value="1047A0037">Artigo 37.º<br> Licença em situação de risco clínico durante a gravidez</option>
+					<option value="1047A0037A">Artigo 37.º-A<br> 
+Licença para deslocação a unidade hospitalar localizada fora da ilha de residência para realização de parto</option>
+					<option value="1047A0038">Artigo 38.º<br> Licença por interrupção da gravidez</option>
+					<option value="1047A0038A">Artigo 38.º-A<br> 
+Falta por luto gestacional </option>
+					<option value="1047A0039">Artigo 39.º<br> Modalidades de licença parental</option>
+					<option value="1047A0040">Artigo 40.º<br> 
+Licença parental inicial </option>
+					<option value="1047A0041">Artigo 41.º<br> 
+Períodos de licença parental exclusiva da mãe </option>
+					<option value="1047A0042">Artigo 42.º<br> 
+Licença parental inicial a gozar por um progenitor em caso de impossibilidade do outro </option>
+					<option value="1047A0043">Artigo 43.º<br> 
+Licença parental exclusiva do pai </option>
+					<option value="1047A0044">Artigo 44.º<br> 
+Licença por adopção </option>
+					<option value="1047A0045">Artigo 45.º<br> 
+Dispensa no âmbito dos processos de adoção e acolhimento familiar </option>
+					<option value="1047A0046">Artigo 46.º<br> 
+Dispensa para consulta pré-natal</option>
+					<option value="1047A0046A">Artigo 46.º-A<br> 
+Dispensa para consulta de procriação medicamente assistida</option>
+					<option value="1047A0047">Artigo 47.º<br> Dispensa para amamentação ou aleitação</option>
+					<option value="1047A0048">Artigo 48.º<br> Procedimento de dispensa para amamentação ou aleitação</option>
+					<option value="1047A0049">Artigo 49.º<br> Falta para assistência a filho</option>
+					<option value="1047A0050">Artigo 50.º<br> Falta para assistência a neto</option>
+					<option value="1047A0051">Artigo 51.º<br> 
+Licença parental complementar </option>
+					<option value="1047A0052">Artigo 52.º<br> Licença para assistência a filho</option>
+					<option value="1047A0053">Artigo 53.º<br> 
+Licença para assistência a filho com deficiência, doença crónica ou doença oncológica</option>
+					<option value="1047A0054">Artigo 54.º<br> Redução do tempo de trabalho para assistência a filho menor com deficiência ou doença crónica</option>
+					<option value="1047A0055">Artigo 55.º<br> 
+Trabalho a tempo parcial de trabalhador com responsabilidades familiares</option>
+					<option value="1047A0056">Artigo 56.º<br> 
+Horário flexível de trabalhador com responsabilidades familiares</option>
+					<option value="1047A0057">Artigo 57.º<br> Autorização de trabalho a tempo parcial ou em regime de horário flexível</option>
+					<option value="1047A0058">Artigo 58.º<br> Dispensa de algumas formas de organização do tempo de trabalho</option>
+					<option value="1047A0059">Artigo 59.º<br> Dispensa de prestação de trabalho suplementar</option>
+					<option value="1047A0060">Artigo 60.º<br> Dispensa de prestação de trabalho no período nocturno</option>
+					<option value="1047A0061">Artigo 61.º<br> Formação para reinserção profissional</option>
+					<option value="1047A0062">Artigo 62.º<br> Protecção da segurança e saúde de trabalhadora grávida, puérpera ou lactante</option>
+					<option value="1047A0063">Artigo 63.º<br> 
+Protecção em caso de despedimento </option>
+					<option value="1047A0064">Artigo 64.º<br> 
+Extensão de direitos atribuídos a progenitores </option>
+					<option value="1047A0065">Artigo 65.º<br> 
+Regime de licenças, faltas e dispensas </option>
+					<option value="1047A0066">Artigo 66.º<br> Princípios gerais relativos ao trabalho de menor</option>
+					<option value="1047A0067">Artigo 67.º<br> Formação profissional de menor</option>
+					<option value="1047A0068">Artigo 68.º<br> Admissão de menor ao trabalho</option>
+					<option value="1047A0069">Artigo 69.º<br> Admissão de menor sem escolaridade obrigatória, frequência do nível secundário de educação ou sem qualificação profissional</option>
+					<option value="1047A0070">Artigo 70.º<br> Capacidade do menor para celebrar contrato de trabalho e receber a retribuição</option>
+					<option value="1047A0071">Artigo 71.º<br> Denúncia de contrato por menor</option>
+					<option value="1047A0072">Artigo 72.º<br> Protecção da segurança e saúde de menor</option>
+					<option value="1047A0073">Artigo 73.º<br> Limites máximos do período normal de trabalho de menor</option>
+					<option value="1047A0074">Artigo 74.º<br> Dispensa de algumas formas de organização do tempo de trabalho de menor</option>
+					<option value="1047A0075">Artigo 75.º<br> Trabalho suplementar de menor</option>
+					<option value="1047A0076">Artigo 76.º<br> Trabalho de menor no período nocturno</option>
+					<option value="1047A0077">Artigo 77.º<br> Intervalo de descanso de menor</option>
+					<option value="1047A0078">Artigo 78.º<br> Descanso diário de menor</option>
+					<option value="1047A0079">Artigo 79.º<br> Descanso semanal de menor</option>
+					<option value="1047A0080">Artigo 80.º<br> Descanso semanal e períodos de trabalho de menor em caso de pluriemprego</option>
+					<option value="1047A0081">Artigo 81.º<br> Participação de menor em espectáculo ou outra actividade</option>
+					<option value="1047A0082">Artigo 82.º<br> Crime por utilização indevida de trabalho de menor</option>
+					<option value="1047A0083">Artigo 83.º<br> Crime de desobediência por não cessação da actividade de menor</option>
+					<option value="1047A0084">Artigo 84.º<br> Princípios gerais quanto ao emprego de trabalhador com capacidade de trabalho reduzida</option>
+					<option value="1047A0085">Artigo 85.º<br> 
+Princípios gerais quanto ao emprego de trabalhador com deficiência, doença crónica ou doença oncológica</option>
+					<option value="1047A0086">Artigo 86.º<br> 
+Medidas de ação positiva em favor de trabalhador com deficiência ou doença crónica</option>
+					<option value="1047A0087">Artigo 87.º<br> 
+Dispensa de algumas formas de organização do tempo de trabalho de trabalhador com deficiência ou doença crónica</option>
+					<option value="1047A0088">Artigo 88.º<br> Trabalho suplementar de trabalhador com deficiência ou doença crónica</option>
+					<option value="1047A0089">Artigo 89.º<br> Noção de trabalhador-estudante</option>
+					<option value="1047A0089A">Artigo 89.º-A<br> 
+Contrato de trabalho com estudante em período de férias ou interrupção lectiva </option>
+					<option value="1047A0090">Artigo 90.º<br> Organização do tempo de trabalho de trabalhador-estudante</option>
+					<option value="1047A0091">Artigo 91.º<br> Faltas para prestação de provas de avaliação</option>
+					<option value="1047A0092">Artigo 92.º<br> Férias e licenças de trabalhador-estudante</option>
+					<option value="1047A0093">Artigo 93.º<br> Promoção profissional de trabalhador-estudante</option>
+					<option value="1047A0094">Artigo 94.º<br> 
+Concessão do estatuto de trabalhador-estudante</option>
+					<option value="1047A0095">Artigo 95.º<br> Cessação e renovação de direitos</option>
+					<option value="1047A0096">Artigo 96.º<br> Procedimento para exercício de direitos de trabalhador-estudante</option>
+					<option value="1047A0096A">Artigo 96.º-A<br> Legislação complementar</option>
+					<option value="1047A0097">Artigo 97.º<br> Poder de direcção</option>
+					<option value="1047A0098">Artigo 98.º<br> Poder disciplinar</option>
+					<option value="1047A0099">Artigo 99.º<br> Regulamento interno de empresa</option>
+					<option value="1047A0100">Artigo 100.º<br> Tipos de empresas</option>
+					<option value="1047A0101">Artigo 101.º<br> Pluralidade de empregadores</option>
+					<option value="1047A0101A">Artigo 101.º-A<br> 
+Trabalhador cuidador </option>
+					<option value="1047A0101B">Artigo 101.º-B<br> 
+Licença do cuidador </option>
+					<option value="1047A0101C">Artigo 101.º-C<br> 
+Trabalho a tempo parcial de trabalhador cuidador </option>
+					<option value="1047A0101D">Artigo 101.º-D<br> 
+Horário flexível de trabalhador cuidador </option>
+					<option value="1047A0101E">Artigo 101.º-E<br> 
+Autorização de trabalho a tempo parcial ou em regime de horário flexível de trabalhador cuidador </option>
+					<option value="1047A0101F">Artigo 101.º-F<br> 
+Proteção em caso de despedimento de trabalhador cuidador </option>
+					<option value="1047A0101G">Artigo 101.º-G<br> 
+Dispensa de prestação de trabalho suplementar </option>
+					<option value="1047A0101H">Artigo 101.º-H<br> 
+Acumulação de regimes </option>
+					<option value="1047A0102">Artigo 102.º<br> Culpa na formação do contrato</option>
+					<option value="1047A0103">Artigo 103.º<br> Regime da promessa de contrato de trabalho</option>
+					<option value="1047A0104">Artigo 104.º<br> Contrato de trabalho de adesão</option>
+					<option value="1047A0105">Artigo 105.º<br> Cláusulas contratuais gerais</option>
+					<option value="1047A0106">Artigo 106.º<br> 
+Dever de informação </option>
+					<option value="1047A0107">Artigo 107.º<br> 
+Meios de informação </option>
+					<option value="1047A0108">Artigo 108.º<br> 
+Informação relativa a prestação de trabalho no estrangeiro </option>
+					<option value="1047A0109">Artigo 109.º<br> 
+Actualização da informação </option>
+					<option value="1047A0110">Artigo 110.º<br> Regra geral sobre a forma de contrato de trabalho</option>
+					<option value="1047A0111">Artigo 111.º<br> 
+Noção de período experimental </option>
+					<option value="1047A0112">Artigo 112.º<br> 
+Duração do período experimental</option>
+					<option value="1047A0113">Artigo 113.º<br> Contagem do período experimental</option>
+					<option value="1047A0114">Artigo 114.º<br> 
+Denúncia do contrato durante o período experimental </option>
+					<option value="1047A0115">Artigo 115.º<br> Determinação da actividade do trabalhador</option>
+					<option value="1047A0116">Artigo 116.º<br> Autonomia técnica</option>
+					<option value="1047A0117">Artigo 117.º<br> Efeitos de falta de título profissional</option>
+					<option value="1047A0118">Artigo 118.º<br> Funções desempenhadas pelo trabalhador</option>
+					<option value="1047A0119">Artigo 119.º<br> Mudança para categoria inferior</option>
+					<option value="1047A0120">Artigo 120.º<br> Mobilidade funcional</option>
+					<option value="1047A0121">Artigo 121.º<br> Invalidade parcial de contrato de trabalho</option>
+					<option value="1047A0122">Artigo 122.º<br> Efeitos da invalidade de contrato de trabalho</option>
+					<option value="1047A0123">Artigo 123.º<br> Invalidade e cessação de contrato de trabalho</option>
+					<option value="1047A0124">Artigo 124.º<br> Contrato com objecto ou fim contrário à lei ou à ordem pública</option>
+					<option value="1047A0125">Artigo 125.º<br> Convalidação de contrato de trabalho</option>
+					<option value="1047A0126">Artigo 126.º<br> Deveres gerais das partes</option>
+					<option value="1047A0127">Artigo 127.º<br> 
+Deveres do empregador </option>
+					<option value="1047A0128">Artigo 128.º<br> Deveres do trabalhador</option>
+					<option value="1047A0129">Artigo 129.º<br> 
+Garantias do trabalhador </option>
+					<option value="1047A0130">Artigo 130.º<br> Objectivos da formação profissional</option>
+					<option value="1047A0131">Artigo 131.º<br> 
+Formação contínua</option>
+					<option value="1047A0132">Artigo 132.º<br> Crédito de horas e subsídio para formação contínua</option>
+					<option value="1047A0133">Artigo 133.º<br> Conteúdo da formação contínua</option>
+					<option value="1047A0134">Artigo 134.º<br> Efeito da cessação do contrato de trabalho no direito a formação</option>
+					<option value="1047A0135">Artigo 135.º<br> Condição ou termo suspensivo</option>
+					<option value="1047A0136">Artigo 136.º<br> Pacto de não concorrência</option>
+					<option value="1047A0137">Artigo 137.º<br> Pacto de permanência</option>
+					<option value="1047A0138">Artigo 138.º<br> Limitação da liberdade de trabalho</option>
+					<option value="1047A0139">Artigo 139.º<br> 
+Regime do termo resolutivo</option>
+					<option value="1047A0140">Artigo 140.º<br> 
+Admissibilidade de contrato de trabalho a termo resolutivo</option>
+					<option value="1047A0141">Artigo 141.º<br> 
+Forma e conteúdo de contrato de trabalho a termo </option>
+					<option value="1047A0142">Artigo 142.º<br> 
+Casos especiais de contrato de trabalho de muito curta duração </option>
+					<option value="1047A0143">Artigo 143.º<br> 
+Sucessão de contrato de trabalho a termo </option>
+					<option value="1047A0144">Artigo 144.º<br> 
+Informações relativas a contrato de trabalho a termo </option>
+					<option value="1047A0145">Artigo 145.º<br> Preferência na admissão</option>
+					<option value="1047A0146">Artigo 146.º<br> Igualdade de tratamento no âmbito de contrato a termo</option>
+					<option value="1047A0147">Artigo 147.º<br> Contrato de trabalho sem termo</option>
+					<option value="1047A0148">Artigo 148.º<br> 
+Duração de contrato de trabalho a termo</option>
+					<option value="1047A0149">Artigo 149.º<br> 
+Renovação de contrato de trabalho a termo certo</option>
+					<option value="1047A0150">Artigo 150.º<br> Noção de trabalho a tempo parcial</option>
+					<option value="1047A0151">Artigo 151.º<br> Liberdade de celebração de contrato de trabalho a tempo parcial</option>
+					<option value="1047A0152">Artigo 152.º<br> Preferência na admissão para trabalho a tempo parcial</option>
+					<option value="1047A0153">Artigo 153.º<br> Forma e conteúdo de contrato de trabalho a tempo parcial</option>
+					<option value="1047A0154">Artigo 154.º<br> Condições de trabalho a tempo parcial</option>
+					<option value="1047A0155">Artigo 155.º<br> Alteração da duração do trabalho a tempo parcial</option>
+					<option value="1047A0156">Artigo 156.º<br> Deveres do empregador em caso de trabalho a tempo parcial</option>
+					<option value="1047A0157">Artigo 157.º<br> Admissibilidade de trabalho intermitente</option>
+					<option value="1047A0158">Artigo 158.º<br> Forma e conteúdo de contrato de trabalho intermitente</option>
+					<option value="1047A0159">Artigo 159.º<br> 
+Período de prestação de trabalho </option>
+					<option value="1047A0160">Artigo 160.º<br> 
+Direitos do trabalhador</option>
+					<option value="1047A0161">Artigo 161.º<br> Objecto da comissão de serviço</option>
+					<option value="1047A0162">Artigo 162.º<br> Regime de contrato de trabalho em comissão de serviço</option>
+					<option value="1047A0163">Artigo 163.º<br> Cessação de comissão de serviço</option>
+					<option value="1047A0164">Artigo 164.º<br> Efeitos da cessação da comissão de serviço</option>
+					<option value="1047A0165">Artigo 165.º<br> 
+Noção de teletrabalho e âmbito do regime</option>
+					<option value="1047A0166">Artigo 166.º<br> 
+Acordo para prestação de teletrabalho</option>
+					<option value="1047A0166A">Artigo 166.º-A<br> 
+Direito ao regime de teletrabalho </option>
+					<option value="1047A0167">Artigo 167.º<br> 
+Duração e cessação do acordo de teletrabalho</option>
+					<option value="1047A0168">Artigo 168.º<br> 
+Equipamentos e sistemas</option>
+					<option value="1047A0169">Artigo 169.º<br> 
+Igualdade de direitos e deveres</option>
+					<option value="1047A0169A">Artigo 169.º-A<br> 
+Organização, direção e controlo do trabalho</option>
+					<option value="1047A0169B">Artigo 169.º-B<br> 
+Deveres especiais</option>
+					<option value="1047A0170">Artigo 170.º<br> 
+Privacidade de trabalhador em regime de teletrabalho</option>
+					<option value="1047A0170A">Artigo 170.º-A<br> 
+Segurança e saúde no trabalho</option>
+					<option value="1047A0171">Artigo 171.º<br> 
+Fiscalização</option>
+					<option value="1047A0172">Artigo 172.º<br> Conceitos específicos do regime de trabalho temporário</option>
+					<option value="1047A0173">Artigo 173.º<br> 
+Cedência ilícita de trabalhador </option>
+					<option value="1047A0174">Artigo 174.º<br> 
+Casos especiais de responsabilidade da empresa de trabalho temporário ou do utilizador</option>
+					<option value="1047A0175">Artigo 175.º<br> Admissibilidade de contrato de utilização de trabalho temporário</option>
+					<option value="1047A0176">Artigo 176.º<br> Justificação de contrato de utilização de trabalho temporário</option>
+					<option value="1047A0177">Artigo 177.º<br> 
+Forma e conteúdo de contrato de utilização de trabalho temporário</option>
+					<option value="1047A0178">Artigo 178.º<br> Duração de contrato de utilização de trabalho temporário</option>
+					<option value="1047A0179">Artigo 179.º<br> 
+Proibição de contratos sucessivos </option>
+					<option value="1047A0180">Artigo 180.º<br> Admissibilidade de contrato de trabalho temporário</option>
+					<option value="1047A0181">Artigo 181.º<br> 
+Forma e conteúdo de contrato de trabalho temporário</option>
+					<option value="1047A0182">Artigo 182.º<br> 
+Duração de contrato de trabalho temporário </option>
+					<option value="1047A0183">Artigo 183.º<br> 
+Forma e conteúdo de contrato de trabalho por tempo indeterminado para cedência temporária </option>
+					<option value="1047A0184">Artigo 184.º<br> Período sem cedência temporária</option>
+					<option value="1047A0185">Artigo 185.º<br> 
+Condições de trabalho de trabalhador temporário </option>
+					<option value="1047A0186">Artigo 186.º<br> 
+Segurança e saúde no trabalho temporário </option>
+					<option value="1047A0187">Artigo 187.º<br> Formação profissional de trabalhador temporário</option>
+					<option value="1047A0188">Artigo 188.º<br> Substituição de trabalhador temporário</option>
+					<option value="1047A0189">Artigo 189.º<br> 
+Enquadramento de trabalhador temporário </option>
+					<option value="1047A0190">Artigo 190.º<br> Prestações garantidas pela caução para exercício da actividade de trabalho temporário</option>
+					<option value="1047A0191">Artigo 191.º<br> 
+Execução da caução </option>
+					<option value="1047A0192">Artigo 192.º<br> 
+Sanções acessórias no âmbito de trabalho temporário </option>
+					<option value="1047A0193">Artigo 193.º<br> Noção de local de trabalho</option>
+					<option value="1047A0194">Artigo 194.º<br> Transferência de local de trabalho</option>
+					<option value="1047A0195">Artigo 195.º<br> Transferência a pedido do trabalhador</option>
+					<option value="1047A0196">Artigo 196.º<br> 
+Procedimento em caso de transferência do local de trabalho </option>
+					<option value="1047A0197">Artigo 197.º<br> Tempo de trabalho</option>
+					<option value="1047A0198">Artigo 198.º<br> Período normal de trabalho</option>
+					<option value="1047A0199">Artigo 199.º<br> Período de descanso</option>
+					<option value="1047A0199A">Artigo 199.º-A<br> 
+Dever de abstenção de contacto</option>
+					<option value="1047A0200">Artigo 200.º<br> Horário de trabalho</option>
+					<option value="1047A0201">Artigo 201.º<br> Período de funcionamento</option>
+					<option value="1047A0202">Artigo 202.º<br> Registo de tempos de trabalho</option>
+					<option value="1047A0203">Artigo 203.º<br> Limites máximos do período normal de trabalho</option>
+					<option value="1047A0204">Artigo 204.º<br> Adaptabilidade por regulamentação colectiva</option>
+					<option value="1047A0205">Artigo 205.º<br> Adaptabilidade individual</option>
+					<option value="1047A0206">Artigo 206.º<br> 
+Adaptabilidade grupal </option>
+					<option value="1047A0207">Artigo 207.º<br> 
+Período de referência </option>
+					<option value="1047A0208">Artigo 208.º<br> Banco de horas por regulamentação coletiva</option>
+					<option value="1047A0208A">Artigo 208.º-A<br> 
+Banco de horas individual</option>
+					<option value="1047A0208B">Artigo 208.º-B<br> 
+Banco de horas grupal </option>
+					<option value="1047A0209">Artigo 209.º<br> 
+Horário concentrado </option>
+					<option value="1047A0210">Artigo 210.º<br> Excepções aos limites máximos do período normal de trabalho</option>
+					<option value="1047A0211">Artigo 211.º<br> 
+Limite máximo da duração média do trabalho semanal </option>
+					<option value="1047A0212">Artigo 212.º<br> Elaboração de horário de trabalho</option>
+					<option value="1047A0213">Artigo 213.º<br> Intervalo de descanso</option>
+					<option value="1047A0214">Artigo 214.º<br> Descanso diário</option>
+					<option value="1047A0215">Artigo 215.º<br> Mapa de horário de trabalho</option>
+					<option value="1047A0216">Artigo 216.º<br> Afixação do mapa de horário de trabalho</option>
+					<option value="1047A0217">Artigo 217.º<br> Alteração de horário de trabalho</option>
+					<option value="1047A0218">Artigo 218.º<br> Condições de isenção de horário de trabalho</option>
+					<option value="1047A0219">Artigo 219.º<br> Modalidades e efeitos de isenção de horário de trabalho</option>
+					<option value="1047A0220">Artigo 220.º<br> Noção de trabalho por turnos</option>
+					<option value="1047A0221">Artigo 221.º<br> Organização de turnos</option>
+					<option value="1047A0222">Artigo 222.º<br> Protecção em matéria de segurança e saúde no trabalho</option>
+					<option value="1047A0223">Artigo 223.º<br> Noção de trabalho nocturno</option>
+					<option value="1047A0224">Artigo 224.º<br> Duração do trabalho de trabalhador nocturno</option>
+					<option value="1047A0225">Artigo 225.º<br> Protecção de trabalhador nocturno</option>
+					<option value="1047A0226">Artigo 226.º<br> Noção de trabalho suplementar</option>
+					<option value="1047A0227">Artigo 227.º<br> Condições de prestação de trabalho suplementar</option>
+					<option value="1047A0228">Artigo 228.º<br> Limites de duração do trabalho suplementar</option>
+					<option value="1047A0229">Artigo 229.º<br> Descanso compensatório de trabalho suplementar</option>
+					<option value="1047A0230">Artigo 230.º<br> Regimes especiais de trabalho suplementar</option>
+					<option value="1047A0231">Artigo 231.º<br> Registo de trabalho suplementar</option>
+					<option value="1047A0232">Artigo 232.º<br> Descanso semanal</option>
+					<option value="1047A0233">Artigo 233.º<br> Cumulação de descanso semanal e de descanso diário</option>
+					<option value="1047A0234">Artigo 234.º<br> 
+Feriados obrigatórios</option>
+					<option value="1047A0235">Artigo 235.º<br> Feriados facultativos</option>
+					<option value="1047A0236">Artigo 236.º<br> Regime dos feriados</option>
+					<option value="1047A0237">Artigo 237.º<br> Direito a férias</option>
+					<option value="1047A0238">Artigo 238.º<br> Duração do período de férias</option>
+					<option value="1047A0239">Artigo 239.º<br> Casos especiais de duração do período de férias</option>
+					<option value="1047A0240">Artigo 240.º<br> Ano do gozo das férias</option>
+					<option value="1047A0241">Artigo 241.º<br> Marcação do período de férias</option>
+					<option value="1047A0242">Artigo 242.º<br> Encerramento para férias</option>
+					<option value="1047A0243">Artigo 243.º<br> Alteração do período de férias por motivo relativo à empresa</option>
+					<option value="1047A0244">Artigo 244.º<br> Alteração do período de férias por motivo relativo ao trabalhador</option>
+					<option value="1047A0245">Artigo 245.º<br> Efeitos da cessação do contrato de trabalho no direito a férias</option>
+					<option value="1047A0246">Artigo 246.º<br> Violação do direito a férias</option>
+					<option value="1047A0247">Artigo 247.º<br> Exercício de outra actividade durante as férias</option>
+					<option value="1047A0248">Artigo 248.º<br> Noção de falta</option>
+					<option value="1047A0249">Artigo 249.º<br> 
+Tipos de falta </option>
+					<option value="1047A0250">Artigo 250.º<br> 
+Imperatividade do regime de faltas </option>
+					<option value="1047A0251">Artigo 251.º<br> 
+Faltas por motivo de falecimento de cônjuge, parente ou afim</option>
+					<option value="1047A0252">Artigo 252.º<br> 
+Falta para assistência a membro do agregado familiar </option>
+					<option value="1047A0252A">Artigo 252.º-A<br> 
+Falta para acompanhamento de grávida que se desloque a unidade hospitalar localizada fora da ilha de residência para realização de parto </option>
+					<option value="1047A0252B">Artigo 252.º-B<br> 
+Falta por dores incapacitantes provocadas por endometriose ou por adenomiose</option>
+					<option value="1047A0253">Artigo 253.º<br> Comunicação de ausência</option>
+					<option value="1047A0254">Artigo 254.º<br> 
+Prova de motivo justificativo de falta </option>
+					<option value="1047A0255">Artigo 255.º<br> 
+Efeitos de falta justificada </option>
+					<option value="1047A0256">Artigo 256.º<br> Efeitos de falta injustificada</option>
+					<option value="1047A0257">Artigo 257.º<br> 
+Substituição da perda de retribuição por motivo de falta </option>
+					<option value="1047A0258">Artigo 258.º<br> Princípios gerais sobre a retribuição</option>
+					<option value="1047A0259">Artigo 259.º<br> Retribuição em espécie</option>
+					<option value="1047A0260">Artigo 260.º<br> Prestações incluídas ou excluídas da retribuição</option>
+					<option value="1047A0261">Artigo 261.º<br> Modalidades de retribuição</option>
+					<option value="1047A0262">Artigo 262.º<br> Cálculo de prestação complementar ou acessória</option>
+					<option value="1047A0263">Artigo 263.º<br> Subsídio de Natal</option>
+					<option value="1047A0264">Artigo 264.º<br> Retribuição do período de férias e subsídio</option>
+					<option value="1047A0265">Artigo 265.º<br> Retribuição por isenção de horário de trabalho</option>
+					<option value="1047A0266">Artigo 266.º<br> Pagamento de trabalho nocturno</option>
+					<option value="1047A0267">Artigo 267.º<br> Retribuição por exercício de funções afins ou funcionalmente ligadas</option>
+					<option value="1047A0268">Artigo 268.º<br> 
+Pagamento de trabalho suplementar </option>
+					<option value="1047A0269">Artigo 269.º<br> 
+Prestações relativas a dia feriado </option>
+					<option value="1047A0270">Artigo 270.º<br> Critérios de determinação da retribuição</option>
+					<option value="1047A0271">Artigo 271.º<br> Cálculo do valor da retribuição horária</option>
+					<option value="1047A0272">Artigo 272.º<br> Determinação judicial do valor da retribuição</option>
+					<option value="1047A0273">Artigo 273.º<br> Determinação da retribuição mínima mensal garantida</option>
+					<option value="1047A0274">Artigo 274.º<br> Prestações incluídas na retribuição mínima mensal garantida</option>
+					<option value="1047A0275">Artigo 275.º<br> Redução da retribuição mínima mensal garantida relacionada com o trabalhador</option>
+					<option value="1047A0276">Artigo 276.º<br> Forma de cumprimento</option>
+					<option value="1047A0277">Artigo 277.º<br> 
+Lugar do cumprimento </option>
+					<option value="1047A0278">Artigo 278.º<br> 
+Tempo do cumprimento </option>
+					<option value="1047A0279">Artigo 279.º<br> Compensações e descontos</option>
+					<option value="1047A0280">Artigo 280.º<br> Cessão de crédito retributivo</option>
+					<option value="1047A0281">Artigo 281.º<br> Princípios gerais em matéria de segurança e saúde no trabalho</option>
+					<option value="1047A0282">Artigo 282.º<br> Informação, consulta e formação dos trabalhadores</option>
+					<option value="1047A0283">Artigo 283.º<br> 
+Acidentes de trabalho e doenças profissionais</option>
+					<option value="1047A0284">Artigo 284.º<br> Regulamentação da prevenção e reparação</option>
+					<option value="1047A0285">Artigo 285.º<br> 
+Efeitos de transmissão de empresa ou estabelecimento </option>
+					<option value="1047A0286">Artigo 286.º<br> 
+Informação e consulta dos trabalhadores e de representantes dos trabalhadores</option>
+					<option value="1047A0286A">Artigo 286.º-A<br> 
+Direito de oposição do trabalhador</option>
+					<option value="1047A0287">Artigo 287.º<br> Representação dos trabalhadores após a transmissão</option>
+					<option value="1047A0288">Artigo 288.º<br> Noção de cedência ocasional de trabalhador</option>
+					<option value="1047A0289">Artigo 289.º<br> Admissibilidade de cedência ocasional</option>
+					<option value="1047A0290">Artigo 290.º<br> Acordo de cedência ocasional de trabalhador</option>
+					<option value="1047A0291">Artigo 291.º<br> Regime de prestação de trabalho de trabalhador cedido</option>
+					<option value="1047A0292">Artigo 292.º<br> Consequência de recurso ilícito a cedência ou de irregularidade do acordo</option>
+					<option value="1047A0293">Artigo 293.º<br> Enquadramento de trabalhador cedido</option>
+					<option value="1047A0294">Artigo 294.º<br> Factos determinantes de redução ou suspensão</option>
+					<option value="1047A0295">Artigo 295.º<br> Efeitos da redução ou da suspensão</option>
+					<option value="1047A0296">Artigo 296.º<br> Facto determinante da suspensão respeitante a trabalhador</option>
+					<option value="1047A0297">Artigo 297.º<br> Regresso do trabalhador</option>
+					<option value="1047A0298">Artigo 298.º<br> Redução ou suspensão em situação de crise empresarial</option>
+					<option value="1047A0298A">Artigo 298.º-A<br> Impedimento de redução ou suspensão</option>
+					<option value="1047A0299">Artigo 299.º<br> Comunicações em caso de redução ou suspensão</option>
+					<option value="1047A0300">Artigo 300.º<br> Informações e negociação em caso de redução ou suspensão</option>
+					<option value="1047A0301">Artigo 301.º<br> Duração de medida de redução ou suspensão</option>
+					<option value="1047A0302">Artigo 302.º<br> Formação profissional durante a redução ou suspensão</option>
+					<option value="1047A0303">Artigo 303.º<br> Deveres do empregador no período de redução ou suspensão</option>
+					<option value="1047A0304">Artigo 304.º<br> Deveres do trabalhador no período de redução ou suspensão</option>
+					<option value="1047A0305">Artigo 305.º<br> 
+Direitos do trabalhador no período de redução ou suspensão </option>
+					<option value="1047A0306">Artigo 306.º<br> Efeitos da redução ou suspensão em férias, subsídio de férias ou de Natal</option>
+					<option value="1047A0307">Artigo 307.º<br> Acompanhamento da medida</option>
+					<option value="1047A0308">Artigo 308.º<br> Direitos dos representantes dos trabalhadores durante a redução ou suspensão</option>
+					<option value="1047A0309">Artigo 309.º<br> Retribuição durante o encerramento ou a diminuição de actividade</option>
+					<option value="1047A0310">Artigo 310.º<br> Cessação de encerramento ou de diminuição de actividade</option>
+					<option value="1047A0311">Artigo 311.º<br> Procedimento em caso de encerramento temporário por facto imputável ao empregador</option>
+					<option value="1047A0312">Artigo 312.º<br> Caução em caso de encerramento temporário por facto imputável ao empregador</option>
+					<option value="1047A0313">Artigo 313.º<br> 
+Actos proibidos em caso de encerramento temporário </option>
+					<option value="1047A0314">Artigo 314.º<br> Anulabilidade de acto de disposição</option>
+					<option value="1047A0315">Artigo 315.º<br> Extensão do regime a caso de encerramento definitivo</option>
+					<option value="1047A0316">Artigo 316.º<br> Responsabilidade penal em caso de encerramento de empresa ou estabelecimento</option>
+					<option value="1047A0317">Artigo 317.º<br> Concessão e efeitos da licença sem retribuição</option>
+					<option value="1047A0318">Artigo 318.º<br> Noção de pré-reforma</option>
+					<option value="1047A0319">Artigo 319.º<br> Acordo de pré-reforma</option>
+					<option value="1047A0320">Artigo 320.º<br> Prestação de pré-reforma</option>
+					<option value="1047A0321">Artigo 321.º<br> Direitos de trabalhador em situação de pré-reforma</option>
+					<option value="1047A0322">Artigo 322.º<br> Cessação de pré-reforma</option>
+					<option value="1047A0323">Artigo 323.º<br> Efeitos gerais do incumprimento do contrato de trabalho</option>
+					<option value="1047A0324">Artigo 324.º<br> Efeitos para o empregador de falta de pagamento pontual da retribuição</option>
+					<option value="1047A0325">Artigo 325.º<br> Requisitos da suspensão de contrato de trabalho</option>
+					<option value="1047A0326">Artigo 326.º<br> Prestação de trabalho durante a suspensão</option>
+					<option value="1047A0327">Artigo 327.º<br> Cessação da suspensão do contrato de trabalho</option>
+					<option value="1047A0328">Artigo 328.º<br> Sanções disciplinares</option>
+					<option value="1047A0329">Artigo 329.º<br> Procedimento disciplinar e prescrição</option>
+					<option value="1047A0330">Artigo 330.º<br> Critério de decisão e aplicação de sanção disciplinar</option>
+					<option value="1047A0331">Artigo 331.º<br> 
+Sanções abusivas</option>
+					<option value="1047A0332">Artigo 332.º<br> Registo de sanções disciplinares</option>
+					<option value="1047A0333">Artigo 333.º<br> Privilégios creditórios</option>
+					<option value="1047A0334">Artigo 334.º<br> Responsabilidade solidária de sociedade em relação de participações recíprocas, de domínio ou de grupo</option>
+					<option value="1047A0335">Artigo 335.º<br> Responsabilidade de sócio, gerente, administrador ou director</option>
+					<option value="1047A0336">Artigo 336.º<br> Fundo de Garantia Salarial</option>
+					<option value="1047A0337">Artigo 337.º<br> 
+Prescrição e prova de crédito </option>
+					<option value="1047A0338">Artigo 338.º<br> Proibição de despedimento sem justa causa</option>
+					<option value="1047A0338A">Artigo 338.º-A<br> 
+Proibição do recurso à terceirização de serviços </option>
+					<option value="1047A0339">Artigo 339.º<br> Imperatividade do regime de cessação do contrato de trabalho</option>
+					<option value="1047A0340">Artigo 340.º<br> Modalidades de cessação do contrato de trabalho</option>
+					<option value="1047A0341">Artigo 341.º<br> Documentos a entregar ao trabalhador</option>
+					<option value="1047A0342">Artigo 342.º<br> Devolução de instrumentos de trabalho</option>
+					<option value="1047A0343">Artigo 343.º<br> Causas de caducidade de contrato de trabalho</option>
+					<option value="1047A0344">Artigo 344.º<br> 
+Caducidade de contrato de trabalho a termo certo </option>
+					<option value="1047A0345">Artigo 345.º<br> 
+Caducidade de contrato de trabalho a termo incerto </option>
+					<option value="1047A0346">Artigo 346.º<br> Morte de empregador, extinção de pessoa colectiva ou encerramento de empresa</option>
+					<option value="1047A0347">Artigo 347.º<br> Insolvência e recuperação de empresa</option>
+					<option value="1047A0348">Artigo 348.º<br> Conversão em contrato a termo após reforma por velhice ou idade de 70 anos</option>
+					<option value="1047A0349">Artigo 349.º<br> 
+Cessação de contrato de trabalho por acordo</option>
+					<option value="1047A0350">Artigo 350.º<br> Cessação do acordo de revogação</option>
+					<option value="1047A0351">Artigo 351.º<br> Noção de justa causa de despedimento</option>
+					<option value="1047A0352">Artigo 352.º<br> Inquérito prévio</option>
+					<option value="1047A0353">Artigo 353.º<br> Nota de culpa</option>
+					<option value="1047A0354">Artigo 354.º<br> 
+Suspensão preventiva de trabalhador </option>
+					<option value="1047A0355">Artigo 355.º<br> Resposta à nota de culpa</option>
+					<option value="1047A0356">Artigo 356.º<br> Instrução</option>
+					<option value="1047A0357">Artigo 357.º<br> Decisão de despedimento por facto imputável ao trabalhador</option>
+					<option value="1047A0358">Artigo 358.º<br> Procedimento em caso de microempresa</option>
+					<option value="1047A0359">Artigo 359.º<br> Noção de despedimento colectivo</option>
+					<option value="1047A0360">Artigo 360.º<br> 
+Comunicações em caso de despedimento colectivo </option>
+					<option value="1047A0361">Artigo 361.º<br> 
+Informações e negociação em caso de despedimento colectivo </option>
+					<option value="1047A0362">Artigo 362.º<br> 
+Intervenção do ministério responsável pela área laboral </option>
+					<option value="1047A0363">Artigo 363.º<br> 
+Decisão de despedimento colectivo </option>
+					<option value="1047A0364">Artigo 364.º<br> Crédito de horas durante o aviso prévio</option>
+					<option value="1047A0365">Artigo 365.º<br> Denúncia do contrato pelo trabalhador durante o aviso prévio</option>
+					<option value="1047A0366">Artigo 366.º<br> 
+Compensação por despedimento colectivo </option>
+					<option value="1047A0366A">Artigo 366.º-A<br> Compensação para novos contratos de trabalho</option>
+					<option value="1047A0367">Artigo 367.º<br> Noção de despedimento por extinção de posto de trabalho</option>
+					<option value="1047A0368" selected>Artigo 368.º<br> 
+Requisitos de despedimento por extinção de posto de trabalho</option>
+					<option value="1047A0369">Artigo 369.º<br> Comunicações em caso de despedimento por extinção de posto de trabalho</option>
+					<option value="1047A0370">Artigo 370.º<br> 
+Consultas em caso de despedimento por extinção de posto de trabalho</option>
+					<option value="1047A0371">Artigo 371.º<br> 
+Decisão de despedimento por extinção de posto de trabalho </option>
+					<option value="1047A0372">Artigo 372.º<br> Direitos de trabalhador em caso de despedimento por extinção de posto de trabalho</option>
+					<option value="1047A0373">Artigo 373.º<br> Noção de despedimento por inadaptação</option>
+					<option value="1047A0374">Artigo 374.º<br> Situações de inadaptação</option>
+					<option value="1047A0375">Artigo 375.º<br> 
+Requisitos de despedimento por inadaptação</option>
+					<option value="1047A0376">Artigo 376.º<br> Comunicações em caso de despedimento por inadaptação</option>
+					<option value="1047A0377">Artigo 377.º<br> Consultas em caso de despedimento por inadaptação</option>
+					<option value="1047A0378">Artigo 378.º<br> Decisão de despedimento por inadaptação</option>
+					<option value="1047A0379">Artigo 379.º<br> Direitos de trabalhador em caso de despedimento por inadaptação</option>
+					<option value="1047A0380">Artigo 380.º<br> Manutenção do nível de emprego</option>
+					<option value="1047A0381">Artigo 381.º<br> Fundamentos gerais de ilicitude de despedimento</option>
+					<option value="1047A0382">Artigo 382.º<br> Ilicitude de despedimento por facto imputável ao trabalhador</option>
+					<option value="1047A0383">Artigo 383.º<br> 
+Ilicitude de despedimento colectivo </option>
+					<option value="1047A0384">Artigo 384.º<br> Ilicitude de despedimento por extinção de posto de trabalho</option>
+					<option value="1047A0385">Artigo 385.º<br> Ilicitude de despedimento por inadaptação</option>
+					<option value="1047A0386">Artigo 386.º<br> Suspensão de despedimento</option>
+					<option value="1047A0387">Artigo 387.º<br> Apreciação judicial do despedimento</option>
+					<option value="1047A0388">Artigo 388.º<br> Apreciação judicial do despedimento colectivo</option>
+					<option value="1047A0389">Artigo 389.º<br> Efeitos da ilicitude de despedimento</option>
+					<option value="1047A0390">Artigo 390.º<br> Compensação em caso de despedimento ilícito</option>
+					<option value="1047A0391">Artigo 391.º<br> Indemnização em substituição de reintegração a pedido do trabalhador</option>
+					<option value="1047A0392">Artigo 392.º<br> Indemnização em substituição de reintegração a pedido do empregador</option>
+					<option value="1047A0393">Artigo 393.º<br> Regras especiais relativas a contrato de trabalho a termo</option>
+					<option value="1047A0394">Artigo 394.º<br> 
+Justa causa de resolução</option>
+					<option value="1047A0395">Artigo 395.º<br> Procedimento para resolução de contrato pelo trabalhador</option>
+					<option value="1047A0396">Artigo 396.º<br> 
+Indemnização ou compensação devida ao trabalhador</option>
+					<option value="1047A0397">Artigo 397.º<br> Revogação da resolução</option>
+					<option value="1047A0398">Artigo 398.º<br> Impugnação da resolução</option>
+					<option value="1047A0399">Artigo 399.º<br> Responsabilidade do trabalhador em caso de resolução ilícita</option>
+					<option value="1047A0400">Artigo 400.º<br> 
+Denúncia com aviso prévio </option>
+					<option value="1047A0401">Artigo 401.º<br> 
+Denúncia sem aviso prévio </option>
+					<option value="1047A0402">Artigo 402.º<br> Revogação da denúncia</option>
+					<option value="1047A0403">Artigo 403.º<br> Abandono do trabalho</option>
+					<option value="1047A0404">Artigo 404.º<br> Estruturas de representação colectiva dos trabalhadores</option>
+					<option value="1047A0405">Artigo 405.º<br> Autonomia e independência</option>
+					<option value="1047A0406">Artigo 406.º<br> Proibição de actos discriminatórios</option>
+					<option value="1047A0407">Artigo 407.º<br> Crime por violação da autonomia ou independência sindical, ou por acto discriminatório</option>
+					<option value="1047A0408">Artigo 408.º<br> Crédito de horas de representantes dos trabalhadores</option>
+					<option value="1047A0409">Artigo 409.º<br> Faltas de representantes dos trabalhadores</option>
+					<option value="1047A0410">Artigo 410.º<br> Protecção em caso de procedimento disciplinar ou despedimento</option>
+					<option value="1047A0411">Artigo 411.º<br> Protecção em caso de transferência</option>
+					<option value="1047A0412">Artigo 412.º<br> Informações confidenciais</option>
+					<option value="1047A0413">Artigo 413.º<br> Justificação e controlo judicial em matéria de confidencialidade de informação</option>
+					<option value="1047A0414">Artigo 414.º<br> Exercício de direitos</option>
+					<option value="1047A0415">Artigo 415.º<br> Princípios gerais relativos a comissões, subcomissões e comissões coordenadoras</option>
+					<option value="1047A0416">Artigo 416.º<br> Personalidade e capacidade de comissão de trabalhadores</option>
+					<option value="1047A0417">Artigo 417.º<br> Número de membros de comissão de trabalhadores, comissão coordenadora ou subcomissão</option>
+					<option value="1047A0418">Artigo 418.º<br> Duração do mandato</option>
+					<option value="1047A0419">Artigo 419.º<br> 
+Reunião de trabalhadores no local de trabalho convocada por comissão de trabalhadores </option>
+					<option value="1047A0420">Artigo 420.º<br> Procedimento para reunião de trabalhadores no local de trabalho</option>
+					<option value="1047A0421">Artigo 421.º<br> Apoio à comissão de trabalhadores e difusão de informação</option>
+					<option value="1047A0422">Artigo 422.º<br> Crédito de horas de membros das comissões</option>
+					<option value="1047A0423">Artigo 423.º<br> Direitos da comissão e da subcomissão de trabalhadores</option>
+					<option value="1047A0424">Artigo 424.º<br> 
+Conteúdo do direito a informação </option>
+					<option value="1047A0425">Artigo 425.º<br> Obrigatoriedade de consulta da comissão de trabalhadores</option>
+					<option value="1047A0426">Artigo 426.º<br> Finalidade e conteúdo do controlo de gestão</option>
+					<option value="1047A0427">Artigo 427.º<br> Exercício do direito a informação e consulta</option>
+					<option value="1047A0428">Artigo 428.º<br> Representantes dos trabalhadores em órgãos de entidade pública empresarial</option>
+					<option value="1047A0429">Artigo 429.º<br> Exercício do direito de participação nos processos de reestruturação</option>
+					<option value="1047A0430">Artigo 430.º<br> Constituição e aprovação dos estatutos de comissão de trabalhadores</option>
+					<option value="1047A0431">Artigo 431.º<br> Votação da constituição e aprovação dos estatutos de comissão de trabalhadores</option>
+					<option value="1047A0432">Artigo 432.º<br> Procedimento para apuramento do resultado</option>
+					<option value="1047A0433">Artigo 433.º<br> 
+Regras gerais da eleição dos membros da comissão e subcomissões de trabalhadores </option>
+					<option value="1047A0434">Artigo 434.º<br> Conteúdo dos estatutos da comissão de trabalhadores</option>
+					<option value="1047A0435">Artigo 435.º<br> Estatutos da comissão coordenadora</option>
+					<option value="1047A0436">Artigo 436.º<br> Adesão e revogação de adesão a comissão coordenadora</option>
+					<option value="1047A0437">Artigo 437.º<br> Eleição de comissão coordenadora</option>
+					<option value="1047A0438">Artigo 438.º<br> 
+Registos e publicações referentes a comissões e subcomissões </option>
+					<option value="1047A0439">Artigo 439.º<br> 
+Controlo de legalidade da constituição e dos estatutos das comissões </option>
+					<option value="1047A0440">Artigo 440.º<br> Direito de associação</option>
+					<option value="1047A0441">Artigo 441.º<br> Regime subsidiário</option>
+					<option value="1047A0442">Artigo 442.º<br> Conceitos no âmbito do direito de associação</option>
+					<option value="1047A0443">Artigo 443.º<br> Direitos das associações</option>
+					<option value="1047A0444">Artigo 444.º<br> Liberdade de inscrição</option>
+					<option value="1047A0445">Artigo 445.º<br> Princípios de auto-regulamentação, organização e gestão democráticas</option>
+					<option value="1047A0446">Artigo 446.º<br> Autonomia e independência das associações</option>
+					<option value="1047A0447">Artigo 447.º<br> 
+Constituição, registo e aquisição de personalidade </option>
+					<option value="1047A0448">Artigo 448.º<br> Aquisição e perda da qualidade de associação de empregadores</option>
+					<option value="1047A0449">Artigo 449.º<br> 
+Alteração de estatutos </option>
+					<option value="1047A0450">Artigo 450.º<br> Conteúdo dos estatutos</option>
+					<option value="1047A0451">Artigo 451.º<br> Princípios da organização e da gestão democráticas</option>
+					<option value="1047A0452">Artigo 452.º<br> Regime disciplinar</option>
+					<option value="1047A0453">Artigo 453.º<br> Impenhorabilidade de bens</option>
+					<option value="1047A0454">Artigo 454.º<br> Publicitação dos membros da direcção</option>
+					<option value="1047A0455">Artigo 455.º<br> Averbamento ao registo</option>
+					<option value="1047A0456">Artigo 456.º<br> 
+Extinção de associações e cancelamento do registo</option>
+					<option value="1047A0457">Artigo 457.º<br> Quotização sindical e protecção dos trabalhadores</option>
+					<option value="1047A0458">Artigo 458.º<br> Cobrança de quotas sindicais</option>
+					<option value="1047A0459">Artigo 459.º<br> Crime de retenção de quota sindical</option>
+					<option value="1047A0460">Artigo 460.º<br> 
+Direito a actividade sindical na empresa </option>
+					<option value="1047A0461">Artigo 461.º<br> 
+Reunião de trabalhadores no local de trabalho </option>
+					<option value="1047A0462">Artigo 462.º<br> Eleição, destituição ou cessação de funções de delegado sindical</option>
+					<option value="1047A0463">Artigo 463.º<br> Número de delegados sindicais</option>
+					<option value="1047A0464">Artigo 464.º<br> Direito a instalações</option>
+					<option value="1047A0465">Artigo 465.º<br> 
+Afixação e distribuição de informação sindical</option>
+					<option value="1047A0466">Artigo 466.º<br> 
+Informação e consulta de delegado sindical</option>
+					<option value="1047A0467">Artigo 467.º<br> Crédito de horas de delegado sindical</option>
+					<option value="1047A0468">Artigo 468.º<br> Crédito de horas e faltas de membro de direcção</option>
+					<option value="1047A0469">Artigo 469.º<br> Noção de legislação do trabalho</option>
+					<option value="1047A0470">Artigo 470.º<br> Precedência de discussão</option>
+					<option value="1047A0471">Artigo 471.º<br> Participação da Comissão Permanente de Concertação Social</option>
+					<option value="1047A0472">Artigo 472.º<br> Publicação de projectos e propostas</option>
+					<option value="1047A0473">Artigo 473.º<br> Prazo de apreciação pública</option>
+					<option value="1047A0474">Artigo 474.º<br> Pareceres e audições das organizações representativas</option>
+					<option value="1047A0475">Artigo 475.º<br> Resultado de apreciação pública</option>
+					<option value="1047A0476">Artigo 476.º<br> Princípio do tratamento mais favorável</option>
+					<option value="1047A0477">Artigo 477.º<br> Forma de instrumento de regulamentação colectiva de trabalho</option>
+					<option value="1047A0478">Artigo 478.º<br> Limites do conteúdo de instrumento de regulamentação colectiva de trabalho</option>
+					<option value="1047A0479">Artigo 479.º<br> Apreciação relativa à igualdade e não discriminação</option>
+					<option value="1047A0480">Artigo 480.º<br> Publicidade de instrumento de regulamentação colectiva de trabalho aplicável</option>
+					<option value="1047A0481">Artigo 481.º<br> Preferência de instrumento de regulamentação colectiva de trabalho negocial vertical</option>
+					<option value="1047A0482">Artigo 482.º<br> Concorrência entre instrumentos de regulamentação colectiva de trabalho negociais</option>
+					<option value="1047A0483">Artigo 483.º<br> Concorrência entre instrumentos de regulamentação colectiva de trabalho não negociais</option>
+					<option value="1047A0484">Artigo 484.º<br> Concorrência entre instrumentos de regulamentação colectiva de trabalho negociais e não negociais</option>
+					<option value="1047A0485">Artigo 485.º<br> 
+Promoção da contratação colectiva </option>
+					<option value="1047A0486">Artigo 486.º<br> Proposta negocial</option>
+					<option value="1047A0487">Artigo 487.º<br> Resposta à proposta</option>
+					<option value="1047A0488">Artigo 488.º<br> Prioridade em matéria negocial</option>
+					<option value="1047A0489">Artigo 489.º<br> Boa fé na negociação</option>
+					<option value="1047A0490">Artigo 490.º<br> Apoio técnico da Administração</option>
+					<option value="1047A0491">Artigo 491.º<br> Representantes de entidades celebrantes</option>
+					<option value="1047A0492">Artigo 492.º<br> 
+Conteúdo de convenção colectiva</option>
+					<option value="1047A0493">Artigo 493.º<br> Comissão paritária</option>
+					<option value="1047A0494">Artigo 494.º<br> Procedimento do depósito de convenção colectiva</option>
+					<option value="1047A0495">Artigo 495.º<br> Alteração de convenção antes da decisão sobre o depósito</option>
+					<option value="1047A0496">Artigo 496.º<br> Princípio da filiação</option>
+					<option value="1047A0497">Artigo 497.º<br> 
+Escolha de convenção aplicável </option>
+					<option value="1047A0498">Artigo 498.º<br> 
+Aplicação de convenção em caso de transmissão de empresa ou estabelecimento</option>
+					<option value="1047A0498A">Artigo 498.º-A<br> 
+Terceirização de serviços </option>
+					<option value="1047A0499">Artigo 499.º<br> Vigência e renovação de convenção colectiva</option>
+					<option value="1047A0500">Artigo 500.º<br> 
+Denúncia de convenção colectiva</option>
+					<option value="1047A0500A">Artigo 500.º-A<br> 
+Arbitragem para apreciação da denúncia de convenção colectiva</option>
+					<option value="1047A0501">Artigo 501.º<br> 
+Sobrevigência e caducidade de convenção colectiva</option>
+					<option value="1047A0501A">Artigo 501.º-A<br> 
+Arbitragem para a suspensão do período de sobrevigência e mediação</option>
+					<option value="1047A0502">Artigo 502.º<br> 
+Cessação e suspensão da vigência de convenção colectiva</option>
+					<option value="1047A0503">Artigo 503.º<br> Sucessão de convenções colectivas</option>
+					<option value="1047A0504">Artigo 504.º<br> Adesão a convenção colectiva ou a decisão arbitral</option>
+					<option value="1047A0505">Artigo 505.º<br> Disposições comuns sobre arbitragem de conflitos colectivos de trabalho</option>
+					<option value="1047A0506">Artigo 506.º<br> Admissibilidade da arbitragem voluntária</option>
+					<option value="1047A0507">Artigo 507.º<br> Funcionamento da arbitragem voluntária</option>
+					<option value="1047A0508">Artigo 508.º<br> Admissibilidade de arbitragem obrigatória</option>
+					<option value="1047A0509">Artigo 509.º<br> Determinação de arbitragem obrigatória</option>
+					<option value="1047A0510">Artigo 510.º<br> 
+Admissibilidade da arbitragem necessária</option>
+					<option value="1047A0511">Artigo 511.º<br> 
+Determinação de arbitragem necessária</option>
+					<option value="1047A0512">Artigo 512.º<br> 
+Competência do Conselho Económico e Social</option>
+					<option value="1047A0513">Artigo 513.º<br> 
+Regulamentação da arbitragem</option>
+					<option value="1047A0514">Artigo 514.º<br> Extensão de convenção colectiva ou decisão arbitral</option>
+					<option value="1047A0515">Artigo 515.º<br> 
+Subsidiariedade </option>
+					<option value="1047A0515A">Artigo 515.º-A<br> 
+Efeitos da cessação de vigência de convenção ou decisão arbitral aplicada por portaria de extensão</option>
+					<option value="1047A0516">Artigo 516.º<br> 
+Competência e procedimento para emissão de portaria de extensão </option>
+					<option value="1047A0517">Artigo 517.º<br> 
+Admissibilidade de portaria de condições de trabalho </option>
+					<option value="1047A0518">Artigo 518.º<br> Competência e procedimento para emissão de portaria de condições de trabalho</option>
+					<option value="1047A0519">Artigo 519.º<br> Publicação e entrada em vigor de instrumento de regulamentação colectiva de trabalho</option>
+					<option value="1047A0520">Artigo 520.º<br> Aplicação de instrumento de regulamentação colectiva de trabalho</option>
+					<option value="1047A0521">Artigo 521.º<br> Violação de disposição de instrumento de regulamentação colectiva de trabalho</option>
+					<option value="1047A0522">Artigo 522.º<br> Boa fé</option>
+					<option value="1047A0523">Artigo 523.º<br> Admissibilidade e regime da conciliação</option>
+					<option value="1047A0524">Artigo 524.º<br> Procedimento de conciliação</option>
+					<option value="1047A0525">Artigo 525.º<br> Transformação da conciliação em mediação</option>
+					<option value="1047A0526">Artigo 526.º<br> Admissibilidade e regime da mediação</option>
+					<option value="1047A0527">Artigo 527.º<br> Procedimento de mediação</option>
+					<option value="1047A0528">Artigo 528.º<br> Mediação por outra entidade</option>
+					<option value="1047A0529">Artigo 529.º<br> Arbitragem</option>
+					<option value="1047A0530">Artigo 530.º<br> Direito à greve</option>
+					<option value="1047A0531">Artigo 531.º<br> Competência para declarar a greve</option>
+					<option value="1047A0532">Artigo 532.º<br> Representação dos trabalhadores em greve</option>
+					<option value="1047A0533">Artigo 533.º<br> Piquete de greve</option>
+					<option value="1047A0534">Artigo 534.º<br> Aviso prévio de greve</option>
+					<option value="1047A0535">Artigo 535.º<br> Proibição de substituição de grevistas</option>
+					<option value="1047A0536">Artigo 536.º<br> Efeitos da greve</option>
+					<option value="1047A0537">Artigo 537.º<br> Obrigação de prestação de serviços durante a greve</option>
+					<option value="1047A0538">Artigo 538.º<br> Definição de serviços a assegurar durante a greve</option>
+					<option value="1047A0539">Artigo 539.º<br> Termo da greve</option>
+					<option value="1047A0540">Artigo 540.º<br> Proibição de coacção, prejuízo ou discriminação de trabalhador</option>
+					<option value="1047A0541">Artigo 541.º<br> Efeitos de greve declarada ou executada de forma contrária à lei</option>
+					<option value="1047A0542">Artigo 542.º<br> Regulamentação da greve por convenção colectiva</option>
+					<option value="1047A0543">Artigo 543.º<br> Responsabilidade penal em matéria de greve</option>
+					<option value="1047A0544">Artigo 544.º<br> Conceito e proibição de lock-out</option>
+					<option value="1047A0545">Artigo 545.º<br> Responsabilidade penal em matéria de lock-out</option>
+					<option value="1047A0546">Artigo 546.º<br> Responsabilidade de pessoas colectivas e equiparadas</option>
+					<option value="1047A0547">Artigo 547.º<br> Desobediência qualificada</option>
+					<option value="1047A0548">Artigo 548.º<br> Noção de contra-ordenação laboral</option>
+					<option value="1047A0549">Artigo 549.º<br> Regime das contra-ordenações laborais</option>
+					<option value="1047A0550">Artigo 550.º<br> Punibilidade da negligência</option>
+					<option value="1047A0551">Artigo 551.º<br> 
+Sujeito responsável por contra-ordenação laboral</option>
+					<option value="1047A0552">Artigo 552.º<br> Apresentação de documentos</option>
+					<option value="1047A0553">Artigo 553.º<br> Escalões de gravidade das contra-ordenações laborais</option>
+					<option value="1047A0554">Artigo 554.º<br> Valores das coimas</option>
+					<option value="1047A0555">Artigo 555.º<br> Outros valores de coimas</option>
+					<option value="1047A0556">Artigo 556.º<br> Critérios especiais de medida da coima</option>
+					<option value="1047A0557">Artigo 557.º<br> Dolo</option>
+					<option value="1047A0558">Artigo 558.º<br> Pluralidade de contra-ordenações</option>
+					<option value="1047A0559">Artigo 559.º<br> Determinação da medida da coima</option>
+					<option value="1047A0560">Artigo 560.º<br> Dispensa de coima</option>
+					<option value="1047A0561">Artigo 561.º<br> Reincidência</option>
+					<option value="1047A0562">Artigo 562.º<br> Sanções acessórias</option>
+					<option value="1047A0563">Artigo 563.º<br> 
+Dispensa e eliminação da publicidade</option>
+					<option value="1047A0564">Artigo 564.º<br> Cumprimento de dever omitido</option>
+					<option value="1047A0565">Artigo 565.º<br> Registo individual</option>
+					<option value="1047A0566">Artigo 566.º<br> Destino das coimas</option>
+					<option value=""></option>
+			</select>
+	 	       <span style="margin-left: 10px; color: #1d31ba; font-family: trebuchet ms; font-size: 11px;">
+	       <a  href="lei_mostra_articulado.php?nid=1047&tabela=leis&nversao=&so_miolo=">
+	       <img src="https://www.pgdlisboa.pt/imagens/refresh.gif" border=0 align=top>&nbsp;Todos</a></span>
+		 <input name="pagina" value="1" type=hidden>
+	 <input name="ficha" value="1" type=hidden>
+	  <input name="nid"	value="1047" type=hidden> 
+	  <input name="tabela" value="leis" type=hidden> 
+	  <!-- Isto é só para o javascript não dar erro -->
+	<input name="tipodiploma" value="" type=hidden> 
+	<input name="numerodiploma" value="" type=hidden>
+	 <input	name="anodiploma" value="" type=hidden>
+	  <input	name="diplomaprincipal" value="" type=hidden>
+	   <input	name="buscacodigo" value="" type=hidden> 
+	   <input	name="codigoprincipal" value="" type=hidden> 
+	   <input	name="diplomas" value="" type=hidden>
+	    <input name="artigos"	value="" type=hidden> 
+	 <input name="so_miolo" value="" type=hidden>	    	    
+	 </font>
+	
+	</form>
+	</div>
+	
+	<!--FIM  FORM PARA  PESQUISA-->
+	</table>
+		
+	<table border="0" cellspacing="1" cellpadding="1" bgcolor=#e1e1e1 width=100%>
+	<td valign=bottom bgcolor=#f2f2f2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<span style="font-family: trebuchet ms; font-size: 12.5px; font-weight: bolder; color: #fe2607">
+	Nº de artigos :&nbsp;<i> 11</i>&nbsp;</span>
+    
+    </td>
+	<td class=txt_7_n_r bgcolor=#f1f1f1>	&nbsp;&nbsp;&nbsp;&nbsp;
+		</td>
+	</table>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+					<td align=right bgcolor=#ffffff valign=top>
+			<table width=100%>
+			<td align=center><br>
+			<br>
+			<a style="color: #0066cc; font-size: 8pt; font-family: Trebuchet MS; font-weight: bold"
+				href="lei_mostra_estrutura.php?tabela=leis&artigo_id=1047A0368&nid=1047&nversao=&tabela=leis&so_miolo=">
+				<img src="https://www.pgdlisboa.pt/imagens/organica.png" alt="" border=0>&nbsp;<u>Ver
+				índice sistemático do diploma</u></a>
+				 <a style="margin-left: 50px; color: #0066cc; font-size: 8pt; font-family: Trebuchet MS; font-weight: bold"
+					href="javascript:janela_imprime('lei_print_articulado.php?tabela=leis&artigo_id=1047A0368&nid=1047&nversao=&tabela=leis  ','imprime',720,480,'yes')">
+				<img src="https://www.pgdlisboa.pt/imagens/imprimir.gif"
+					alt="Abre  janela autónoma para impressão mais amigável "
+					border=0>&nbsp;<u>Imprimir todo o diploma</u></a></td>
+			</table>
+			<table width=100%><td colspan=3><span style="font-size:13px;font-family:tahoma;color:#000000;"><b>SUMÁRIO</b></span><div style="margin-top:8px;margin-left:12px;font-size:12.5px;font-family:trebuchet ms;color:#000000;"><b><b>Aprova a revisão do Código do Trabalho</b></b></div>_____________________</td></tr></table></td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 364.º<br> Crédito de horas durante o aviso prévio</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>1 - Durante o prazo de aviso prévio, o trabalhador tem direito a um crédito de horas correspondente a dois dias de trabalho por semana, sem prejuízo da retribuição. <BR> 2 - O crédito de horas pode ser dividido por alguns ou todos os dias da semana, por iniciativa do trabalhador. <BR> 3 - O trabalhador deve comunicar ao empregador a utilização do crédito de horas, com três dias de antecedência, salvo motivo atendível. <BR> 4 - Constitui contra-ordenação leve a violação do disposto neste artigo.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> </td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> </td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0364" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0364" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 365.º<br> Denúncia do contrato pelo trabalhador durante o aviso prévio</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>Durante o prazo de aviso prévio, o trabalhador pode denunciar o contrato de trabalho, mediante declaração com a antecedência mínima de três dias úteis, mantendo o direito a compensação.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> </td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> </td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0365" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0365" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 366.º<br> 
+Compensação por despedimento colectivo </td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>1 - Em caso de despedimento coletivo, o trabalhador tem direito a compensação correspondente a 14 dias de retribuição base e diuturnidades por cada ano completo de antiguidade. <BR> 2 - A compensação prevista no número anterior é determinada do seguinte modo: <BR> a) O valor da retribuição base mensal e diuturnidades do trabalhador a considerar para efeitos de cálculo da compensação não pode ser superior a 20 vezes a retribuição mínima mensal garantida; <BR> b) O montante global da compensação não pode ser superior a 12 vezes a retribuição base mensal e diuturnidades do trabalhador ou, quando seja aplicável o limite previsto na alínea anterior, a 240 vezes a retribuição mínima mensal garantida; <BR> c) O valor diário de retribuição base e diuturnidades é o resultante da divisão por 30 da retribuição base mensal e diuturnidades; <BR> d) Em caso de fração de ano, o montante da compensação é calculado proporcionalmente. <BR> 3 - O empregador é responsável pelo pagamento da totalidade da compensação, sem prejuízo do direito do trabalhador a acionar o FGCT, nos termos previstos em legislação específica. <BR> 4 - Presume-se que o trabalhador aceita o despedimento quando recebe do empregador a totalidade da compensação prevista neste artigo. <BR> 5 - A presunção referida no número anterior pode ser ilidida desde que, em simultâneo, o trabalhador entregue ou ponha, por qualquer forma, a totalidade da compensação paga pelo empregador à disposição deste último. <BR> 6 - Nos casos de contrato de trabalho a termo e de contrato de trabalho temporário, o trabalhador tem direito a compensação prevista no n.º 2 do artigo 344.º e do n.º 4 do artigo 345.º, consoante os casos, aplicando-se, ainda, o disposto nos n.os 2 a 5 do presente artigo. <BR> 7 - Constitui contraordenação grave a violação do disposto nos n.os 1, 2, 3 e 6.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1977&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 69/2013, de 30/08</a><br>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=3628&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 13/2023, de 03/04</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0366&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 7/2009, de 12/02</a><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0366&n_versao=2&so_miolo=>2ª versão:&nbsp;Lei n.º 23/2012, de 25/06</a><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0366&n_versao=3&so_miolo=>3ª versão:&nbsp;Lei n.º 69/2013, de 30/08</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0366" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0366" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV>			  <script>ver_anotacoes('1047A0366')</script>
+			 <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 366.º-A<br> Compensação para novos contratos de trabalho</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>(Revogado.)		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0366A&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 53/2011, de 14/10</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0366A" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0366A" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_11_b_l colspan=3>DIVISÃO III <BR> Despedimento por extinção de posto de trabalho<br></td></tr><tr><td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 367.º<br> Noção de despedimento por extinção de posto de trabalho</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>1 - Considera-se despedimento por extinção de posto de trabalho a cessação de contrato de trabalho promovida pelo empregador e fundamentada nessa extinção, quando esta seja devida a motivos de mercado, estruturais ou tecnológicos, relativos à empresa. <BR> 2 - Entende-se por motivos de mercado, estruturais ou tecnológicos os como tal referidos no n.º 2 do artigo 359.º		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> </td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> </td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0367" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0367" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV>			  <script>ver_anotacoes('1047A0367')</script>
+			 <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<a name="#artigo"><td class=txt_base_b_l bgcolor="#fcfacf"> <font style ="font-weight:bold;color:#cc221e; font-size:11px">&nbsp;&nbsp;Artigo 368.º<br> 
+Requisitos de despedimento por extinção de posto de trabalho</font></td></a>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l bgcolor="#fcfacf"> <font color="#cc221e">1 - O despedimento por extinção de posto de trabalho só pode ter lugar desde que se verifiquem os seguintes requisitos:  <BR> a) Os motivos indicados não sejam devidos a conduta culposa do empregador ou do trabalhador;  <BR> b) Seja praticamente impossível a subsistência da relação de trabalho;  <BR> c) Não existam, na empresa, contratos de trabalho a termo para tarefas correspondentes às do posto de trabalho extinto;  <BR> d) Não seja aplicável o despedimento colectivo.  <BR> 2 - Havendo na secção ou estrutura equivalente uma pluralidade de postos de trabalho de conteúdo funcional idêntico, para determinação do posto de trabalho a extinguir, a decisão do empregador deve observar, por referência aos respetivos titulares, a seguinte ordem de critérios relevantes e não discriminatórios:  <BR> a) Pior avaliação de desempenho, com parâmetros previamente conhecidos pelo trabalhador;  <BR> b) Menores habilitações académicas e profissionais;  <BR> c) Maior onerosidade pela manutenção do vínculo laboral do trabalhador para a empresa;  <BR> d) Menor experiência na função;  <BR> e) Menor antiguidade na empresa.  <BR> 3 - O trabalhador que, nos três meses anteriores ao início do procedimento para despedimento, tenha sido transferido para posto de trabalho que venha a ser extinto, tem direito a ser reafectado ao posto de trabalho anterior caso ainda exista, com a mesma retribuição base.  <BR> 4 - Para efeito da alínea b) do n.º 1, uma vez extinto o posto de trabalho, considera-se que a subsistência da relação de trabalho é praticamente impossível quando o empregador não disponha de outro compatível com a categoria profissional do trabalhador.  <BR> 5 - O despedimento por extinção do posto de trabalho só pode ter lugar desde que, até ao termo do prazo de aviso prévio, seja posta à disposição do trabalhador a compensação devida, bem como os créditos vencidos e os exigíveis por efeito da cessação do contrato de trabalho.  <BR> 6 - Constitui contra-ordenação grave o despedimento com violação do disposto nas alíneas c) e d) do n.º 1 e nos n.os 2 ou 3.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=2099&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 27/2014, de 08/05</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0368&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 7/2009, de 12/02</a><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0368&n_versao=2&so_miolo=>2ª versão:&nbsp;Lei n.º 23/2012, de 25/06</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0368" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0368" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV>			  <script>ver_anotacoes('1047A0368')</script>
+			 <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 369.º<br> Comunicações em caso de despedimento por extinção de posto de trabalho</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>1 - No caso de despedimento por extinção de posto de trabalho, o empregador comunica, por escrito, à comissão de trabalhadores ou, na sua falta, à comissão intersindical ou comissão sindical, ao trabalhador envolvido e ainda, caso este seja representante sindical, à associação sindical respectiva:  <BR> a) A necessidade de extinguir o posto de trabalho, indicando os motivos justificativos e a secção ou unidade equivalente a que respeita;  <BR> b) A necessidade de despedir o trabalhador afecto ao posto de trabalho a extinguir e a sua categoria profissional.  <BR> c) Os critérios para seleção dos trabalhadores a despedir.  <BR> 2 - Constitui contra-ordenação grave o despedimento efectuado com violação do disposto no número anterior.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0369&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 7/2009, de 12/02</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0369" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0369" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 370.º<br> 
+Consultas em caso de despedimento por extinção de posto de trabalho</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>1 - Nos 15 dias posteriores à comunicação prevista no artigo anterior, a estrutura representativa dos trabalhadores, o trabalhador envolvido e ainda, caso este seja representante sindical, a associação sindical respetiva podem transmitir ao empregador o seu parecer fundamentado, nomeadamente sobre os motivos invocados, os requisitos previstos no n.º 1 do artigo 368.º ou os critérios a que se refere o n.º 2 do mesmo artigo, e as alternativas que permitam atenuar os efeitos do despedimento. <BR> 2 - Qualquer trabalhador envolvido ou entidade referida no número anterior pode, nos cinco dias úteis posteriores à comunicação do empregador, solicitar ao serviço com competência inspetiva do ministério responsável pela área laboral a verificação dos requisitos previstos nas alíneas c) e d) do n.º 1 e no n.º 2 do artigo 368.º, informando simultaneamente do facto o empregador. <BR> 3 - O serviço a que se refere o número anterior elabora e envia ao requerente e ao empregador relatório sobre a matéria sujeita a verificação, no prazo de sete dias após a recepção do requerimento.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=3165&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 93/2019, de 04/09</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0370&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 7/2009, de 12/02</a><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0370&n_versao=2&so_miolo=>2ª versão:&nbsp;Lei n.º 23/2012, de 25/06</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0370" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0370" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 371.º<br> 
+Decisão de despedimento por extinção de posto de trabalho </td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>1 - Decorridos cinco dias a contar do termo do prazo previsto no n.º 1 do artigo anterior, ou, sendo caso disso, a contar da recepção do relatório a que se refere o n.º 3 do mesmo artigo ou do termo do prazo para o seu envio, o empregador pode proceder ao despedimento. <BR> 2 - A decisão de despedimento é proferida por escrito, dela constando: <BR> a) Motivo da extinção do posto de trabalho; <BR> b) Confirmação dos requisitos previstos no n.º 1 do artigo 368.º; <BR> c) Prova da aplicação dos critérios de determinação do posto de trabalho a extinguir, caso se tenha verificado oposição a esta; <BR> d) Montante, forma, momento e lugar do pagamento da compensação e dos créditos vencidos e dos exigíveis por efeito da cessação do contrato de trabalho; <BR> e) Data da cessação do contrato. <BR> 3 - O empregador comunica a decisão, por cópia ou transcrição, ao trabalhador, às entidades referidas no n.º 1 do artigo 369.º e, bem assim, ao serviço com competência inspectiva do ministério responsável pela área laboral, com antecedência mínima, relativamente à data da cessação, de: <BR> a) 15 dias, no caso de trabalhador com antiguidade inferior a um ano; <BR> b) 30 dias, no caso de trabalhador com antiguidade igual ou superior a um ano e inferior a cinco anos; <BR> c) 60 dias, no caso de trabalhador com antiguidade igual ou superior a cinco anos e inferior a 10 anos; <BR> d) 75 dias, no caso de trabalhador com antiguidade igual ou superior a 10 anos. <BR> 4 - O pagamento da compensação, dos créditos vencidos e dos exigíveis por efeito da cessação do contrato de trabalho deve ser efectuado até ao termo do prazo de aviso prévio. <BR> 5 - Constitui contraordenação grave o despedimento efetuado com violação do disposto nos n.os 1 e 2, assim como a falta de comunicação ao trabalhador referida no n.º 3 e a falta de pagamento ao trabalhador no prazo referido no n.º 4. <BR> 6 - Constitui contraordenação leve a falta de comunicação às entidades e ao serviço referidos no n.º 3.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=3628&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 13/2023, de 03/04</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0371&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 7/2009, de 12/02</a><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0371&n_versao=2&so_miolo=>2ª versão:&nbsp;Lei n.º 23/2012, de 25/06</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0371" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0371" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 372.º<br> Direitos de trabalhador em caso de despedimento por extinção de posto de trabalho</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>Ao trabalhador despedido por extinção do posto de trabalho aplica-se o disposto no n.º 4 e na primeira parte do n.º 5 do artigo 363.º e nos artigos 364.º a 366.º		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> <span style='color:#0554e7'><i>&nbsp;&nbsp;Contém as alterações dos seguintes diplomas:</i><br></span>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1503&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 53/2011, de 14/10</a><br>&nbsp;&nbsp;&nbsp;-&nbsp;<a href=lei_mostra_articulado.php?nid=1755&tabela=leis&ficha=1&pagina=1&so_miolo=>Lei n.º 23/2012, de 25/06</a><br></td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> <span style='color:#0554e7'><i>&nbsp;&nbsp;Consultar versões anteriores deste artigo:</i></span><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0372&n_versao=1&so_miolo=>1ª versão:&nbsp;Lei n.º 7/2009, de 12/02</a><br>&nbsp;&nbsp;&nbsp;-<a href=lei_busca_art_velho.php?nid=1047&artigonum=1047A0372&n_versao=2&so_miolo=>2ª versão:&nbsp;Lei n.º 53/2011, de 14/10</a><br></td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0372" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0372" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV>			  <script>ver_anotacoes('1047A0372')</script>
+			 <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table class="artigo" border=0 bgcolor=#f1f1f1 cellpadding=1 cellspacing=1	width=100%>
+		<td bgcolor=#ffffff>
+		<table border=0 width="100%" cellpadding="0">
+		</td>
+		<tr>
+		<td class=txt_11_b_l colspan=3>DIVISÃO IV <BR> Despedimento por inadaptação<br></td></tr><tr><td class=txt_base_b_l><font style ="font-family:tahoma;font-weight:bold;color:#d74600; font-size:11px">&nbsp;&nbsp;Artigo 373.º<br> Noção de despedimento por inadaptação</td>		</tr>
+		</table>
+		<table bgcolor="#FFFFFF" border=0 width="100%">
+		<tr>
+		<td valign=top colspan=4 class=txt_base_n_l>Considera-se despedimento por inadaptação a cessação de contrato de trabalho promovida pelo empregador e fundamentada em inadaptação superveniente do trabalhador ao posto de trabalho.		</td>
+		<tr>
+
+	<!-- INÍCIO DAS ANOTAÇÕES NO FIM DE CADA ARTIGO:
+                    a)   Fazendo um select à tabela  lei_art_alteracoes,   mostra a lista de todos os eventuais diplomas alterantes de cada artigo em exibição, desde que
+                              o nº de versão  que de cada um desses diplomas resultou para o artigo (campo nversao da tabela lei_art_alteracoes)  seja igual
+	                   ou inferior ao nº da versão  (variável $nversaoartigo - vd acima, a qual que corresponde  ao campo nversao,  campo esse que é, consoante os casos, da tabela  lei_artigos ou da tabela lei_velhas_art )
+		         do artigo que está em exibição
+	         b)   Fazendo um select à tabela  lei_art_velhos,  mostra a lista de todas as eventuais versões anteriores de cada artigo em exibição  (...4ª,3ª,2ª,1ª)   -->
+
+	<td valign=top bgcolor=#ffffff class=txt_base_n_l><font
+	color=#387070> </td>
+		<td valign=top bgcolor="#ffffff" class=txt_base_n_l><font
+			color="#387070"> </td>
+			</tr>
+			<td bgcolor="#ffffff" valign="top"
+			style="font-size: 10px; font-family: trebuchet ms; color: #404040"
+			colspan=2>			<DIV id="div_cria_anotacao_1047A0373" style="display: none; height: 300px; overflow: auto"></DIV>
+			<DIV id="lista_anotacoes_1047A0373" style="margin-top:10px;text-align:left;display:block;overflow:auto;"></DIV> <br>
+			</div>
+			</td>
+			<tr>
+			<td colspan=2 valign=top></td>
+		</table>
+		</TD>
+		</TABLE>
+		<table border=0 bgcolor="#ffffff" width="100%">
+		<td valign=top bgcolor="#e1e1e1" class="txt_7_n_r"><!-- Se a página em exibiçao não for a 1ª, mostra o botão "anterior"-->
+		Páginas:&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		</table>
+		</td>
+		</table>
+          <!-- JAVALI -->
+     <footer id="footer">
+  <div class="center">
+    <div class="region region-footer">
+      <div id="block-microsite-contactos" class="block block-mp block-contactos">
+        <div class="copyright">
+          <span>© Copyright 2026. Todos os direitos reservados</span>
+          <a class="javali" href="https://www.javali.pt">Desenvolvido por <span>Javali</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer></BODY>
+</HTML>
+				  
+				  				  
+				  
+<script id="f5_cspm">(function(){var f5_cspm={f5_p:'FCBBDMFGOKLPGBMFDGPBPIFOPAPPKFMEMMFJMIFMKBADLGIAOAEFCBNLDLMGFLHOMKMBGICAAANBJEFAMGKAPENPAADMMCALNFPDDHPEPPJKFBPIBEBLJJLBIGIOCABF',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr1512627630aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>

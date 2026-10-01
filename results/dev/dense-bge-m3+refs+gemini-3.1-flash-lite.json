@@ -1,0 +1,770 @@
+{
+  "split": "dev",
+  "system": "dense-bge-m3+refs+gemini-3.1-flash-lite",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "usage": {
+      "calls": 46,
+      "cached": 46,
+      "prompt_tokens": 91855,
+      "completion_tokens": 4121
+    },
+    "turned_into_refusals": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0
+    }
+  },
+  "commit": "f58a0b2da2e89fbd3231435f63b1acadcaa82de9",
+  "uncommitted_changes": false,
+  "run_at": "2026-09-30T15:01:01+01:00",
+  "summary": {
+    "answerable": {
+      "items": 40,
+      "refused": 0.025,
+      "cited": 39,
+      "citation_precision": 0.9209401709401709,
+      "citation_recall": 0.8875
+    },
+    "composite": {
+      "items": 9,
+      "refused": 0.1111111111111111,
+      "cited": 8,
+      "citation_precision": 0.8333333333333334,
+      "citation_recall": 0.6111111111111112
+    },
+    "explicit_reference": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "simple": {
+      "items": 15,
+      "refused": 0.0,
+      "cited": 15,
+      "citation_precision": 0.8833333333333333,
+      "citation_recall": 0.9333333333333333
+    },
+    "temporal": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "unanswerable": {
+      "items": 6,
+      "refused": 0.8333333333333334,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null
+    }
+  },
+  "items": [
+    {
+      "id": "ct-0004",
+      "type": "composite",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "cited": [],
+      "expected": [
+        "lei-7-2009/244",
+        "lei-7-2009/251"
+      ],
+      "allowed": [
+        "lei-7-2009/249",
+        "lei-7-2009/253",
+        "lei-7-2009/254"
+      ],
+      "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 29/09/2026, base para responder a esta pergunta. Os artigos fornecidos não preveem a suspensão das férias por motivo de falecimento de um familiar, apenas em situações de impedimento por doença ou outro facto não imputável ao trabalhador. Portanto, não é possível responder à sua questão com base nestes artigos."
+    },
+    {
+      "id": "ct-0005",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/244"
+      ],
+      "expected": [
+        "lei-7-2009/244"
+      ],
+      "allowed": [],
+      "text": "O gozo das férias não se inicia ou suspende-se quando o trabalhador esteja temporariamente impedido por doença ou outro facto que não lhe seja imputável, desde que o trabalhador comunique esse facto ao empregador.\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 244.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0006",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/263"
+      ],
+      "expected": [
+        "lei-7-2009/263"
+      ],
+      "allowed": [],
+      "text": "O subsídio de Natal deve ser pago até ao dia 15 de dezembro de cada ano.\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 263.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0008",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/214",
+        "lei-7-2009/78"
+      ],
+      "expected": [
+        "lei-7-2009/214"
+      ],
+      "allowed": [],
+      "text": "Um trabalhador tem direito a, pelo menos, onze horas seguidas de descanso entre dois períodos diários de trabalho consecutivos. Contudo, se o trabalhador for um menor com idade inferior a 16 anos, tem direito a 14 horas, e se tiver idade igual ou superior a 16 anos, tem direito a 12 horas consecutivas de descanso diário.\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 214.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 78.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0009",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "cited": [
+        "lei-7-2009/273"
+      ],
+      "expected": [],
+      "allowed": [],
+      "text": "Os artigos fornecidos não mencionam o valor monetário específico da retribuição mínima mensal garantida para 2026, estabelecendo apenas que esse valor é determinado anualmente por legislação específica.\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 273.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0010",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 29/09/2026, base para responder a esta pergunta. Os artigos fornecidos não estabelecem qualquer periodicidade para a realização de exames de saúde obrigatórios para trabalhadores com base na idade, nomeadamente para trabalhadores com mais de 50 anos."
+    },
+    {
+      "id": "ct-0019",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não mencionam os requisitos para aceder a financiamento público da formação."
+    },
+    {
+      "id": "ct-0022",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/242"
+      ],
+      "expected": [
+        "lei-7-2009/242"
+      ],
+      "allowed": [],
+      "text": "Sim, o empregador pode encerrar a empresa ou o estabelecimento, total ou parcialmente, para férias dos trabalhadores, desde que seja compatível com a natureza da atividade. O encerramento pode ocorrer até quinze dias consecutivos entre 1 de maio e 31 de outubro, por períodos superiores ou fora destas datas em condições específicas (como previsão em instrumento de regulamentação coletiva), ou ainda por períodos curtos específicos no Natal ou feriados.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 242.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0024",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/234"
+      ],
+      "expected": [
+        "lei-7-2009/234"
+      ],
+      "allowed": [],
+      "text": "Os feriados obrigatórios são os dias 1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, Corpo de Deus, 10 de junho, 15 de agosto, 5 de outubro, 1 de novembro e os dias 1, 8 e 25 de dezembro. A Sexta-Feira Santa pode ser observada noutro dia com significado local no período da Páscoa e determinados feriados podem, por legislação específica, ser observados na segunda-feira subsequente.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 234.º (versão em vigor desde 02/04/2016)"
+    },
+    {
+      "id": "ct-0027",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/112"
+      ],
+      "expected": [
+        "lei-7-2009/112"
+      ],
+      "allowed": [],
+      "text": "Sim, a antiguidade do trabalhador conta-se desde o início do período experimental.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 112.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0029",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/350"
+      ],
+      "expected": [
+        "lei-7-2009/350"
+      ],
+      "allowed": [],
+      "text": "Sim, o trabalhador pode fazer cessar o acordo de revogação através de comunicação escrita dirigida ao empregador até ao sétimo dia seguinte à data da sua celebração. Para tal, deve devolver ao empregador a totalidade das compensações pecuniárias recebidas. Esta possibilidade não se aplica se o acordo tiver data e assinaturas com reconhecimento notarial presencial.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 350.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0033",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.0,
+      "cited": [
+        "lei-7-2009/256"
+      ],
+      "expected": [
+        "lei-7-2009/351"
+      ],
+      "allowed": [
+        "lei-7-2009/256"
+      ],
+      "text": "Os artigos fornecidos não indicam se a falta injustificada constitui, por si só, fundamento para despedimento, apenas referindo que constitui violação do dever de assiduidade e determina perda de retribuição, além de ser considerada infração grave em certos casos.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 256.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0034",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/237"
+      ],
+      "expected": [
+        "lei-7-2009/237",
+        "lei-7-2009/238"
+      ],
+      "allowed": [],
+      "text": "Não, o direito a férias é irrenunciável e o seu gozo não pode ser substituído por qualquer compensação, económica ou outra, mesmo com o acordo do trabalhador.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 237.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0035",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/165"
+      ],
+      "expected": [
+        "lei-7-2009/165"
+      ],
+      "allowed": [],
+      "text": "O n.º 1 do artigo 165.º define teletrabalho como a prestação de trabalho em regime de subordinação jurídica num local não determinado pelo empregador, utilizando tecnologias de informação e comunicação.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 165.º (versão em vigor desde 01/01/2022)"
+    },
+    {
+      "id": "ct-0036",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/342"
+      ],
+      "expected": [
+        "lei-7-2009/342"
+      ],
+      "allowed": [],
+      "text": "O artigo 342.º estabelece que, ao cessar o contrato de trabalho, o trabalhador deve devolver imediatamente ao empregador os instrumentos de trabalho e outros objetos que lhe pertençam, sob pena de responsabilidade civil pelos danos causados.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 342.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0038",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/115"
+      ],
+      "expected": [
+        "lei-7-2009/115"
+      ],
+      "allowed": [],
+      "text": "O artigo 115.º determina que a atividade para a qual o trabalhador é contratado deve ser definida por acordo entre as partes. Essa definição pode ser feita através de remissão para uma categoria de instrumento de regulamentação coletiva de trabalho ou de regulamento interno da empresa. Adicionalmente, presume-se que o contrato de trabalho confere ao trabalhador os poderes necessários para praticar negócios jurídicos inerentes à sua atividade, a menos que a lei exija um instrumento especial.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 115.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0039",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não indicam os passos específicos que o trabalhador deve seguir para receber créditos através do Fundo de Garantia Salarial, referindo apenas que o pagamento é assegurado nos termos de legislação específica."
+    },
+    {
+      "id": "ct-0043",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/234"
+      ],
+      "expected": [
+        "lei-7-2009/234"
+      ],
+      "allowed": [
+        "lei-23-2012/10"
+      ],
+      "text": "Não, o dia 5 de outubro não consta na lista de feriados obrigatórios definida pela lei.\n\nFontes (lei em vigor a 05/10/2014):\n- Código do Trabalho, art. 234.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0044",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/234"
+      ],
+      "expected": [
+        "lei-7-2009/234"
+      ],
+      "allowed": [
+        "lei-23-2012/10"
+      ],
+      "text": "Não, o dia 5 de outubro não consta na lista de feriados obrigatórios definida pelo Código do Trabalho.\n\nFontes (lei em vigor a 05/10/2012):\n- Código do Trabalho, art. 234.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0045",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/165"
+      ],
+      "expected": [
+        "lei-7-2009/165"
+      ],
+      "allowed": [],
+      "text": "Sim, a definição de teletrabalho estabelece que a prestação laboral é realizada habitualmente fora da empresa, recorrendo a tecnologias de informação e comunicação.\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 165.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0050",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/166",
+        "lei-7-2009/168"
+      ],
+      "expected": [
+        "lei-7-2009/166",
+        "lei-7-2009/168"
+      ],
+      "allowed": [],
+      "text": "O acordo de teletrabalho deve definir a propriedade dos instrumentos de trabalho. No entanto, o empregador é responsável pela disponibilização dos equipamentos e sistemas necessários, devendo o acordo especificar se estes são fornecidos diretamente pela empresa ou adquiridos pelo trabalhador, com a concordância do empregador sobre as suas características e preços.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 166.º (versão em vigor desde 01/01/2022)\n- Código do Trabalho, art. 168.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0053",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/389",
+        "lei-7-2009/390",
+        "lei-7-2009/63"
+      ],
+      "expected": [
+        "lei-7-2009/389",
+        "lei-7-2009/390"
+      ],
+      "allowed": [],
+      "text": "Sendo o despedimento declarado ilícito, o trabalhador tem direito à reintegração no mesmo estabelecimento da empresa, mantendo a sua categoria e antiguidade, e a ser indemnizado por todos os danos causados, patrimoniais e não patrimoniais. Adicionalmente, recebe as retribuições que deixou de auferir desde o despedimento até ao trânsito em julgado da decisão, deduzindo-se certas importâncias como subsídio de desemprego e rendimentos obtidos pela cessação do contrato. Caso se trate de trabalhadora grávida, puérpera, lactante ou trabalhador em licença parental, o empregador não pode opor-se à reintegração e o trabalhador pode optar por uma indemnização alternativa.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 389.º (versão em vigor desde 01/08/2012)\n- Código do Trabalho, art. 390.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 63.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0054",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/394",
+        "lei-7-2009/351"
+      ],
+      "expected": [
+        "lei-7-2009/394",
+        "lei-7-2009/396"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode rescindir o contrato de trabalho com justa causa imediata devido a comportamentos culposos do empregador, como a falta de pagamento pontual da retribuição, violação de garantias legais ou convencionais (incluindo assédio), sanção abusiva, falta de condições de segurança e saúde, lesão de interesses patrimoniais sérios ou ofensas à integridade física ou moral. Além disso, constituem justa causa a necessidade de cumprir uma obrigação legal incompatível com o contrato, a alteração substancial e duradoura das condições de trabalho, a falta não culposa de pagamento da retribuição e a transmissão da empresa sob certas condições. A falta de pagamento da retribuição considera-se culposa quando prolongada por 60 dias ou quando o empregador declare por escrito a previsão de não pagamento até esse prazo. A justa causa é apreciada considerando o grau de lesão dos interesses, a relação entre as partes e outras circunstâncias relevantes.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 394.º (versão em vigor desde 01/10/2019)\n- Código do Trabalho, art. 351.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0055",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/101-A"
+      ],
+      "expected": [
+        "lei-7-2009/101-A"
+      ],
+      "allowed": [],
+      "text": "O artigo 101.º-A define que o trabalhador cuidador é aquele a quem tenha sido reconhecido o estatuto de cuidador informal não principal, segundo a legislação aplicável, mediante a apresentação do devido comprovativo.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 101.º-A (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0056",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/43"
+      ],
+      "expected": [
+        "lei-7-2009/43"
+      ],
+      "allowed": [],
+      "text": "O pai tem direito a uma licença parental obrigatória de 15 dias úteis, gozados nos 30 dias seguintes ao nascimento do filho, sendo que cinco desses dias devem ser consecutivos e imediatamente após o nascimento. No caso de nascimentos múltiplos, acrescem dois dias por cada gémeo além do primeiro.\n\nFontes (lei em vigor a 01/06/2018):\n- Código do Trabalho, art. 43.º (versão em vigor desde 06/09/2015)"
+    },
+    {
+      "id": "ct-0057",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/43"
+      ],
+      "expected": [
+        "lei-7-2009/43"
+      ],
+      "allowed": [],
+      "text": "O pai tem a obrigatoriedade de gozar uma licença parental de 20 dias úteis nas seis semanas seguintes ao nascimento, sendo cinco destes gozados de modo consecutivo imediatamente a seguir ao nascimento.\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 43.º (versão em vigor desde 01/04/2020)"
+    },
+    {
+      "id": "ct-0058",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/268"
+      ],
+      "expected": [
+        "lei-7-2009/268"
+      ],
+      "allowed": [],
+      "text": "O trabalho suplementar prestado em dia útil é pago com um acréscimo de 50% pela primeira hora ou fração, e de 75% por hora ou fração subsequente.\n\nFontes (lei em vigor a 01/06/2011):\n- Código do Trabalho, art. 268.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0059",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/268"
+      ],
+      "expected": [
+        "lei-7-2009/268"
+      ],
+      "allowed": [],
+      "text": "Não, o Código do Trabalho não prevê acréscimos diferenciados na retribuição do trabalho suplementar consoante o número de horas anuais acumuladas. O pagamento do trabalho suplementar é efetuado com acréscimos fixos de 25% na primeira hora ou fração e 37,5% nas subsequentes em dia útil, ou de 50% em dia de descanso ou feriado, independentemente do volume anual de horas prestadas.\n\nFontes (lei em vigor a 01/06/2022):\n- Código do Trabalho, art. 268.º (versão em vigor desde 01/10/2019)"
+    },
+    {
+      "id": "ct-0061",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/112"
+      ],
+      "expected": [
+        "lei-7-2009/112"
+      ],
+      "allowed": [],
+      "text": "Para um contrato de trabalho por tempo indeterminado, a duração do período experimental é de 90 dias para a generalidade dos trabalhadores, categoria onde se enquadram as funções sem especial complexidade.\n\nFontes (lei em vigor a 01/06/2018):\n- Código do Trabalho, art. 112.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0062",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/97",
+        "lei-7-2009/169-A"
+      ],
+      "expected": [
+        "lei-7-2009/169-A",
+        "lei-7-2009/170"
+      ],
+      "allowed": [],
+      "text": "O empregador estabelece os termos em que o trabalho é prestado, dentro dos limites do contrato e da lei. Os poderes de direção e controlo exercem-se preferencialmente por via dos equipamentos e sistemas de comunicação afetos ao trabalhador, seguindo procedimentos previamente conhecidos e compatíveis com a sua privacidade. O controlo da prestação deve respeitar os princípios da proporcionalidade e da transparência, sendo proibido impor a conexão permanente por imagem ou som durante o horário de trabalho.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 97.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 169.º-A (versão em vigor desde 01/01/2022)"
+    },
+    {
+      "id": "ct-0065",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/387"
+      ],
+      "expected": [
+        "lei-7-2009/387",
+        "lei-7-2009/388"
+      ],
+      "allowed": [],
+      "text": "Sim, o trabalhador pode opor-se ao despedimento através da apresentação de um requerimento em formulário próprio junto do tribunal competente. Este procedimento deve ser realizado no prazo de 60 dias, contados a partir da receção da comunicação de despedimento ou da data de cessação do contrato, se esta for posterior.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 387.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0069",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/142"
+      ],
+      "expected": [
+        "lei-7-2009/142"
+      ],
+      "allowed": [],
+      "text": "O artigo 142.º regula os contratos de trabalho de muito curta duração para fazer face a acréscimos excecionais e substanciais de atividade, com duração máxima de 35 dias e sem necessidade de forma escrita, exigindo apenas a comunicação à segurança social. A duração total destes contratos entre o mesmo trabalhador e empregador não pode exceder 70 dias por ano civil. A violação destas regras converte o contrato num vínculo de seis meses. A falta de comunicação constitui uma contraordenação leve.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 142.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0070",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/359"
+      ],
+      "expected": [
+        "lei-7-2009/359"
+      ],
+      "allowed": [],
+      "text": "O n.º 1 do artigo 359.º define o despedimento coletivo como a cessação de contratos de trabalho promovida pelo empregador, operada no período de três meses, que abranja pelo menos dois ou cinco trabalhadores (conforme se trate de micro/pequena empresa ou média/grande empresa), fundamentada em encerramento de secções ou redução de trabalhadores por motivos de mercado, estruturais ou tecnológicos.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 359.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0071",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não estabelecem qualquer percentagem mínima de trabalhadores com deficiência que uma empresa, independentemente da sua dimensão, deva ter."
+    },
+    {
+      "id": "ct-0073",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm a definição ou informação sobre o que é uma agência privada de colocação."
+    },
+    {
+      "id": "ct-0077",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/268"
+      ],
+      "expected": [
+        "lei-7-2009/268"
+      ],
+      "allowed": [],
+      "text": "O trabalho suplementar que exceda as 100 horas anuais é pago com base na retribuição horária, acrescido de 50% na primeira hora ou fração e 75% nas horas ou frações subsequentes, quando realizado em dia útil. Em dia de descanso semanal, obrigatório ou complementar, ou em feriado, o acréscimo é de 100% por cada hora ou fração.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 268.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0079",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/257",
+        "lei-7-2009/238"
+      ],
+      "expected": [
+        "lei-7-2009/257",
+        "lei-7-2009/238"
+      ],
+      "allowed": [],
+      "text": "A perda de retribuição por faltas pode ser substituída pela renúncia a dias de férias, desde que o trabalhador comunique essa decisão expressamente ao empregador, até ao limite dos dias que excedam 20 dias úteis de férias. O empregador não pode opor-se a este pedido. Esta substituição não implica redução do subsídio de férias.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 257.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 238.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0081",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/117"
+      ],
+      "expected": [
+        "lei-7-2009/117",
+        "lei-7-2009/122"
+      ],
+      "allowed": [],
+      "text": "A falta de título profissional para uma atividade que o condicione legalmente determina a nulidade do contrato de trabalho.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 117.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0082",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/169"
+      ],
+      "expected": [
+        "lei-7-2009/169"
+      ],
+      "allowed": [],
+      "text": "O n.º 1 do artigo 169.º estabelece que o trabalhador em teletrabalho tem os mesmos direitos e deveres que os demais trabalhadores da empresa com categoria ou função idêntica, incluindo formação, carreira, duração do trabalho, descansos, saúde e segurança, e acesso a informação. Garante especificamente o direito a receber uma retribuição não inferior à do regime presencial, a participar presencialmente em reuniões de estruturas representativas quando convocado e a integrar a contagem de trabalhadores para efeitos de representação coletiva.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 169.º (versão em vigor desde 01/01/2022)"
+    },
+    {
+      "id": "ct-0086",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/241"
+      ],
+      "expected": [
+        "lei-7-2009/241"
+      ],
+      "allowed": [],
+      "text": "As férias são marcadas por acordo entre empregador e trabalhador. Na falta de acordo, cabe ao empregador marcar o período de férias, devendo, nesse caso, ouvir a comissão de trabalhadores ou, na sua falta, a comissão intersindical ou a comissão sindical representativa do trabalhador.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 241.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0088",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/212"
+      ],
+      "expected": [
+        "lei-7-2009/212"
+      ],
+      "allowed": [],
+      "text": "Compete ao empregador determinar o horário de trabalho do trabalhador, dentro dos limites da lei. Na sua elaboração, o empregador deve considerar, prioritariamente, a segurança e saúde do trabalhador, facilitar a conciliação com a vida familiar e a frequência de cursos ou formação.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 212.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0089",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/278"
+      ],
+      "expected": [
+        "lei-7-2009/278"
+      ],
+      "allowed": [],
+      "text": "A retribuição vence-se por períodos certos e iguais (semana, quinzena ou mês), devendo ser paga em dia útil, durante o período de trabalho ou logo a seguir. O montante deve estar disponível para o trabalhador na data do vencimento ou num dia útil anterior.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 278.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0091",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/120"
+      ],
+      "expected": [
+        "lei-7-2009/120"
+      ],
+      "allowed": [],
+      "text": "Sim, o empregador pode encarregar temporariamente o trabalhador de exercer outras funções desde que o interesse da empresa o exija e não implique uma modificação substancial da sua posição. Esta alteração deve ser justificada, indicar uma duração previsível (até dois anos) e não pode causar diminuição da retribuição, garantindo-se ao trabalhador as condições mais favoráveis inerentes às novas funções.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 120.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0097",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.25,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/343",
+        "lei-7-2009/344",
+        "lei-7-2009/345",
+        "lei-7-2009/346"
+      ],
+      "expected": [
+        "lei-7-2009/343"
+      ],
+      "allowed": [],
+      "text": "O contrato de trabalho caduca por termo do contrato, impossibilidade superveniente de prestação ou receção de trabalho, reforma por velhice ou invalidez, morte do empregador individual (salvo sucessão ou transmissão da empresa), extinção de pessoa coletiva ou encerramento da empresa. Adicionalmente, ocorre a caducidade do contrato a termo certo no final do prazo estipulado (mediante comunicação escrita com aviso prévio de 15 ou 8 dias) e do contrato a termo incerto quando se verifica o termo (mediante aviso prévio do empregador).\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 343.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 344.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 345.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 346.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0099",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/364"
+      ],
+      "expected": [
+        "lei-7-2009/364"
+      ],
+      "allowed": [],
+      "text": "Sim, durante o prazo de aviso prévio de despedimento coletivo, o trabalhador tem direito a um crédito de horas correspondente a dois dias de trabalho por semana, sem prejuízo da retribuição. O trabalhador pode dividir este crédito pelos dias da semana por iniciativa própria e deve comunicar a sua utilização ao empregador com três dias de antecedência, salvo motivo atendível.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 364.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0100",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/355",
+        "lei-7-2009/356"
+      ],
+      "expected": [
+        "lei-7-2009/355"
+      ],
+      "allowed": [],
+      "text": "Após receber a nota de culpa, o trabalhador dispõe de 10 dias úteis para consultar o processo e responder por escrito, podendo apresentar os elementos relevantes para esclarecer os factos e a sua participação, juntar documentos e solicitar diligências probatórias. Além disso, nos três dias úteis seguintes à receção da nota, o trabalhador pode comunicar ao empregador qual a associação sindical que emitirá o parecer sobre o processo.\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 355.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 356.º (versão em vigor desde 01/08/2012)"
+    }
+  ]
+}

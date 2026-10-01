@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lex"
+version = "0.0.1"
+description = "An open benchmark for question answering over Portuguese legislation, with a reference system measured against it."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic==2.13.5",  # bench items and every type that crosses a module boundary
+    "psycopg[binary]==3.3.6",  # the Postgres store (ADR 0006)
+    "python-dotenv==1.2.3",  # reads .env (DATABASE_URL, the LLM settings) in the entry points
+    "numpy==2.5.3",  # the corpus's vectors in memory, for the serverless demo (ADR 0014)
+    "tzdata==2026.4",  # Lisbon's date where the system has no time zone database
+]
+
+[project.optional-dependencies]
+# Only for fetching: renders the DR's consolidated page, a single-page app (ADR 0005).
+ingest = ["playwright==1.63.0"]
+# Only for the dense retriever's real model (ADR 0007); tests use a toy embedder instead.
+dense = ["sentence-transformers==6.1.0", "torch==2.14.0"]
+# The answer model's client: any OpenAI-compatible endpoint, Gemini by default (ADR 0011).
+llm = ["openai==3.22.1"]
+# The HTTP service in front of the reference system.
+api = ["fastapi==0.142.1", "uvicorn==0.54.0"]
+# Lex's article store as tools for an agent: python -m lex.mcp_server.
+mcp = ["mcp==2.2.0"]
+dev = [
+    "httpx==0.28.1",  # FastAPI's TestClient
+    "mypy==2.3.1",
+    "pytest==9.1.1",
+    "ruff==0.16.9",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lex"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+files = ["src", "tests"]
+strict = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["playwright.*", "sentence_transformers.*"]  # optional extras; CI checks without them
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

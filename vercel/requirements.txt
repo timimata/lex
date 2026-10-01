@@ -1,0 +1,10 @@
+# The demo function's dependencies, pinned as in pyproject.toml (ADR 0014). No torch, no
+# sentence-transformers: questions are embedded through the Gemini API.
+fastapi==0.142.1
+pydantic==2.13.5
+openai==3.22.1
+numpy==2.5.3
+python-dotenv==1.2.3
+tzdata==2026.4
+# Imported by lex.retrieval.dense and lex.store.db, though the demo never connects to Postgres.
+psycopg[binary]==3.3.6

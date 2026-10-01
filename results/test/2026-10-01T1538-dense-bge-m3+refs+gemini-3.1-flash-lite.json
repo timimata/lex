@@ -1,0 +1,78 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 71,
+    "sha": "0906d35d32c7"
+  },
+  "system": "dense-bge-m3+refs+gemini-3.1-flash-lite",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "format": "answer",
+    "usage": {
+      "calls": 71,
+      "cached": 71,
+      "prompt_tokens": 142424,
+      "completion_tokens": 6158
+    },
+    "turned_into_refusals": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0,
+      "dropped_sentences": 0
+    }
+  },
+  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-01T15:38:30+01:00",
+  "summary": {
+    "answerable": {
+      "items": 61,
+      "refused": 0.03278688524590164,
+      "cited": 59,
+      "citation_precision": 0.9276836158192091,
+      "citation_recall": 0.8617486338797815
+    },
+    "composite": {
+      "items": 14,
+      "refused": 0.0,
+      "cited": 14,
+      "citation_precision": 0.9166666666666667,
+      "citation_recall": 0.6547619047619048
+    },
+    "explicit_reference": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "simple": {
+      "items": 29,
+      "refused": 0.034482758620689655,
+      "cited": 28,
+      "citation_precision": 0.9190476190476191,
+      "citation_recall": 0.9310344827586207
+    },
+    "temporal": {
+      "items": 10,
+      "refused": 0.1,
+      "cited": 9,
+      "citation_precision": 0.9074074074074073,
+      "citation_recall": 0.8400000000000001
+    },
+    "unanswerable": {
+      "items": 10,
+      "refused": 0.9,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null
+    }
+  }
+}

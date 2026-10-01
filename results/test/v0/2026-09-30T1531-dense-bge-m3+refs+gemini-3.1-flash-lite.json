@@ -1,0 +1,72 @@
+{
+  "split": "test",
+  "system": "dense-bge-m3+refs+gemini-3.1-flash-lite",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "usage": {
+      "calls": 54,
+      "cached": 0,
+      "prompt_tokens": 109399,
+      "completion_tokens": 4591
+    },
+    "turned_into_refusals": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0
+    }
+  },
+  "commit": "8cb4d9017e2ac3fb5f54238032f40ed936b6019a",
+  "uncommitted_changes": false,
+  "run_at": "2026-09-30T15:31:26+01:00",
+  "summary": {
+    "answerable": {
+      "items": 50,
+      "refused": 0.04,
+      "cited": 48,
+      "citation_precision": 0.9354166666666667,
+      "citation_recall": 0.9
+    },
+    "composite": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 0.9583333333333334,
+      "citation_recall": 0.75
+    },
+    "explicit_reference": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "simple": {
+      "items": 27,
+      "refused": 0.037037037037037035,
+      "cited": 26,
+      "citation_precision": 0.9128205128205129,
+      "citation_recall": 0.9259259259259259
+    },
+    "temporal": {
+      "items": 7,
+      "refused": 0.14285714285714285,
+      "cited": 6,
+      "citation_precision": 0.9166666666666666,
+      "citation_recall": 0.8571428571428571
+    },
+    "unanswerable": {
+      "items": 4,
+      "refused": 0.75,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null
+    }
+  }
+}

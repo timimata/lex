@@ -1,0 +1,319 @@
+import datetime as dt
+import json
+from dataclasses import dataclass
+from pathlib import Path
+
+import pytest
+
+from lex.domain import Answer, Citation
+
+pytest.importorskip("fastapi")
+from fastapi.testclient import TestClient
+
+from lex.api.app import DISCLAIMER, LISBON, Limits, create_app, leaderboard, lisbon_today
+
+TODAY = dt.date(2026, 9, 30)
+
+
+class Echo:
+    name = "echo"
+
+    def __init__(self) -> None:
+        self.asked: list[tuple[str, dt.date]] = []
+
+    def answer(self, question: str, as_of: dt.date) -> Answer:
+        self.asked.append((question, as_of))
+        return Answer(text="Resposta.", citations=[Citation(diploma="lei-7-2009", article="238")])
+
+
+@dataclass(frozen=True)
+class Version:
+    heading: str
+    text: str
+    valid_from: dt.date
+    valid_to: dt.date | None
+    introduced_by: str
+    source_url: str
+
+
+HISTORY = [
+    Version(
+        "Férias", "com majoração", dt.date(2009, 2, 17), dt.date(2012, 8, 1), "lei-7-2009", "u1"
+    ),
+    Version("Férias", "sem majoração", dt.date(2012, 8, 1), None, "lei-23-2012", "u2"),
+]
+
+
+def library(diploma: str, article: str) -> list[Version]:
+    return HISTORY if (diploma, article) == ("lei-7-2009", "238") else []
+
+
+class Clock:
+    def __init__(self) -> None:
+        self.now = 0.0
+
+    def __call__(self) -> float:
+        return self.now
+
+
+def client(system: Echo, limits: Limits | None = None, clock: Clock | None = None) -> TestClient:
+    app = create_app(
+        system,
+        library=library,
+        leaderboard=[{"system": "s", "task": "answers"}],
+        limits=limits,
+        today=lambda: TODAY,
+        clock=clock or Clock(),
+    )
+    return TestClient(app)
+
+
+def test_an_answer_comes_dated_cited_and_with_the_disclaimer() -> None:
+    system = Echo()
+    response = client(system).post("/api/answer", json={"question": "Quantos dias de férias?"})
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "question": "Quantos dias de férias?",
+        "as_of": "2026-09-30",
+        "system": "echo",
+        "answer": {
+            "text": "Resposta.",
+            "citations": [{"diploma": "lei-7-2009", "article": "238"}],
+            "refused": False,
+            "timings": {},
+        },
+        "seconds": response.json()["seconds"],
+        "cached": False,
+        "disclaimer": DISCLAIMER,
+    }
+    assert 0 <= response.json()["seconds"] < 5
+    assert system.asked == [("Quantos dias de férias?", TODAY)]
+
+
+def test_dates_outside_the_codes_life_are_refused() -> None:
+    system = Echo()
+    api = client(system)
+    past = api.post("/api/answer", json={"question": "Férias?", "as_of": "2011-06-01"})
+
+    assert past.json()["as_of"] == "2011-06-01"
+    assert (
+        api.post("/api/answer", json={"question": "Férias?", "as_of": "2026-10-01"}).status_code
+        == 422
+    )
+    assert (
+        api.post("/api/answer", json={"question": "Férias?", "as_of": "2009-02-16"}).status_code
+        == 422
+    )
+    assert system.asked == [("Férias?", dt.date(2011, 6, 1))]
+
+
+def test_a_repeated_question_is_answered_once() -> None:
+    system = Echo()
+    api = client(system)
+    api.post("/api/answer", json={"question": "Quantos  dias de férias?"})
+    again = api.post("/api/answer", json={"question": "quantos dias de FÉRIAS?"})
+
+    assert again.status_code == 200
+    assert (again.json()["cached"], again.json()["seconds"]) == (True, 0)
+    assert len(system.asked) == 1
+
+
+def test_answers_are_limited_per_visitor_per_hour_and_in_total_per_day() -> None:
+    clock = Clock()
+    api = client(Echo(), Limits(per_visitor_per_hour=2, per_day=3), clock)
+
+    def ask(n: int, who: str) -> int:
+        headers = {"x-real-ip": who}
+        return api.post(
+            "/api/answer", json={"question": f"Pergunta {n}?"}, headers=headers
+        ).status_code
+
+    assert [ask(1, "a"), ask(2, "a"), ask(3, "a")] == [200, 200, 429]
+    clock.now = 3600.0  # an hour later the visitor may ask again
+    assert ask(4, "a") == 200
+    assert ask(5, "b") == 429  # but the day's three answers are spent, for everyone
+
+
+def test_an_article_shows_the_version_in_force_and_its_timeline() -> None:
+    api = client(Echo())
+    view = api.get("/api/articles/lei-7-2009/238", params={"as_of": "2011-06-01"}).json()
+
+    assert (view["heading"], view["text"], view["source_url"]) == ("Férias", "com majoração", "u1")
+    assert [p["valid_from"] for p in view["versions"]] == ["2009-02-17", "2012-08-01"]
+    assert view["disclaimer"] == DISCLAIMER
+    assert api.get("/api/articles/lei-7-2009/238").json()["text"] == "sem majoração"
+    assert api.get("/api/articles/lei-7-2009/238?as_of=2008-01-01").json()["text"] is None
+    assert api.get("/api/articles/lei-7-2009/999").status_code == 404
+
+
+def test_the_leaderboard_and_health_are_served() -> None:
+    api = client(Echo())
+    assert api.get("/api/leaderboard").json() == [{"system": "s", "task": "answers"}]
+    assert api.get("/api/health").json() == {
+        "status": "ok",
+        "system": "echo",
+        "today": "2026-09-30",
+    }
+    assert api.post("/api/answer", json={"question": ""}).status_code == 422
+
+
+class Failing(Echo):
+    def answer(self, question: str, as_of: dt.date) -> Answer:
+        self.asked.append((question, as_of))
+        raise RuntimeError("quota exceeded")
+
+
+def test_a_failed_answer_is_a_503_and_is_tried_again_next_time() -> None:
+    system = Failing()
+    api = client(system)
+    first = api.post("/api/answer", json={"question": "Férias?"})
+
+    assert first.status_code == 503
+    assert first.json()["detail"] == "O Lex não conseguiu responder agora. Tente mais tarde."
+    api.post("/api/answer", json={"question": "Férias?"})
+    assert len(system.asked) == 2
+
+
+class Status(Exception):
+    """An error from the model's client, which carries the reply's HTTP status."""
+
+    def __init__(self, status_code: int, message: str) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+
+
+class APITimeoutError(Exception):
+    """Named as the client names a request that took too long."""
+
+
+class Raising(Echo):
+    def __init__(self, error: Exception) -> None:
+        super().__init__()
+        self.error = error
+
+    def answer(self, question: str, as_of: dt.date) -> Answer:
+        raise self.error
+
+
+@pytest.mark.parametrize(
+    ("error", "told"),
+    [
+        (
+            Status(429, "quotaId: GenerateRequestsPerDayPerProjectPerModel-FreeTier"),
+            "limite diário",
+        ),
+        (Status(429, "quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier"), "minuto"),
+        (Status(503, "This model is currently experiencing high demand."), "sobrecarregado"),
+        (APITimeoutError("Request timed out."), "demorou demasiado"),
+    ],
+)
+def test_the_visitor_is_told_what_stopped_the_answer(error: Exception, told: str) -> None:
+    reply = client(Raising(error)).post("/api/answer", json={"question": "Férias?"})
+
+    assert reply.status_code == 503
+    assert told in reply.json()["detail"]
+
+
+def test_a_client_cannot_pick_its_own_address_to_dodge_the_limit() -> None:
+    api = client(Echo(), Limits(per_visitor_per_hour=1, per_day=10))
+
+    def ask(n: int, spoofed: str) -> int:
+        # The proxy appends the real address last; whatever comes first, the client wrote.
+        headers = {"x-forwarded-for": f"{spoofed}, 203.0.113.7"}
+        return api.post("/api/answer", json={"question": f"P{n}?"}, headers=headers).status_code
+
+    assert [ask(1, "1.1.1.1"), ask(2, "2.2.2.2")] == [200, 429]
+
+
+def test_a_failed_answer_costs_the_visitor_nothing() -> None:
+    system = Failing()
+    api = client(system, Limits(per_visitor_per_hour=1, per_day=1))
+    assert api.post("/api/answer", json={"question": "Férias?"}).status_code == 503
+    assert api.post("/api/answer", json={"question": "Férias?"}).status_code == 503  # not 429
+    assert len(system.asked) == 2
+
+
+def test_today_is_lisbons_date_even_on_a_utc_server() -> None:
+    late = dt.datetime(2026, 9, 30, 23, 30, tzinfo=dt.UTC)  # 00:30 on 1 October in Lisbon
+    assert lisbon_today(late) == dt.date(2026, 10, 1)
+    winter = dt.datetime(2026, 12, 31, 23, 30, tzinfo=dt.UTC)  # Lisbon is on UTC in winter
+    assert lisbon_today(winter) == dt.date(2026, 12, 31)
+    assert LISBON.key == "Europe/Lisbon"
+
+
+@dataclass(frozen=True)
+class Found:
+    diploma: str
+    article: str
+    heading: str
+
+
+def test_articles_can_be_searched_by_word_without_a_model() -> None:
+    asked: list[tuple[str, dt.date, int]] = []
+
+    def find(q: str, day: dt.date, k: int) -> list[Found]:
+        asked.append((q, day, k))
+        return [Found("lei-7-2009", "238", "Férias")]
+
+    api = TestClient(create_app(Echo(), find=find, today=lambda: TODAY))
+    hits = api.get("/api/search", params={"q": "férias", "k": 999}).json()
+
+    assert hits == [{"diploma": "lei-7-2009", "article": "238", "heading": "Férias"}]
+    assert asked == [("férias", TODAY, 50)]
+    assert TestClient(create_app(Echo())).get("/api/search", params={"q": "x"}).status_code == 404
+
+
+def test_answers_made_at_deploy_are_served_without_asking_the_system(tmp_path: Path) -> None:
+    from lex.api.__main__ import load_answers
+
+    path = tmp_path / "answers.json"
+    made = Answer(
+        text="Feita no deploy.", citations=[Citation(diploma="lei-7-2009", article="238")]
+    )
+    rows = [
+        {"question": "Quantos dias de férias?", "as_of": "2011-06-01", "answer": made.model_dump()}
+    ]
+    path.write_text(json.dumps(rows), encoding="utf-8")
+    system = Echo()
+    api = TestClient(create_app(system, preload=load_answers(path), today=lambda: TODAY))
+
+    reply = api.post(
+        "/api/answer", json={"question": "quantos  dias de FÉRIAS?", "as_of": "2011-06-01"}
+    )
+    assert (reply.json()["answer"]["text"], reply.json()["cached"]) == ("Feita no deploy.", True)
+    assert system.asked == []
+    assert load_answers(tmp_path / "missing.json") == {}
+
+
+def test_the_leaderboard_keeps_each_systems_newest_run_and_how_it_was_judged(
+    tmp_path: Path,
+) -> None:
+    def run(name: str, system: str, at: str, summary: dict[str, object], **config: object) -> None:
+        record = {"system": system, "run_at": at, "commit": "abcdef123", "summary": summary}
+        record["config"] = config
+        (tmp_path / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
+
+    measured = {"known_answer_checks": {"reference": {"as_expected": 40, "cases": 40}}}
+    run("a", "demo", "2026-10-01T12:43:00+01:00", {"answerable": {"items": 50}}, task="answers")
+    run(
+        "b",
+        "demo",
+        "2026-10-01T15:00:00+01:00",
+        {"answerable": {"items": 50}, "correctness": {"answerable": {"correta": 0.8}}},
+        task="answers",
+        judge={"model": "gemma", "prompt": "p", "measured_on_dev": measured, "unparsed": 0},
+    )
+    run("c", "demo", "2026-10-01T12:44:00+01:00", {"all": {"items": 50}})  # retrieval
+    (tmp_path / "superseded").mkdir()
+
+    board = leaderboard(tmp_path)
+
+    assert [(e["system"], e["task"], e["run_at"][11:16]) for e in board] == [
+        ("demo", "answers", "15:00"),
+        ("demo", "retrieval", "12:44"),
+    ]
+    assert board[0]["summary"] == {"answerable": {"items": 50}}
+    assert board[0]["correctness"] == {"answerable": {"correta": 0.8}}
+    assert board[0]["judge"] == {"model": "gemma", "measured_on_dev": measured}
+    assert board[1]["correctness"] is None and board[1]["judge"] is None

@@ -1,0 +1,606 @@
+{
+  "split": "dev",
+  "bench": {
+    "items": 61,
+    "sha": "38975f9a7a82"
+  },
+  "system": "judge-check",
+  "config": {
+    "judge": "gemma-4-26b-a4b-it",
+    "judge_prompt": "b103c12eae1b",
+    "pass_share": 0.9,
+    "unparsed": 0,
+    "usage": {
+      "calls": 78,
+      "cached": 68,
+      "prompt_tokens": 33910,
+      "completion_tokens": 3496
+    }
+  },
+  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-01T14:45:07+01:00",
+  "summary": {
+    "reference": {
+      "cases": 45,
+      "as_expected": 45,
+      "share": 1.0,
+      "correta": 45,
+      "parcial": 0,
+      "errada": 0
+    },
+    "yes-no": {
+      "cases": 12,
+      "as_expected": 12,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 0,
+      "errada": 12
+    },
+    "altered": {
+      "cases": 33,
+      "as_expected": 33,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 1,
+      "errada": 32
+    },
+    "number": {
+      "cases": 21,
+      "as_expected": 21,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 1,
+      "errada": 20
+    },
+    "passed": true
+  },
+  "items": [
+    {
+      "id": "ct-0004",
+      "kind": "reference",
+      "answer": "Sim, segundo a ACT. O falecimento é um facto não imputável ao trabalhador que o impede de gozar as férias, pelo que o gozo se suspende (art. 244.º, n.º 1), desde que o comunique ao empregador. A ausência rege-se pelo regime das faltas por falecimento (art. 251.º) e os dias de férias por gozar são marcados depois (art. 244.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0004",
+      "kind": "yes-no",
+      "answer": "Não, segundo a ACT. O falecimento é um facto não imputável ao trabalhador que o impede de gozar as férias, pelo que o gozo se suspende (art. 244.º, n.º 1), desde que o comunique ao empregador. A ausência rege-se pelo regime das faltas por falecimento (art. 251.º) e os dias de férias por gozar são marcados depois (art. 244.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0005",
+      "kind": "reference",
+      "answer": "Que o gozo das férias não se inicia, ou suspende-se, quando o trabalhador esteja temporariamente impedido por doença ou outro facto que não lhe seja imputável, desde que comunique a situação ao empregador.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0006",
+      "kind": "reference",
+      "answer": "Até 15 de dezembro de cada ano. O valor é igual a um mês de retribuição.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0008",
+      "kind": "reference",
+      "answer": "Pelo menos onze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0008",
+      "kind": "number",
+      "answer": "Pelo menos catorze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0022",
+      "kind": "reference",
+      "answer": "Sim, quando for compatível com a natureza da atividade: até 15 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0022",
+      "kind": "number",
+      "answer": "Sim, quando for compatível com a natureza da atividade: até 22 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0022",
+      "kind": "yes-no",
+      "answer": "Não, quando for compatível com a natureza da atividade: até 15 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0024",
+      "kind": "reference",
+      "answer": "1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, Corpo de Deus, 10 de junho, 15 de agosto, 5 de outubro, 1 de novembro, 1, 8 e 25 de dezembro.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0027",
+      "kind": "reference",
+      "answer": "Sim: a antiguidade do trabalhador conta-se desde o início do período experimental.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0027",
+      "kind": "yes-no",
+      "answer": "Não: a antiguidade do trabalhador conta-se desde o início do período experimental.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0029",
+      "kind": "reference",
+      "answer": "Sim, até ao sétimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0029",
+      "kind": "number",
+      "answer": "Sim, até ao décimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0029",
+      "kind": "yes-no",
+      "answer": "Não, até ao sétimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0033",
+      "kind": "reference",
+      "answer": "Sim, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0033",
+      "kind": "yes-no",
+      "answer": "Não, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0034",
+      "kind": "reference",
+      "answer": "Em regra não: o direito a férias é irrenunciável e o gozo não pode ser substituído por compensação, mesmo com acordo (art. 237.º, n.º 3). A exceção é poder renunciar aos dias que excedam 20 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art. 238.º, n.º 5).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0034",
+      "kind": "number",
+      "answer": "Em regra não: o direito a férias é irrenunciável e o gozo não pode ser substituído por compensação, mesmo com acordo (art. 237.º, n.º 3). A exceção é poder renunciar aos dias que excedam 30 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art. 238.º, n.º 5).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0035",
+      "kind": "reference",
+      "answer": "Que teletrabalho é a prestação de trabalho em regime de subordinação jurídica do trabalhador a um empregador, em local não determinado por este, através do recurso a tecnologias de informação e comunicação.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0036",
+      "kind": "reference",
+      "answer": "Que, cessando o contrato de trabalho, o trabalhador deve devolver imediatamente ao empregador os instrumentos de trabalho e outros objetos que lhe pertençam, sob pena de responsabilidade civil pelos danos causados.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0038",
+      "kind": "reference",
+      "answer": "Que cabe às partes determinar por acordo a atividade para que o trabalhador é contratado, o que pode ser feito por remissão para categoria de instrumento de regulamentação coletiva ou de regulamento interno da empresa; e que, se a atividade envolver negócios jurídicos, o contrato concede ao trabalhador os poderes necessários, salvo se a lei exigir instrumento especial.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0043",
+      "kind": "reference",
+      "answer": "Não. A Lei n.º 23/2012 retirou o 5 de outubro dos feriados obrigatórios, com efeitos a partir de 1 de janeiro de 2013; só voltou a ser feriado obrigatório com a Lei n.º 8/2016, em vigor desde 2 de abril de 2016.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0043",
+      "kind": "yes-no",
+      "answer": "Sim. A Lei n.º 23/2012 retirou o 5 de outubro dos feriados obrigatórios, com efeitos a partir de 1 de janeiro de 2013; só voltou a ser feriado obrigatório com a Lei n.º 8/2016, em vigor desde 2 de abril de 2016.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0044",
+      "kind": "reference",
+      "answer": "Sim. A Lei n.º 23/2012 tirou-o da lista do art. 234.º a partir de 1 de agosto de 2012, mas o seu art. 10.º determinou que a eliminação só produzia efeitos a partir de 1 de janeiro de 2013.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0044",
+      "kind": "yes-no",
+      "answer": "Não. A Lei n.º 23/2012 tirou-o da lista do art. 234.º a partir de 1 de agosto de 2012, mas o seu art. 10.º determinou que a eliminação só produzia efeitos a partir de 1 de janeiro de 2013.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0045",
+      "kind": "reference",
+      "answer": "Sim, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação. Desde 1 de janeiro de 2022 (Lei n.º 83/2021) basta que seja prestado em local não determinado pelo empregador.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0045",
+      "kind": "yes-no",
+      "answer": "Não, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação. Desde 1 de janeiro de 2022 (Lei n.º 83/2021) basta que seja prestado em local não determinado pelo empregador.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0050",
+      "kind": "reference",
+      "answer": "A propriedade dos instrumentos de trabalho tem de ficar definida no acordo de teletrabalho (art. 166.º, n.º 4, al. g)). O empregador é responsável por disponibilizar os equipamentos e sistemas necessários, e o acordo deve dizer se são fornecidos por ele ou adquiridos pelo trabalhador com a sua concordância quanto às características e preços (art. 168.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0053",
+      "kind": "reference",
+      "answer": "A ser indemnizado por todos os danos, patrimoniais e não patrimoniais, e a ser reintegrado sem prejuízo da categoria e antiguidade (art. 389.º), e ainda às retribuições que deixou de receber desde o despedimento até ao trânsito em julgado da decisão, com as deduções previstas na lei (art. 390.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0054",
+      "kind": "reference",
+      "answer": "Com direito a indemnização, comportamentos culposos do empregador como a falta de pagamento pontual da retribuição, a violação de garantias do trabalhador, a sanção abusiva, a falta de condições de segurança e saúde, a lesão de interesses patrimoniais sérios ou a ofensa à integridade, honra ou dignidade (art. 394.º, n.º 2, e art. 396.º, n.º 1). Sem indemnização, situações como uma obrigação legal incompatível, a alteração substancial e duradoura das condições de trabalho ou a falta não culposa de pagamento (art. 394.º, n.º 3).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0055",
+      "kind": "reference",
+      "answer": "Que, para efeitos do Código, é trabalhador cuidador aquele a quem tenha sido reconhecido o estatuto de cuidador informal não principal, nos termos da legislação aplicável, mediante apresentação do respetivo comprovativo.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0056",
+      "kind": "reference",
+      "answer": "15 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0056",
+      "kind": "number",
+      "answer": "22 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0057",
+      "kind": "reference",
+      "answer": "20 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Desde 1 de maio de 2023 são 28 dias.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0057",
+      "kind": "number",
+      "answer": "30 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Desde 1 de maio de 2023 são 28 dias.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0058",
+      "kind": "reference",
+      "answer": "50 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte. Em dia de descanso semanal ou feriado, 100 %. Os acréscimos baixaram para metade com a Lei n.º 23/2012, a partir de 1 de agosto de 2012.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0058",
+      "kind": "number",
+      "answer": "75 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte. Em dia de descanso semanal ou feriado, 100 %. Os acréscimos baixaram para metade com a Lei n.º 23/2012, a partir de 1 de agosto de 2012.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0059",
+      "kind": "reference",
+      "answer": "Não. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 25 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0059",
+      "kind": "number",
+      "answer": "Não. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 37 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "parcial",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0059",
+      "kind": "yes-no",
+      "answer": "Sim. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 25 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0061",
+      "kind": "reference",
+      "answer": "90 dias, o da generalidade dos trabalhadores. O período de 180 dias para quem procura o primeiro emprego ou está em desemprego de longa duração só existe desde 1 de outubro de 2019 (Lei n.º 93/2019).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0061",
+      "kind": "number",
+      "answer": "135 dias, o da generalidade dos trabalhadores. O período de 180 dias para quem procura o primeiro emprego ou está em desemprego de longa duração só existe desde 1 de outubro de 2019 (Lei n.º 93/2019).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0062",
+      "kind": "reference",
+      "answer": "Preferencialmente através dos equipamentos e sistemas de comunicação afetos à atividade do trabalhador, segundo procedimentos que ele conheça previamente e que respeitem a sua privacidade; o controlo tem de ser proporcional e transparente, sendo proibido impor a conexão permanente por imagem ou som (art. 169.º-A, n.os 4 e 5). É vedada a captura e utilização de imagem, som, escrita ou histórico, ou outros meios de controlo que afetem a privacidade (art. 170.º, n.º 5).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0065",
+      "kind": "reference",
+      "answer": "Sim. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 60 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0065",
+      "kind": "number",
+      "answer": "Sim. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 90 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0065",
+      "kind": "yes-no",
+      "answer": "Não. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 60 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0069",
+      "kind": "reference",
+      "answer": "O contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 35 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0069",
+      "kind": "number",
+      "answer": "O contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 52 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0070",
+      "kind": "reference",
+      "answer": "Define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de três meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0070",
+      "kind": "number",
+      "answer": "Define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de seis meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0077",
+      "kind": "reference",
+      "answer": "Com acréscimo de 50 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0077",
+      "kind": "number",
+      "answer": "Com acréscimo de 75 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0079",
+      "kind": "reference",
+      "answer": "Em regra não. Mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 20 dias úteis de férias (art. 257.º, n.º 1, al. a), com o art. 238.º, n.º 5); o subsídio de férias não é reduzido e o empregador não se pode opor.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0079",
+      "kind": "number",
+      "answer": "Em regra não. Mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 30 dias úteis de férias (art. 257.º, n.º 1, al. a), com o art. 238.º, n.º 5); o subsídio de férias não é reduzido e o empregador não se pode opor.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0081",
+      "kind": "reference",
+      "answer": "A falta do título profissional determina a nulidade do contrato (art. 117.º, n.º 1), mas o contrato produz efeitos como válido em relação ao tempo em que foi executado (art. 122.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0082",
+      "kind": "reference",
+      "answer": "Que o trabalhador em teletrabalho tem os mesmos direitos e deveres dos demais trabalhadores da empresa com a mesma categoria ou função idêntica, nomeadamente quanto a formação, promoção na carreira, limites da duração do trabalho, períodos de descanso e férias pagas, segurança e saúde no trabalho, reparação de acidentes de trabalho e doenças profissionais e acesso a informação das estruturas representativas.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0086",
+      "kind": "reference",
+      "answer": "Por acordo entre empregador e trabalhador. Na falta de acordo, marca-as o empregador, ouvidos os representantes dos trabalhadores, sem que possam começar em dia de descanso semanal do trabalhador; em pequena, média ou grande empresa, só entre 1 de maio e 31 de outubro, salvo convenção coletiva ou parecer dos representantes que admita outra época.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0088",
+      "kind": "reference",
+      "answer": "Ao empregador, dentro dos limites da lei, tendo em conta prioritariamente a segurança e saúde do trabalhador e facilitando a conciliação com a vida familiar e a frequência de formação; os representantes dos trabalhadores devem ser consultados.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0089",
+      "kind": "reference",
+      "answer": "O crédito vence-se por períodos certos e iguais, em regra a semana, a quinzena ou o mês; deve ser paga em dia útil, durante o período de trabalho ou imediatamente a seguir a este, e estar à disposição do trabalhador na data do vencimento ou em dia útil anterior.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0091",
+      "kind": "reference",
+      "answer": "Sim, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0091",
+      "kind": "yes-no",
+      "answer": "Não, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0097",
+      "kind": "reference",
+      "answer": "Quando se verifica o seu termo; por impossibilidade superveniente, absoluta e definitiva de o trabalhador prestar o trabalho ou de o empregador o receber; e com a reforma do trabalhador por velhice ou invalidez.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0099",
+      "kind": "reference",
+      "answer": "Sim, a um crédito de horas correspondente a dois dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0099",
+      "kind": "number",
+      "answer": "Sim, a um crédito de horas correspondente a quatro dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0099",
+      "kind": "yes-no",
+      "answer": "Não, a um crédito de horas correspondente a dois dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0100",
+      "kind": "reference",
+      "answer": "Tem 10 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0100",
+      "kind": "number",
+      "answer": "Tem 15 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0118",
+      "kind": "reference",
+      "answer": "Informar o trabalhador sobre os dispositivos, programas e sistemas usados para acompanhar à distância a sua atividade; abster-se de o contactar no período de descanso, salvo força maior (art. 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a dois meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art. 169.º-B, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0118",
+      "kind": "number",
+      "answer": "Informar o trabalhador sobre os dispositivos, programas e sistemas usados para acompanhar à distância a sua atividade; abster-se de o contactar no período de descanso, salvo força maior (art. 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a quatro meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art. 169.º-B, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0122",
+      "kind": "reference",
+      "answer": "14 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art. 366.º, n.os 1 e 2). A mesma compensação aplica-se ao despedimento por extinção do posto de trabalho e por inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0122",
+      "kind": "number",
+      "answer": "21 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art. 366.º, n.os 1 e 2). A mesma compensação aplica-se ao despedimento por extinção do posto de trabalho e por inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0126",
+      "kind": "reference",
+      "answer": "O direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até quatro anos (art. 101.º-C); a trabalhar em horário flexível enquanto se verificar a necessidade de assistência (art. 101.º-D); e a não prestar trabalho suplementar nesse período (art. 101.º-G). Quem opte pelo tempo parcial ou pelo horário flexível não pode ser penalizado na avaliação e na progressão na carreira.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0126",
+      "kind": "number",
+      "answer": "O direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até oito anos (art. 101.º-C); a trabalhar em horário flexível enquanto se verificar a necessidade de assistência (art. 101.º-D); e a não prestar trabalho suplementar nesse período (art. 101.º-G). Quem opte pelo tempo parcial ou pelo horário flexível não pode ser penalizado na avaliação e na progressão na carreira.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0130",
+      "kind": "reference",
+      "answer": "Depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 30 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação. Comunica-a ao trabalhador, às estruturas representativas e à ACT com a antecedência mínima de 15, 30, 60 ou 75 dias, conforme a antiguidade seja inferior a um ano, de um a cinco anos, de cinco a 10 anos, ou de 10 ou mais anos (art. 378.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0130",
+      "kind": "number",
+      "answer": "Depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 45 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação. Comunica-a ao trabalhador, às estruturas representativas e à ACT com a antecedência mínima de 15, 30, 60 ou 75 dias, conforme a antiguidade seja inferior a um ano, de um a cinco anos, de cinco a 10 anos, ou de 10 ou mais anos (art. 378.º).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0135",
+      "kind": "reference",
+      "answer": "12 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0135",
+      "kind": "number",
+      "answer": "18 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      db: # the store, as in docker-compose.yml (ADR 0006)
+        image: paradedb/paradedb:0.25.11-pg18
+        env:
+          POSTGRES_USER: lex
+          POSTGRES_PASSWORD: lex
+          POSTGRES_DB: lex
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lex"
+          --health-interval 2s
+          --health-retries 30
+    env:
+      DATABASE_URL: postgresql://lex:lex@127.0.0.1:5432/lex
+      LEX_REQUIRE_DB: "1" # store tests fail here instead of skipping
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: pip install -e ".[dev,llm,api,mcp]" # not dense: torch is too heavy for CI
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: mypy
+      - run: pytest
+      - run: python -m lex.bench validate
+
+  web: # the demo's page: types and a production build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build

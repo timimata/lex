@@ -1,0 +1,128 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 71,
+    "sha": "0906d35d32c7"
+  },
+  "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+claims",
+  "config": {
+    "model": "gemini-embedding-2@768",
+    "store": "memory",
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "format": "claims",
+    "usage": {
+      "calls": 71,
+      "cached": 54,
+      "prompt_tokens": 113517,
+      "completion_tokens": 10259
+    },
+    "turned_into_refusals": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0,
+      "dropped_sentences": 0
+    },
+    "judge": {
+      "model": "gemma-4-26b-a4b-it",
+      "prompt": "b103c12eae1b",
+      "measured_on_dev": {
+        "known_answer_checks": {
+          "reference": {
+            "as_expected": 45,
+            "cases": 45
+          },
+          "altered": {
+            "as_expected": 33,
+            "cases": 33
+          }
+        }
+      },
+      "unparsed": 0
+    }
+  },
+  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-01T14:52:02+01:00",
+  "summary": {
+    "answerable": {
+      "items": 61,
+      "refused": 0.03278688524590164,
+      "cited": 59,
+      "citation_precision": 0.942090395480226,
+      "citation_recall": 0.9087431693989071
+    },
+    "composite": {
+      "items": 14,
+      "refused": 0.07142857142857142,
+      "cited": 13,
+      "citation_precision": 0.9102564102564104,
+      "citation_recall": 0.7023809523809524
+    },
+    "explicit_reference": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "simple": {
+      "items": 29,
+      "refused": 0.034482758620689655,
+      "cited": 28,
+      "citation_precision": 0.9375,
+      "citation_recall": 0.9655172413793104
+    },
+    "temporal": {
+      "items": 10,
+      "refused": 0.0,
+      "cited": 10,
+      "citation_precision": 0.95,
+      "citation_recall": 0.96
+    },
+    "unanswerable": {
+      "items": 10,
+      "refused": 0.8,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    "correctness": {
+      "answerable": {
+        "items": 61,
+        "correta": 0.7704918032786885,
+        "parcial": 0.14754098360655737,
+        "errada": 0.08196721311475409
+      },
+      "composite": {
+        "items": 14,
+        "correta": 0.5714285714285714,
+        "parcial": 0.2857142857142857,
+        "errada": 0.14285714285714285
+      },
+      "explicit_reference": {
+        "items": 8,
+        "correta": 1.0,
+        "parcial": 0.0,
+        "errada": 0.0
+      },
+      "simple": {
+        "items": 29,
+        "correta": 0.7931034482758621,
+        "parcial": 0.13793103448275862,
+        "errada": 0.06896551724137931
+      },
+      "temporal": {
+        "items": 10,
+        "correta": 0.8,
+        "parcial": 0.1,
+        "errada": 0.1
+      }
+    }
+  }
+}

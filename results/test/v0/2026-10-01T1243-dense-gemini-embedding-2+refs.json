@@ -1,0 +1,55 @@
+{
+  "split": "test",
+  "system": "dense-gemini-embedding-2+refs",
+  "config": {
+    "model": "gemini-embedding-2@768",
+    "store": "memory",
+    "references": "ADR 0004 parser",
+    "ks": [
+      1,
+      3,
+      5,
+      10
+    ]
+  },
+  "commit": "c0d4d3750e81461a05c923f3be4ed83a1378e7de",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-01T12:43:28+01:00",
+  "summary": {
+    "all": {
+      "items": 50,
+      "recall@1": 0.78,
+      "recall@3": 0.96,
+      "recall@5": 0.97,
+      "recall@10": 1.0
+    },
+    "composite": {
+      "items": 8,
+      "recall@1": 0.375,
+      "recall@3": 0.875,
+      "recall@5": 0.9375,
+      "recall@10": 1.0
+    },
+    "explicit_reference": {
+      "items": 8,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0
+    },
+    "simple": {
+      "items": 27,
+      "recall@1": 0.8148148148148148,
+      "recall@3": 0.9629629629629629,
+      "recall@5": 0.9629629629629629,
+      "recall@10": 1.0
+    },
+    "temporal": {
+      "items": 7,
+      "recall@1": 0.8571428571428571,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0
+    }
+  }
+}

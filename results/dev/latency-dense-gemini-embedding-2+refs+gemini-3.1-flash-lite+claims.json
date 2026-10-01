@@ -1,0 +1,141 @@
+{
+  "url": "https://lex-beryl.vercel.app",
+  "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+claims",
+  "measured_at": "2026-10-01T12:51:43+01:00",
+  "summary": {
+    "asked": 15,
+    "failed": 0,
+    "first_total": 3.83,
+    "measured": 14,
+    "total_p50": 3.93,
+    "total_p95": 6.12,
+    "server_p50": 3.72,
+    "server_p95": 5.91,
+    "retrieval_p50": 0.229,
+    "retrieval_p95": 0.298,
+    "generation_p50": 3.483,
+    "generation_p95": 5.647
+  },
+  "requests": [
+    {
+      "status": 200,
+      "total": 3.83,
+      "server": 3.5,
+      "cached": false,
+      "retrieval": 0.306,
+      "generation": 3.191
+    },
+    {
+      "status": 200,
+      "total": 2.1,
+      "server": 1.9,
+      "cached": false,
+      "retrieval": 0.216,
+      "generation": 1.681
+    },
+    {
+      "status": 200,
+      "total": 3.69,
+      "server": 3.35,
+      "cached": false,
+      "retrieval": 0.197,
+      "generation": 3.158
+    },
+    {
+      "status": 200,
+      "total": 5.72,
+      "server": 5.47,
+      "cached": false,
+      "retrieval": 0.197,
+      "generation": 5.276
+    },
+    {
+      "status": 200,
+      "total": 5.84,
+      "server": 5.63,
+      "cached": false,
+      "retrieval": 0.218,
+      "generation": 5.408
+    },
+    {
+      "status": 200,
+      "total": 6.12,
+      "server": 5.91,
+      "cached": false,
+      "retrieval": 0.268,
+      "generation": 5.647
+    },
+    {
+      "status": 200,
+      "total": 2.3,
+      "server": 2.09,
+      "cached": false,
+      "retrieval": 0.296,
+      "generation": 1.791
+    },
+    {
+      "status": 200,
+      "total": 2.36,
+      "server": 2.15,
+      "cached": false,
+      "retrieval": 0.182,
+      "generation": 1.971
+    },
+    {
+      "status": 200,
+      "total": 5.44,
+      "server": 5.23,
+      "cached": false,
+      "retrieval": 0.178,
+      "generation": 5.048
+    },
+    {
+      "status": 200,
+      "total": 4.0,
+      "server": 3.79,
+      "cached": false,
+      "retrieval": 0.273,
+      "generation": 3.517
+    },
+    {
+      "status": 200,
+      "total": 4.59,
+      "server": 4.26,
+      "cached": false,
+      "retrieval": 0.229,
+      "generation": 4.031
+    },
+    {
+      "status": 200,
+      "total": 2.67,
+      "server": 2.48,
+      "cached": false,
+      "retrieval": 0.263,
+      "generation": 2.217
+    },
+    {
+      "status": 200,
+      "total": 3.03,
+      "server": 2.69,
+      "cached": false,
+      "retrieval": 0.298,
+      "generation": 2.394
+    },
+    {
+      "status": 200,
+      "total": 3.93,
+      "server": 3.72,
+      "cached": false,
+      "retrieval": 0.234,
+      "generation": 3.483
+    },
+    {
+      "status": 200,
+      "total": 4.74,
+      "server": 4.55,
+      "cached": false,
+      "retrieval": 0.237,
+      "generation": 4.309
+    }
+  ]
+}

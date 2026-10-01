@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "fastapi",
+  "buildCommand": "echo the page is built by vercel/assemble.py into web/",
+  "functions": {
+    "index.py": {
+      "maxDuration": 30,
+      "includeFiles": "{lex/**,data/**,results/**,web/**}"
+    }
+  }
+}

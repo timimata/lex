@@ -1,0 +1,129 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 71,
+    "sha": "0906d35d32c7"
+  },
+  "system": "dense-bge-m3+rerank+refs+gemini-3.1-flash-lite",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "reranker": "BAAI/bge-reranker-v2-m3@953dc6f",
+    "rerank_depth": 20,
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "format": "answer",
+    "usage": {
+      "calls": 71,
+      "cached": 54,
+      "prompt_tokens": 146836,
+      "completion_tokens": 6229
+    },
+    "turned_into_refusals": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0,
+      "dropped_sentences": 0
+    },
+    "judge": {
+      "model": "gemma-4-26b-a4b-it",
+      "prompt": "b103c12eae1b",
+      "measured_on_dev": {
+        "known_answer_checks": {
+          "reference": {
+            "as_expected": 45,
+            "cases": 45
+          },
+          "altered": {
+            "as_expected": 33,
+            "cases": 33
+          }
+        }
+      },
+      "unparsed": 0
+    }
+  },
+  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-01T15:36:00+01:00",
+  "summary": {
+    "answerable": {
+      "items": 61,
+      "refused": 0.03278688524590164,
+      "cited": 59,
+      "citation_precision": 0.9310734463276835,
+      "citation_recall": 0.8841530054644808
+    },
+    "composite": {
+      "items": 14,
+      "refused": 0.0,
+      "cited": 14,
+      "citation_precision": 0.9285714285714286,
+      "citation_recall": 0.7380952380952381
+    },
+    "explicit_reference": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "simple": {
+      "items": 29,
+      "refused": 0.034482758620689655,
+      "cited": 28,
+      "citation_precision": 0.9083333333333333,
+      "citation_recall": 0.9310344827586207
+    },
+    "temporal": {
+      "items": 10,
+      "refused": 0.1,
+      "cited": 9,
+      "citation_precision": 0.9444444444444444,
+      "citation_recall": 0.86
+    },
+    "unanswerable": {
+      "items": 10,
+      "refused": 0.8,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    "correctness": {
+      "answerable": {
+        "items": 61,
+        "correta": 0.7377049180327869,
+        "parcial": 0.19672131147540983,
+        "errada": 0.06557377049180328
+      },
+      "composite": {
+        "items": 14,
+        "correta": 0.5714285714285714,
+        "parcial": 0.35714285714285715,
+        "errada": 0.07142857142857142
+      },
+      "explicit_reference": {
+        "items": 8,
+        "correta": 0.875,
+        "parcial": 0.125,
+        "errada": 0.0
+      },
+      "simple": {
+        "items": 29,
+        "correta": 0.7931034482758621,
+        "parcial": 0.1724137931034483,
+        "errada": 0.034482758620689655
+      },
+      "temporal": {
+        "items": 10,
+        "correta": 0.7,
+        "parcial": 0.1,
+        "errada": 0.2
+      }
+    }
+  }
+}

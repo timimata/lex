@@ -1,0 +1,60 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 71,
+    "sha": "0906d35d32c7"
+  },
+  "system": "dense-bge-m3+rerank+refs",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "reranker": "BAAI/bge-reranker-v2-m3@953dc6f",
+    "rerank_depth": 20,
+    "references": "ADR 0004 parser",
+    "ks": [
+      1,
+      3,
+      5,
+      10
+    ]
+  },
+  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-01T14:58:41+01:00",
+  "summary": {
+    "all": {
+      "items": 61,
+      "recall@1": 0.7431693989071039,
+      "recall@3": 0.8967213114754099,
+      "recall@5": 0.9087431693989071,
+      "recall@10": 0.9475409836065574
+    },
+    "composite": {
+      "items": 14,
+      "recall@1": 0.34523809523809523,
+      "recall@3": 0.75,
+      "recall@5": 0.7738095238095238,
+      "recall@10": 0.8571428571428571
+    },
+    "explicit_reference": {
+      "items": 8,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0
+    },
+    "simple": {
+      "items": 29,
+      "recall@1": 0.8620689655172413,
+      "recall@3": 0.9310344827586207,
+      "recall@5": 0.9310344827586207,
+      "recall@10": 0.9655172413793104
+    },
+    "temporal": {
+      "items": 10,
+      "recall@1": 0.75,
+      "recall@3": 0.9199999999999999,
+      "recall@5": 0.96,
+      "recall@10": 0.9800000000000001
+    }
+  }
+}

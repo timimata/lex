@@ -1,0 +1,4 @@
+# Never uploaded with a deployment (ADR 0014)
+.env*
+.vercel
+.gitignore
