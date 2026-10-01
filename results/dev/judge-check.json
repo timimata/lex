@@ -1,8 +1,8 @@
 {
   "split": "dev",
   "bench": {
-    "items": 61,
-    "sha": "38975f9a7a82"
+    "items": 70,
+    "sha": "8b4ac7025370"
   },
   "system": "judge-check",
   "config": {
@@ -11,47 +11,47 @@
     "pass_share": 0.9,
     "unparsed": 0,
     "usage": {
-      "calls": 78,
-      "cached": 68,
-      "prompt_tokens": 33910,
-      "completion_tokens": 3496
+      "calls": 95,
+      "cached": 78,
+      "prompt_tokens": 43691,
+      "completion_tokens": 4272
     }
   },
-  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "commit": "e8f11edcbe13e90079a4fce88b0174ca6d4191f2",
   "uncommitted_changes": false,
-  "run_at": "2026-10-01T14:45:07+01:00",
+  "run_at": "2026-10-01T17:52:38+01:00",
   "summary": {
     "reference": {
-      "cases": 45,
-      "as_expected": 45,
+      "cases": 54,
+      "as_expected": 54,
       "share": 1.0,
-      "correta": 45,
+      "correta": 54,
       "parcial": 0,
       "errada": 0
     },
     "yes-no": {
-      "cases": 12,
-      "as_expected": 12,
+      "cases": 14,
+      "as_expected": 14,
       "share": 1.0,
       "correta": 0,
       "parcial": 0,
-      "errada": 12
+      "errada": 14
     },
     "altered": {
-      "cases": 33,
-      "as_expected": 33,
+      "cases": 41,
+      "as_expected": 41,
       "share": 1.0,
       "correta": 0,
       "parcial": 1,
-      "errada": 32
+      "errada": 40
     },
     "number": {
-      "cases": 21,
-      "as_expected": 21,
+      "cases": 27,
+      "as_expected": 27,
       "share": 1.0,
       "correta": 0,
       "parcial": 1,
-      "errada": 20
+      "errada": 26
     },
     "passed": true
   },
@@ -599,6 +599,125 @@
       "id": "ct-0135",
       "kind": "number",
       "answer": "18 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0140",
+      "kind": "reference",
+      "answer": "A falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até três dias consecutivos, e o pai também até três dias (art. 38.º-A). A falta para assistência a filho: até 30 dias por ano, ou durante toda a hospitalização, a filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica; até 15 dias por ano a filho com 12 ou mais anos que, sendo maior, faça parte do agregado familiar; acresce um dia por cada filho além do primeiro, e o pai e a mãe não a podem exercer em simultâneo (art. 49.º). E a falta para assistência a neto: até 30 dias consecutivos a seguir ao nascimento de neto que viva com o trabalhador e seja filho de adolescente com menos de 16 anos, e, em substituição dos progenitores, para assistência inadiável a neto menor ou, independentemente da idade, com deficiência ou doença crónica (art. 50.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0140",
+      "kind": "number",
+      "answer": "A falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até seis dias consecutivos, e o pai também até três dias (art. 38.º-A). A falta para assistência a filho: até 30 dias por ano, ou durante toda a hospitalização, a filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica; até 15 dias por ano a filho com 12 ou mais anos que, sendo maior, faça parte do agregado familiar; acresce um dia por cada filho além do primeiro, e o pai e a mãe não a podem exercer em simultâneo (art. 49.º). E a falta para assistência a neto: até 30 dias consecutivos a seguir ao nascimento de neto que viva com o trabalhador e seja filho de adolescente com menos de 16 anos, e, em substituição dos progenitores, para assistência inadiável a neto menor ou, independentemente da idade, com deficiência ou doença crónica (art. 50.º).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0141",
+      "kind": "reference",
+      "answer": "Redução de cinco horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art. 54.º); trabalho a tempo parcial e horário flexível para quem tenha filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica que viva consigo (arts. 55.º e 56.º); dispensa de trabalho em adaptabilidade, banco de horas ou horário concentrado para a trabalhadora grávida, puérpera ou lactante e, na aleitação, para qualquer dos progenitores (art. 58.º); dispensa de trabalho suplementar para a trabalhadora grávida e para quem tenha filho com menos de 12 meses, e durante a amamentação se necessário (art. 59.º); e dispensa de trabalho noturno nos 112 dias antes e depois do parto e, se necessário, no resto da gravidez e na amamentação (art. 60.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0141",
+      "kind": "number",
+      "answer": "Redução de oito horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art. 54.º); trabalho a tempo parcial e horário flexível para quem tenha filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica que viva consigo (arts. 55.º e 56.º); dispensa de trabalho em adaptabilidade, banco de horas ou horário concentrado para a trabalhadora grávida, puérpera ou lactante e, na aleitação, para qualquer dos progenitores (art. 58.º); dispensa de trabalho suplementar para a trabalhadora grávida e para quem tenha filho com menos de 12 meses, e durante a amamentação se necessário (art. 59.º); e dispensa de trabalho noturno nos 112 dias antes e depois do parto e, se necessário, no resto da gravidez e na amamentação (art. 60.º).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0142",
+      "kind": "reference",
+      "answer": "Sim. O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, salvo se atuarem com dolo, com base em declarações ou factos do processo judicial ou contraordenacional de assédio, até à decisão final transitada em julgado (art. 29.º, n.º 6). É abusiva a sanção motivada por ter alegado ser vítima ou ser testemunha de assédio, e presume-se abusivo o despedimento ou outra sanção aplicada até um ano após a denúncia (art. 331.º, n.º 1, alínea d), e n.º 2, alínea b)).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0142",
+      "kind": "yes-no",
+      "answer": "Não. O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, salvo se atuarem com dolo, com base em declarações ou factos do processo judicial ou contraordenacional de assédio, até à decisão final transitada em julgado (art. 29.º, n.º 6). É abusiva a sanção motivada por ter alegado ser vítima ou ser testemunha de assédio, e presume-se abusivo o despedimento ou outra sanção aplicada até um ano após a denúncia (art. 331.º, n.º 1, alínea d), e n.º 2, alínea b)).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0145",
+      "kind": "reference",
+      "answer": "Conforme a modalidade acordada, o trabalhador deixa de estar sujeito aos limites máximos do período normal de trabalho, pode ter um aumento determinado desse período ou cumpre o período acordado; na falta de acordo, aplica-se a primeira (art. 219.º, n.os 1 e 2). A isenção não prejudica o direito ao descanso semanal, obrigatório ou complementar, aos feriados nem ao descanso diário (art. 219.º, n.º 3); este, de onze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art. 214.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0145",
+      "kind": "number",
+      "answer": "Conforme a modalidade acordada, o trabalhador deixa de estar sujeito aos limites máximos do período normal de trabalho, pode ter um aumento determinado desse período ou cumpre o período acordado; na falta de acordo, aplica-se a primeira (art. 219.º, n.os 1 e 2). A isenção não prejudica o direito ao descanso semanal, obrigatório ou complementar, aos feriados nem ao descanso diário (art. 219.º, n.º 3); este, de catorze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art. 214.º).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0146",
+      "kind": "reference",
+      "answer": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 48 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art. 207.º (art. 211.º, n.º 1): por exemplo, trabalhador familiar do empregador, cargos de administração ou de direção, atividades que exigem continuidade do serviço ou acréscimos previsíveis de atividade (art. 207.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0146",
+      "kind": "number",
+      "answer": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 72 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art. 207.º (art. 211.º, n.º 1): por exemplo, trabalhador familiar do empregador, cargos de administração ou de direção, atividades que exigem continuidade do serviço ou acréscimos previsíveis de atividade (art. 207.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0147",
+      "kind": "reference",
+      "answer": "Se o empregador impedir culposamente o gozo das férias, o trabalhador tem direito a uma compensação no valor do triplo da retribuição correspondente ao período em falta, que deve ser gozado até 30 de abril do ano civil seguinte (art. 246.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0154",
+      "kind": "reference",
+      "answer": "Constituem violação do dever de assiduidade e determinam a perda da retribuição do período de ausência, que não conta para a antiguidade. A falta injustificada a um ou meio período normal de trabalho imediatamente antes ou depois de dia ou meio-dia de descanso ou de feriado é infração grave, e a perda de retribuição abrange também esses dias ou meios-dias. Num atraso injustificado superior a 60 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art. 256.º).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0154",
+      "kind": "number",
+      "answer": "Constituem violação do dever de assiduidade e determinam a perda da retribuição do período de ausência, que não conta para a antiguidade. A falta injustificada a um ou meio período normal de trabalho imediatamente antes ou depois de dia ou meio-dia de descanso ou de feriado é infração grave, e a perda de retribuição abrange também esses dias ou meios-dias. Num atraso injustificado superior a 90 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art. 256.º).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0155",
+      "kind": "reference",
+      "answer": "Sim, com justa causa, fazendo cessar o contrato de imediato: a prática de assédio pela entidade empregadora ou por outros trabalhadores é violação culposa das garantias do trabalhador (art. 394.º, n.º 2, alínea b)), e o assédio praticado pelo empregador ou seu representante e denunciado à ACT é ofensa à sua integridade, honra ou dignidade (art. 394.º, n.º 2, alínea f)).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0155",
+      "kind": "yes-no",
+      "answer": "Não, com justa causa, fazendo cessar o contrato de imediato: a prática de assédio pela entidade empregadora ou por outros trabalhadores é violação culposa das garantias do trabalhador (art. 394.º, n.º 2, alínea b)), e o assédio praticado pelo empregador ou seu representante e denunciado à ACT é ofensa à sua integridade, honra ou dignidade (art. 394.º, n.º 2, alínea f)).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0162",
+      "kind": "reference",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até três dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ct-0162",
+      "kind": "number",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até seis dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
       "verdict": "errada",
       "as_expected": true
     }

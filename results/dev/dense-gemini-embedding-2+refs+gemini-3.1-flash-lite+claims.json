@@ -1,8 +1,8 @@
 {
   "split": "dev",
   "bench": {
-    "items": 61,
-    "sha": "38975f9a7a82"
+    "items": 70,
+    "sha": "8b4ac7025370"
   },
   "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+claims",
   "config": {
@@ -17,10 +17,10 @@
     "k": 5,
     "format": "claims",
     "usage": {
-      "calls": 61,
-      "cached": 46,
-      "prompt_tokens": 95770,
-      "completion_tokens": 7970
+      "calls": 70,
+      "cached": 61,
+      "prompt_tokens": 110307,
+      "completion_tokens": 10036
     },
     "turned_into_refusals": {
       "malformed": 0,
@@ -34,35 +34,35 @@
       "measured_on_dev": {
         "known_answer_checks": {
           "reference": {
-            "as_expected": 45,
-            "cases": 45
+            "as_expected": 54,
+            "cases": 54
           },
           "altered": {
-            "as_expected": 33,
-            "cases": 33
+            "as_expected": 41,
+            "cases": 41
           }
         }
       },
       "unparsed": 0
     }
   },
-  "commit": "35455c0cc5be75f4aa2ee1f04126b669a7a4bef0",
+  "commit": "e8f11edcbe13e90079a4fce88b0174ca6d4191f2",
   "uncommitted_changes": false,
-  "run_at": "2026-10-01T14:46:59+01:00",
+  "run_at": "2026-10-01T17:58:40+01:00",
   "summary": {
     "answerable": {
-      "items": 45,
-      "refused": 0.06666666666666667,
-      "cited": 42,
-      "citation_precision": 0.9523809523809523,
-      "citation_recall": 0.8703703703703703
+      "items": 54,
+      "refused": 0.05555555555555555,
+      "cited": 51,
+      "citation_precision": 0.9261437908496732,
+      "citation_recall": 0.8487654320987654
     },
     "composite": {
-      "items": 12,
-      "refused": 0.16666666666666666,
-      "cited": 10,
-      "citation_precision": 0.95,
-      "citation_recall": 0.5972222222222222
+      "items": 17,
+      "refused": 0.11764705882352941,
+      "cited": 15,
+      "citation_precision": 0.8488888888888888,
+      "citation_recall": 0.5784313725490197
     },
     "explicit_reference": {
       "items": 8,
@@ -72,10 +72,10 @@
       "citation_recall": 1.0
     },
     "simple": {
-      "items": 16,
+      "items": 20,
       "refused": 0.0,
-      "cited": 16,
-      "citation_precision": 0.90625,
+      "cited": 20,
+      "citation_precision": 0.925,
       "citation_recall": 1.0
     },
     "temporal": {
@@ -94,16 +94,16 @@
     },
     "correctness": {
       "answerable": {
-        "items": 45,
-        "correta": 0.7111111111111111,
-        "parcial": 0.2,
-        "errada": 0.08888888888888889
+        "items": 54,
+        "correta": 0.7037037037037037,
+        "parcial": 0.2222222222222222,
+        "errada": 0.07407407407407407
       },
       "composite": {
-        "items": 12,
-        "correta": 0.5,
-        "parcial": 0.3333333333333333,
-        "errada": 0.16666666666666666
+        "items": 17,
+        "correta": 0.47058823529411764,
+        "parcial": 0.4117647058823529,
+        "errada": 0.11764705882352941
       },
       "explicit_reference": {
         "items": 8,
@@ -112,9 +112,9 @@
         "errada": 0.0
       },
       "simple": {
-        "items": 16,
-        "correta": 0.75,
-        "parcial": 0.25,
+        "items": 20,
+        "correta": 0.8,
+        "parcial": 0.2,
         "errada": 0.0
       },
       "temporal": {
@@ -1013,6 +1013,171 @@
       ],
       "allowed": [],
       "text": "Não encontrei, nos artigos do Código do Trabalho em vigor a 01/06/2015, base para responder a esta pergunta. Os artigos fornecidos não contêm informação sobre os valores de compensação para despedimento por extinção de posto de trabalho ou por inadaptação."
+    },
+    {
+      "id": "ct-0140",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.3333333333333333,
+      "recall": 0.3333333333333333,
+      "cited": [
+        "lei-7-2009/35",
+        "lei-7-2009/249",
+        "lei-7-2009/38-A"
+      ],
+      "expected": [
+        "lei-7-2009/49",
+        "lei-7-2009/50",
+        "lei-7-2009/38-A"
+      ],
+      "allowed": [],
+      "text": "O regime de proteção na parentalidade inclui faltas para assistência a filho, faltas para assistência a neto e licença para assistência a filho, bem como licença para assistência a filho com deficiência, doença crónica ou doença oncológica. (art. 35.º) É também considerada falta justificada a motivada pela prestação de assistência inadiável e imprescindível a filho ou a neto. (art. 249.º) Existe ainda a possibilidade de falta por luto gestacional até três dias consecutivos, aplicável à trabalhadora quando não haja lugar a licença parental, ou ao pai quando se verifique essa licença ou falta. (art. 38.º-A)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 35.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 249.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 38.º-A (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0141",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.4,
+      "recall": 0.3333333333333333,
+      "cited": [
+        "lei-7-2009/56",
+        "lei-7-2009/57",
+        "lei-7-2009/58",
+        "lei-7-2009/51",
+        "lei-7-2009/35"
+      ],
+      "expected": [
+        "lei-7-2009/54",
+        "lei-7-2009/55",
+        "lei-7-2009/56",
+        "lei-7-2009/58",
+        "lei-7-2009/59",
+        "lei-7-2009/60"
+      ],
+      "allowed": [],
+      "text": "O trabalhador com responsabilidades familiares tem direito a trabalhar em regime de horário de trabalho flexível, que permite escolher o início e o fim do período normal de trabalho diário. (art. 56.º) Trabalhadores progenitores podem solicitar o trabalho a tempo parcial ou o regime de horário flexível, desde que cumpram os requisitos formais de pedido ao empregador. (art. 57.º) A trabalhadora grávida, puérpera ou lactante, e o progenitor em caso de aleitação, têm direito a ser dispensados de prestar trabalho em regime de adaptabilidade, banco de horas ou horário concentrado. (art. 58.º) A licença parental complementar permite optar por trabalho a tempo parcial, com um período normal de trabalho igual a metade do tempo completo. (art. 51.º) A proteção na parentalidade inclui ainda o direito à dispensa de prestação de trabalho suplementar e de trabalho no período noturno. (art. 35.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 56.º (versão em vigor desde 06/09/2015)\n- Código do Trabalho, art. 57.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 58.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 51.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 35.º (versão em vigor desde 01/05/2023)"
+    },
+    {
+      "id": "ct-0142",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/29",
+        "lei-7-2009/331"
+      ],
+      "expected": [
+        "lei-7-2009/29",
+        "lei-7-2009/331"
+      ],
+      "allowed": [],
+      "text": "O denunciante e as testemunhas de assédio não podem ser sancionados disciplinarmente, a menos que atuem com dolo durante o processo. (art. 29.º) É considerada abusiva uma sanção disciplinar motivada pelo facto de o trabalhador ter alegado ser vítima ou testemunha em processo de assédio. (art. 331.º) Presume-se abusiva a sanção aplicada até um ano após a denúncia ou o exercício de direitos relativos a assédio. (art. 331.º) A aplicação de sanção abusiva constitui uma contraordenação muito grave e confere ao trabalhador o direito a indemnização. (art. 331.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 29.º (versão em vigor desde 01/10/2017)\n- Código do Trabalho, art. 331.º (versão em vigor desde 01/10/2019)"
+    },
+    {
+      "id": "ct-0145",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/219",
+        "lei-7-2009/265"
+      ],
+      "expected": [
+        "lei-7-2009/219",
+        "lei-7-2009/214"
+      ],
+      "allowed": [
+        "lei-7-2009/265"
+      ],
+      "text": "A isenção de horário de trabalho pode consistir na não sujeição aos limites máximos do período normal de trabalho, na possibilidade de aumento do período normal de trabalho ou na observância do período normal de trabalho acordado. (art. 219.º) Esta isenção não prejudica o direito a dia de descanso semanal, obrigatório ou complementar, a feriado ou a descanso diário. (art. 219.º) O trabalhador isento tem direito a retribuição específica, estabelecida por instrumento de regulamentação coletiva ou, na falta deste, equivalente a uma hora de trabalho suplementar por dia ou a duas horas por semana, conforme o regime de isenção. (art. 265.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 219.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 265.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0146",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 0.5,
+      "cited": [
+        "lei-7-2009/211",
+        "lei-7-2009/204"
+      ],
+      "expected": [
+        "lei-7-2009/211",
+        "lei-7-2009/207"
+      ],
+      "allowed": [],
+      "text": "A duração média do trabalho semanal não pode exceder as quarenta e oito horas, incluindo o trabalho suplementar. (art. 211.º) Este limite deve ser calculado num período de referência de quatro meses, ou de seis meses caso se aplique o n.º 2 do artigo 207.º, a menos que instrumento de regulamentação colectiva estabeleça outro período até doze meses. (art. 211.º) No caso de adaptabilidade por regulamentação colectiva, o período normal de trabalho não pode exceder cinquenta horas em média num período de dois meses. (art. 204.º) Os limites mencionados não se aplicam a trabalhadores em cargos de administração, direcção ou com poder de decisão autónomo que estejam isentos de horário de trabalho. (art. 211.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 211.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 204.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0147",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/246"
+      ],
+      "expected": [
+        "lei-7-2009/246"
+      ],
+      "allowed": [],
+      "text": "Se o empregador impedir culposamente o gozo das férias, o trabalhador tem direito a uma compensação igual ao triplo da retribuição correspondente ao período em falta. (art. 246.º) O período de férias em falta deve ser gozado até 30 de Abril do ano civil seguinte. (art. 246.º) Esta violação constitui uma contraordenação grave. (art. 246.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 246.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0154",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/256"
+      ],
+      "expected": [
+        "lei-7-2009/256"
+      ],
+      "allowed": [
+        "lei-7-2009/351"
+      ],
+      "text": "A falta injustificada constitui violação do dever de assiduidade e determina a perda da retribuição correspondente ao período de ausência. (art. 256.º) O período de ausência injustificada não é contado na antiguidade do trabalhador. (art. 256.º) A falta injustificada a um ou meio período normal de trabalho diário, imediatamente anterior ou posterior a dia ou meio dia de descanso ou a feriado, constitui uma infração grave. (art. 256.º) Nesses casos, a perda de retribuição abrange também os dias ou meios-dias de descanso ou feriados imediatamente anteriores ou posteriores ao dia da falta. (art. 256.º) Em caso de atraso injustificado superior a trinta ou sessenta minutos, o empregador pode não aceitar a prestação de trabalho durante parte ou a totalidade do período normal de trabalho. (art. 256.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 256.º (versão em vigor desde 01/08/2012)"
+    },
+    {
+      "id": "ct-0155",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/394",
+        "lei-7-2009/395"
+      ],
+      "expected": [
+        "lei-7-2009/394"
+      ],
+      "allowed": [
+        "lei-7-2009/29",
+        "lei-7-2009/395",
+        "lei-7-2009/396"
+      ],
+      "text": "O trabalhador pode fazer cessar imediatamente o contrato caso ocorra justa causa, o que inclui a prática de assédio pelo empregador ou por outros trabalhadores. (art. 394.º) Para efetivar a resolução do contrato, o trabalhador deve comunicar o facto por escrito ao empregador, com a indicação sucinta dos motivos, nos 30 dias seguintes ao conhecimento dos mesmos. (art. 395.º)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 394.º (versão em vigor desde 01/10/2019)\n- Código do Trabalho, art. 395.º (versão em vigor desde 17/02/2009)"
+    },
+    {
+      "id": "ct-0162",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "cited": [
+        "lei-7-2009/252-B"
+      ],
+      "expected": [
+        "lei-7-2009/252-B"
+      ],
+      "allowed": [
+        "lei-7-2009/249"
+      ],
+      "text": "A trabalhadora com dores graves e incapacitantes por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente até três dias consecutivos por cada mês de prestação de trabalho. (art. 252.º-B)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 252.º-B (versão em vigor desde 26/04/2025)"
     }
   ]
 }

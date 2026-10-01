@@ -290,38 +290,44 @@ held-out test set judged correct."
 Phases 3 to 5 report their test numbers on benchmark v0 (54 test items). From 2026-10-01 the
 README and the leaderboard report v1; v0's test runs are kept in `results/test/v0/`.
 
-- Grow the benchmark to 150 to 200 items, first where it is thinnest: `unanswerable` (10 today,
-  too few to say much about refusals) and `composite` (17, the weakest type).
-  **Progress, 2026-10-01: benchmark v1, 132 items** (batch 07, 32 items from the ACT's FAQ):
-  `unanswerable` 10 -> 26 (out-of-corpus regimes a question could be mistaken for: domestic
-  service, work accidents, health and safety services, road transport, asbestos, disability
-  quotas, retirement), `composite` 17 -> 26, plus 3 `simple` and 4 `temporal`. A new `validate`
-  check refuses a second item from an FAQ entry about the present; it caught four drafts that
-  repeated entries already in the benchmark. Dev 61 items, test 71. Every run now records which
-  version of its split it used.
-  **Test results on v1, 2026-10-01** (`results/test/`, commit 35455c0; 61 answerable and 10
+- ~~Grow the benchmark to 150 to 200 items, first where it is thinnest: `unanswerable` (10) and
+  `composite` (17, the weakest type).~~ Done 2026-10-01: **benchmark v1, 158 items**, from two
+  batches drawn from the ACT's FAQ (07 and 08, 58 items). `unanswerable` 10 -> 29 (out-of-corpus
+  regimes a question could be mistaken for: domestic service, work accidents, health and safety
+  services, road transport, asbestos, disability quotas, retirement, social-security benefits,
+  the meal allowance), `composite` 17 -> 33, `temporal` 15 -> 22 (among them absences for a death
+  in 2022, when a spouse's gave five days and a child's twenty), and recent law such as the 2025
+  absence for endometriosis. A new `validate` check refuses a second item from an FAQ entry about
+  the present; it caught four drafts that repeated entries already in the benchmark. Dev 70
+  items, test 88. Every run now records which version of its split it used; runs on the
+  intermediate 132-item state are kept in `results/test/v1-132/`.
+
+  **Test results on v1, 2026-10-01** (`results/test/`, commit e8f11ed; 75 answerable and 13
   unanswerable items):
 
   | Retrieval | recall@1 | recall@10 | explicit references | composite recall@10 |
   |---|---|---|---|---|
-  | BM25 | 0.46 | 0.74 | 0 of 8 | 0.82 |
-  | Dense (BGE-M3) | 0.55 | 0.80 | 0 of 8 | 0.87 |
-  | BGE-M3 + reranker + parser (reference) | 0.74 | 0.95 | 8 of 8 | 0.86 |
-  | Gemini Embedding 2 + parser (the demo) | 0.73 | 0.99 | 8 of 8 | 0.96 |
+  | BM25 | 0.48 | 0.75 | 0 of 8 | 0.75 |
+  | Dense (BGE-M3) | 0.59 | 0.83 | 0 of 8 | 0.85 |
+  | BGE-M3 + reranker + parser (reference) | 0.76 | 0.96 | 8 of 8 | 0.88 |
+  | Gemini Embedding 2 + parser (the demo) | 0.71 | 0.99 | 8 of 8 | 0.97 |
 
   | Answers (Gemini 3.1 Flash-Lite, top 5) | Correct | Citation recall / precision | Refused: answerable, unanswerable | Composite: recall, correct |
   |---|---|---|---|---|
-  | The demo (a citation per sentence) | 0.77 | 0.91 / 0.94 | 2 of 61, 8 of 10 | 0.70, 0.57 |
-  | Reference (BGE-M3 + reranker) | 0.74 | 0.88 / 0.93 | 2 of 61, 8 of 10 | 0.74, 0.57 |
-  | BGE-M3 without reranker | not judged | 0.86 / 0.93 | 2 of 61, 9 of 10 | 0.65, not judged |
+  | The demo (a citation per sentence) | 0.76 | 0.92 / 0.94 | 2 of 75, 11 of 13 | 0.71, 0.50 |
+  | Reference (BGE-M3 + reranker) | 0.67 | 0.89 / 0.91 | 2 of 75, 11 of 13 | 0.71, 0.50 |
+  | BGE-M3 without reranker | not judged | 0.87 / 0.91 | 2 of 75, 12 of 13 | 0.64, not judged |
 
-  The judge passed its known-answer checks again on v1's dev (45 of 45 references, 33 of 33
-  altered answers). On dev (61 items) the demo refused all 16 unanswerable questions, and its
-  misses on the new items are all composite: a second article left out (art. 199.º-A next to
-  169.º-B on telework, 101.º-G next to 101.º-C and 101.º-D for carers) and a refusal of the
-  compensation question for three kinds of dismissal, today's and 2015's alike. With more
-  composite and unanswerable questions, refusing what the Code does not cover holds up (8 or 9
-  of 10 on test, 16 of 16 on dev), and composite questions remain the weak spot.
+  On dev (70 items) the demo: 0.70 judged correct, citation recall 0.85 and precision 0.93, 3 of
+  54 answerable questions wrongly refused, all 16 unanswerable ones refused. The judge passed its
+  known-answer checks on v1's dev (54 of 54 references, 41 of 41 altered
+  answers). What the numbers say: with nearly three times as many out-of-scope
+  questions, refusing what the Code does not cover holds up (11 or 12 of 13 on test, 16 of 16 on
+  dev). Composite questions remain the weak spot, half of them judged correct; their misses on
+  dev are a second article left out (art. 199.º-A next to 169.º-B on telework, 101.º-G next to
+  101.º-C and 101.º-D for carers) or a refusal. The demo leads the reference system on
+  correctness (0.76 against 0.67), mostly through fewer partial answers; the two differ in
+  embeddings and in answer format, so this does not say which change helps.
 - Add tenancy (Código Civil and NRAU) and the Código do IRS.
 - Legal review by a law student or lecturer (Faculdade de Direito, Universidade Lusófona).
 - ~~Licences for the code and the data, with a decision on whether test stays hidden.~~ Done

@@ -24,40 +24,42 @@ answer must cite, plus a reference system whose every number comes from running 
   refusal.
 - **What changed.** Any cited article opens on its version for the date, with its timeline and the
   changes from the previous version marked paragraph by paragraph.
-- **Measured, not claimed.** A 132-question benchmark with a held-out test split, and every number
+- **Measured, not claimed.** A 158-question benchmark with a held-out test split, and every number
   below comes from `results/`.
 
 ![Article 238.º as changed by Lei n.º 23/2012](docs/img/changes-238.png)
 
 ## Results
 
-On the held-out test split of benchmark v1 (71 questions never used to tune anything, 61
-answerable and 10 not; `results/test/`):
+On the held-out test split of benchmark v1 (88 questions never used to tune anything, 75
+answerable and 13 not; `results/test/`):
 
 | Retrieval | recall@1 | recall@10 | questions naming their article |
 |---|---|---|---|
-| BM25 | 0.46 | 0.74 | 0 of 8 |
-| Dense (BGE-M3) | 0.55 | 0.80 | 0 of 8 |
-| Dense + reranker + reference parser (reference system) | 0.74 | 0.95 | 8 of 8 |
-| Gemini Embedding 2 + reference parser (the demo) | 0.73 | 0.99 | 8 of 8 |
+| BM25 | 0.48 | 0.75 | 0 of 8 |
+| Dense (BGE-M3) | 0.59 | 0.83 | 0 of 8 |
+| Dense + reranker + reference parser (reference system) | 0.76 | 0.96 | 8 of 8 |
+| Gemini Embedding 2 + reference parser (the demo) | 0.71 | 0.99 | 8 of 8 |
 
 | Answers (top 5 articles, Gemini 3.1 Flash-Lite) | Correct (LLM judge) | Citation recall | Citation precision | Answerable wrongly refused | Unanswerable refused |
 |---|---|---|---|---|---|
-| The demo: Gemini Embedding 2, a citation per sentence | 0.77 | 0.91 | 0.94 | 2 of 61 | 8 of 10 |
-| Reference retrieval (BGE-M3 and reranker) | 0.74 | 0.88 | 0.93 | 2 of 61 | 8 of 10 |
-| BGE-M3, no reranker | not judged | 0.86 | 0.93 | 2 of 61 | 9 of 10 |
+| The demo: Gemini Embedding 2, a citation per sentence | 0.76 | 0.92 | 0.94 | 2 of 75 | 11 of 13 |
+| Reference retrieval (BGE-M3 and reranker) | 0.67 | 0.89 | 0.91 | 2 of 75 | 11 of 13 |
+| BGE-M3, no reranker | not judged | 0.87 | 0.91 | 2 of 75 | 12 of 13 |
 
 **Answer correctness** comes from an LLM judge (Gemma 4 26B A4B) that compares each answer with
 the question's reference answer; a refusal counts as wrong. The judge is not measured against
 hand labels but on known-answer cases ([ADR 0015](docs/decisions/0015-answer-judge.md)): on dev
-it accepted 45 of 45 reference answers and caught 33 of 33 altered ones, a number changed or a
+it accepted 54 of 54 reference answers and caught 41 of 41 altered ones, a number changed or a
 yes turned into a no. That shows it catches clear errors; how it judges ambiguous answers is not
-measured.
+measured. The demo and the reference system differ in two ways (embeddings and answer format), so
+the gap between them says which is better, not why.
 
 The weak spot is composite questions, where the second article is often missed: for the demo,
-citation recall 0.70 and 0.57 judged correct on the 14 composite test questions. Runs on
-benchmark v0 (54 test questions), including a local Gemma 4 E2B small enough for a Raspberry Pi,
-are kept in `results/test/v0/`. Details, dev numbers and every step tried and dropped are in the
+citation recall 0.71 and 0.50 judged correct on the 16 composite test questions. Earlier runs are
+kept apart: on benchmark v0 (54 test questions, with a local Gemma 4 E2B small enough for a
+Raspberry Pi) in `results/test/v0/`, and on the intermediate 132-item benchmark in
+`results/test/v1-132/`. Details, dev numbers and every step tried and dropped are in the
 [roadmap](docs/ROADMAP.md).
 
 ## How it works

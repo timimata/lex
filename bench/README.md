@@ -73,9 +73,10 @@ approved it. Article numbers are written as the DR prints them, without ".º": `
 | `explicit_reference` | Names an article: "o que diz o artigo 238.º do Código do Trabalho?" |
 | `unanswerable` | Outside the corpus, or not answerable from the law. The right response is to say so |
 
-Benchmark v1 (2026-10-01) has 132 items: 45 `simple`, 26 `composite`, 19 `temporal`, 16
-`explicit_reference` and 26 `unanswerable`; 61 in dev and 71 in test. Every run records which
-version of its split it used (`bench` in `results/`); v0's test runs are in `results/test/v0/`.
+Benchmark v1 (2026-10-01) has 158 items: 58 `simple`, 33 `composite`, 22 `temporal`, 16
+`explicit_reference` and 29 `unanswerable`; 70 in dev and 88 in test. Every run records which
+version of its split it used (`bench` in `results/`); v0's test runs are in `results/test/v0/`,
+and those on the intermediate 132-item state in `results/test/v1-132/`.
 
 Targets for v0 (100 items): at least 15 `temporal`, 15 `explicit_reference` and 15 `composite`,
 about 10 `unanswerable`, the rest `simple`. For non-temporal items, `as_of` is the date the item

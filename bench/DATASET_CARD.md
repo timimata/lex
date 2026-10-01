@@ -36,14 +36,14 @@ It is not part of this dataset: the code rebuilds it from the Diário da Repúbl
 
 ## This dataset: the dev split
 
-61 items of benchmark v1 (2026-10-01). The test split, 71 items, stays private so that its scores
+70 items of benchmark v1 (2026-10-01). The test split, 88 items, stays private so that its scores
 keep their meaning; results on it are published on the leaderboard and in the code repository
 (`results/test/`). To have a system scored on test, open an issue on the code repository.
 
 | Type | What it tests | Dev items |
 |---|---|---|
-| `simple` | One fact, one or two articles | 16 |
-| `composite` | Several articles combined | 12 |
+| `simple` | One fact, one or two articles | 20 |
+| `composite` | Several articles combined | 17 |
 | `temporal` | `as_of` in the past; the answer depends on the law in force that day | 9 |
 | `explicit_reference` | The question names its article | 8 |
 | `unanswerable` | Outside the corpus; the right response is to say so | 16 |
@@ -80,12 +80,12 @@ test answer.
 Systems are scored on citation recall and precision (against `must_cite` and `may_cite`), on
 refusals (of unanswerable questions, and wrongly of answerable ones), and on correctness, judged
 by an LLM against the reference answer. The judge is checked on known-answer cases rather than
-hand labels: on dev it accepted 45 of 45 reference answers and caught 33 of 33 altered ones.
+hand labels: on dev it accepted 54 of 54 reference answers and caught 41 of 41 altered ones.
 
-On test (61 answerable, 10 unanswerable), the demo's system (Gemini Embedding 2 retrieval with
+On test (75 answerable, 13 unanswerable), the demo's system (Gemini Embedding 2 retrieval with
 an explicit-reference parser, Gemini 3.1 Flash-Lite answering with a citation per sentence):
-0.77 judged correct, citation recall 0.91, precision 0.94, 2 of 61 answerable questions wrongly
-refused, 8 of 10 unanswerable ones refused. Composite questions are the hardest: 0.57 correct.
+0.76 judged correct, citation recall 0.92, precision 0.94, 2 of 75 answerable questions wrongly
+refused, 11 of 13 unanswerable ones refused. Composite questions are the hardest: 0.50 correct.
 The full leaderboard is on the demo's Results page.
 
 ## Licence and attribution
