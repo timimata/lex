@@ -2,7 +2,8 @@
 
 An open benchmark for question answering over Portuguese legislation, and an open-source system
 measured against it. **Live demo: [lex-beryl.vercel.app](https://lex-beryl.vercel.app)**
-(Portuguese or English interface). Code: [github.com/timimata/lex](https://github.com/timimata/lex).
+(Portuguese or English interface). Code: [github.com/timimata/lex](https://github.com/timimata/lex);
+dataset (dev split): [huggingface.co/datasets/timimata/lex](https://huggingface.co/datasets/timimata/lex).
 
 Portugal already has AI assistants for its law: Lia on the Diário da República, the Ministry of
 Justice's Guia Prático, and commercial tools such as TogaAI and LeiGPT. As far as we could find,

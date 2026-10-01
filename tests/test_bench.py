@@ -218,3 +218,21 @@ def test_a_snapshot_is_refused_while_a_file_holds_test_content_or_a_key() -> Non
         "notes.txt holds a string shaped like an API key",
     ]
     assert find_leaks({"README.md": "Nada a esconder aqui."}, [secret]) == []
+
+
+def test_the_dataset_folder_has_the_card_dev_and_the_licence(tmp_path: Path) -> None:
+    from lex.bench.snapshot import ADR, ADR_ONLINE, dataset
+
+    public = tmp_path / "public"
+    (public / "bench" / "data").mkdir(parents=True)
+    (public / "bench" / "DATASET_CARD.md").write_text("license: cc-by-4.0", encoding="utf-8")
+    (public / "bench" / "data" / "dev.jsonl").write_text("{}", encoding="utf-8")
+    (public / "bench" / "LICENSE.md").write_text(f"See [ADR 0016]({ADR}).", encoding="utf-8")
+    hf = tmp_path / "hf"
+
+    dataset(public, hf)
+
+    files = sorted(p.relative_to(hf).as_posix() for p in hf.rglob("*.*"))
+    assert files == ["LICENSE.md", "README.md", "data/dev.jsonl"]
+    assert ADR_ONLINE in (tmp_path / "hf" / "LICENSE.md").read_text(encoding="utf-8")
+    assert "test.jsonl" not in files

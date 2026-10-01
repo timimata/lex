@@ -65,3 +65,21 @@ def snapshot(root: Path, out: Path, data_dir: Path = DATA_DIR) -> list[str]:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(root / path, target)
     return []
+
+
+ADR = "../docs/decisions/0016-licences-and-hidden-test.md"
+ADR_ONLINE = (
+    "https://github.com/timimata/lex/blob/main/docs/decisions/0016-licences-and-hidden-test.md"
+)
+
+
+def dataset(public: Path, out: Path) -> None:
+    """The Hugging Face dataset's folder, from a snapshot: the card as README.md, the dev split
+    and the licence, whose link to ADR 0016 points at the public repository."""
+    if out.exists():
+        shutil.rmtree(out)
+    (out / "data").mkdir(parents=True)
+    shutil.copy2(public / "bench" / "DATASET_CARD.md", out / "README.md")
+    shutil.copy2(public / "bench" / "data" / "dev.jsonl", out / "data" / "dev.jsonl")
+    licence = (public / "bench" / "LICENSE.md").read_text(encoding="utf-8")
+    (out / "LICENSE.md").write_text(licence.replace(ADR, ADR_ONLINE), encoding="utf-8")

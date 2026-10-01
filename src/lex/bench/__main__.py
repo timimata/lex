@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from lex.bench.corpus_check import check_citations, load_periods
-from lex.bench.snapshot import snapshot
+from lex.bench.snapshot import dataset, snapshot
 from lex.bench.splits import DATA_DIR, assign, check, items_by_file, summary
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -18,6 +18,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
     parser.add_argument("--versions", type=Path, default=VERSIONS, help="the ingested corpus")
     parser.add_argument("--out", type=Path, default=ROOT / "build" / "public", help="snapshot")
+    parser.add_argument("--dataset", type=Path, default=ROOT / "build" / "hf", help="HF dataset")
     args = parser.parse_args(argv)
 
     problems = check(args.data_dir)
@@ -33,7 +34,11 @@ def main(argv: list[str] | None = None) -> int:
         if leaks:
             print("\n".join(leaks), file=sys.stderr)
             return 1
+        dataset(args.out, args.dataset)
         print(f"wrote the public snapshot to {args.out}: every tracked file but the test split")
+        print(
+            f"and the Hugging Face dataset's folder to {args.dataset}: the card, dev, the licence"
+        )
         return 0
     if args.command == "assign":
         moved = assign(args.data_dir)

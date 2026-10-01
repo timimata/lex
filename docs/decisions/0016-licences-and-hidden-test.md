@@ -31,7 +31,8 @@ and, until 2026-10-01, two ADRs and a parser fixture, which were cleaned that da
 - Test results stay public: their summaries (`results/test/`) carry no items, and the README and
   the leaderboard report them. Another system can be scored on test by asking; the private
   repository runs it and publishes the numbers.
-- A Hugging Face dataset, when made, holds dev only, with the datasheet and the licence.
+- The Hugging Face dataset holds dev only, with its card and the licence:
+  https://huggingface.co/datasets/timimata/lex.
 
 ## Consequences
 

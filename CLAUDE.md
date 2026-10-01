@@ -95,6 +95,7 @@ python -m lex.bench validate    # schema, split and duplicate checks; prints cou
 python -m lex.bench assign      # moves incoming.jsonl items to their split
 python -m lex.bench snapshot    # the public mirror: every tracked file but test (ADR 0016)
 cd build/public && git add -A && git commit -m "Lex: snapshot of private commit <sha>" && git push
+hf upload timimata/lex build/hf . --repo-type dataset   # the dev split, after a snapshot
 python -m lex.ingest ct --offline   # rebuild article versions from data/raw (no network)
 docker compose up -d --wait         # the store; tests that need it skip without it
 python -m lex.store load            # replace the store's contents with the ingestion output
