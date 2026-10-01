@@ -329,8 +329,9 @@ README and the leaderboard report v1; v0's test runs are kept in `results/test/v
   benchmark, and the test split private. A search of every tracked file found test items quoted
   in two ADRs and a parser fixture, now removed. `python -m lex.bench snapshot` writes the public
   mirror and refuses it while any file holds test content or a key.
-- Then the repo public, as that mirror, and the benchmark's dev split on Hugging Face Datasets
-  (free).
+- ~~Then the repo public, as that mirror~~: https://github.com/timimata/lex, from 2026-10-01 (its
+  CI passes without the test split). Next, the benchmark's dev split on Hugging Face Datasets
+  (free), which needs Tiago's Hugging Face login.
 - Keep the corpus current: the weekly amendment check is in place; rebuilding after an
   amendment stays a person's call, since dating new versions needs checking.
 

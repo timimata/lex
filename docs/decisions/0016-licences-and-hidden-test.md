@@ -37,6 +37,8 @@ and, until 2026-10-01, two ADRs and a parser fixture, which were cleaned that da
 
 - Readers of the public repository get the code, dev, the datasheet, every decision and every
   number, but not the test items or the development history.
-- Each public release is a snapshot commit that names the private commit it was made from.
+- Each public release is a snapshot commit that names the private commit it was made from. The
+  mirror is https://github.com/timimata/lex, first published on 2026-10-01 from commit df50041;
+  its commits use the account's GitHub no-reply address.
 - Scoring someone else's system on test goes through the maintainer, as with other benchmarks
   that keep their test set hidden.
