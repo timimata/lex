@@ -395,8 +395,10 @@ Chosen by what the numbers and job ads say:
   searches and 0 reads in 168 answers), yet its prompt scored 0.74 correct in both of two runs
   against the per-sentence format's 0.68 and 0.70, and refused none of the 66 answerable
   questions against 4 (all 18 unanswerable refused either way). The gain is the prompt's, and
-  two runs of the same system differ by about one item (`--repeat`). Next: the coverage
-  instruction alone in the per-sentence prompt, twice on dev, then a test run if it holds;
+  two runs of the same system differ by about one item (`--repeat`). The coverage instruction
+  alone (`--format claims-cover`) scored 0.65, no gain; the rest of the agent's prompt, that the
+  model may ask and should answer when the articles suffice, is what helped (ADR 0018, amended).
+  Next: the agent as the demo's system, within a time budget, then a test run;
 - tracing (Langfuse), model routing, cost per question;
 - a local model for the answers on a Raspberry Pi (ADR 0012 has the quality; speed not measured);
 - a hand-scored comparison with Lia and TogaAI on a small dev subset, after checking their terms.

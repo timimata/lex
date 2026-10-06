@@ -7,7 +7,13 @@ from typing import Any
 import pytest
 
 from lex.domain import DIPLOMAS, Citation
-from lex.generation.answer import ReferenceSystem, parse, prompt
+from lex.generation.answer import (
+    CLAIMS_SYSTEM,
+    COVER_SYSTEM,
+    ReferenceSystem,
+    parse,
+    prompt,
+)
 from lex.generation.llm import (
     DEFAULT_MODEL,
     DEFAULT_PARAMS,
@@ -380,6 +386,22 @@ def claims(*sentences: tuple[str, list[str]], refused: bool = False, reason: str
             "motivo": reason,
         }
     )
+
+
+def test_the_cover_format_is_the_claims_task_with_the_coverage_instruction() -> None:
+    class Asked(Scripted):
+        def complete(self, system: str, user: str) -> Completion:
+            self.system = system
+            return super().complete(system, user)
+
+    model = Asked(claims(("São cinco dias consecutivos.", ["251"])))
+    system = ReferenceSystem(Fixed(["251"]), articles, model, format="claims-cover")
+    answer = system.answer("Pergunta?", TODAY)
+
+    assert system.name == "fixed+scripted+claims-cover"
+    assert model.system == COVER_SYSTEM != CLAIMS_SYSTEM
+    assert "cobrem todas as partes da pergunta" in COVER_SYSTEM
+    assert answer.citations == [cite("251")]
 
 
 def test_claims_keep_each_sentence_with_its_articles_and_drop_the_unsupported() -> None:

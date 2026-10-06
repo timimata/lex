@@ -1,7 +1,7 @@
 # 0018. The agent is not kept; what helped was its prompt
 
 Date: 2026-10-06
-Status: accepted
+Status: accepted; amended 2026-10-06 (the coverage instruction alone)
 
 ## Context
 
@@ -46,3 +46,20 @@ items.
   been within it.
 - Revisit an agent if the questions grow beyond what five retrieved articles can hold (the
   model never found anything missing here, with the demo's retrieval at dev recall@5 0.90).
+
+## Amendment, 2026-10-06: the coverage instruction alone does not do it
+
+`--format claims-cover` is the per-sentence prompt with the agent's one sentence that is not
+about requests ("Antes de responder, vê se os artigos dados cobrem todas as partes da
+pergunta."), word for word. One run on dev v2: 0.65 correct (43 of 66), 0.27 partial, 0.08
+wrong; citation recall 0.85, precision 0.90; 2 of 66 answerable refused, 18 of 18 unanswerable
+refused; composite 0.37 correct. That is no better than the per-sentence prompt (0.68 and
+0.70), so the agent prompt's gain does not come from that sentence. What is left is the rest of
+its text: that the model may ask for more articles, and should answer "when the articles
+suffice, or if no request would help". A model told it could ask, and that what it holds may
+be enough, refused no answerable question in two runs.
+
+Next: the agent itself as the demo's system, since it is the measured configuration (0.74 twice)
+and costs one call per question while the model asks for nothing. Before that, a time budget for
+the demo (a request adds a search and a call, within Vercel's 30 s) and a test run at that
+milestone. Not done today: the day's free quota is spent.

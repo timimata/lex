@@ -58,7 +58,15 @@ que os artigos dão.
 6. Responde apenas com um objeto JSON, sem mais nada:
 {"frases": [{"texto": "...", "artigos": ["CT 238"]}], "recusa": false, "motivo": ""}"""
 
-FORMATS = ("answer", "claims")
+# The per-sentence task with the one instruction of the agent's prompt that is not about
+# requests (ADR 0018): what the agent's gain on dev came from, if not from the requests' text.
+COVER_SYSTEM = CLAIMS_SYSTEM.replace(
+    "\n\nRegras:\n",
+    "\n\nAntes de responder, vê se os artigos dados cobrem todas as partes da pergunta.\n\n"
+    "Regras:\n",
+)
+
+FORMATS = ("answer", "claims", "claims-cover")
 
 
 class Version(Protocol):
@@ -234,7 +242,7 @@ class ReferenceSystem:
         articles: Articles,
         llm: Llm,
         k: int = K,
-        format: str = "answer",  # or "claims": a citation per sentence
+        format: str = "answer",  # "claims": a citation per sentence; "claims-cover", ADR 0018
     ) -> None:
         if format not in FORMATS:
             raise ValueError(f"unknown format {format!r}")
@@ -249,7 +257,7 @@ class ReferenceSystem:
         self.name = (
             f"{retriever.name}+{llm.name}"
             + (f"+k{k}" if k != K else "")
-            + ("+claims" if format == "claims" else "")
+            + (f"+{format}" if format != "answer" else "")
             + (
                 f"+effort-{effort}"
                 if effort not in (None, DEFAULT_PARAMS["reasoning_effort"])
@@ -283,7 +291,7 @@ class ReferenceSystem:
     def _from_model(
         self, question: str, as_of: dt.date, given: list[tuple[Citation, Version]]
     ) -> Answer:
-        if self.format == "claims":
+        if self.format != "answer":
             return self._from_claims(question, as_of, given)
         parsed = parse(self.llm.complete(SYSTEM, prompt(question, as_of, given)).text)
         if parsed is None:
@@ -306,7 +314,8 @@ class ReferenceSystem:
     def _from_claims(
         self, question: str, as_of: dt.date, given: list[tuple[Citation, Version]]
     ) -> Answer:
-        reply = self.llm.complete(CLAIMS_SYSTEM, prompt(question, as_of, given)).text
+        system = COVER_SYSTEM if self.format == "claims-cover" else CLAIMS_SYSTEM
+        reply = self.llm.complete(system, prompt(question, as_of, given)).text
         return claims_answer(reply, as_of, given, self.counts)
 
 
