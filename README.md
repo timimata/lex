@@ -31,6 +31,8 @@ answer must cite, plus a reference system whose every number comes from running 
 
 ![Article 238.º as changed by Lei n.º 23/2012](docs/img/changes-238.png)
 
+![Article 1069.º of the Código Civil as changed by Lei n.º 31/2012: a lease must now be written whatever its length](docs/img/changes-1069.png)
+
 ## Results
 
 On the held-out test split of benchmark v2 (97 questions never used to tune anything, 80
