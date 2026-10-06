@@ -18,6 +18,7 @@ from typing import Any, Protocol
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -27,7 +28,9 @@ DISCLAIMER = (
     "Os textos consolidados não têm valor legal: só faz fé a publicação no Diário da República. "
     "O Lex não é aconselhamento jurídico."
 )
-FIRST_DAY = dt.date(2009, 2, 17)  # the Código do Trabalho's entry into force
+# From this day the corpus has every tenancy article's history (ADR 0017); the Código do
+# Trabalho starts later, on 2009-02-17, and a question about it before then finds no article.
+FIRST_DAY = dt.date(2006, 6, 27)
 LISBON = ZoneInfo("Europe/Lisbon")
 UNAVAILABLE = "O Lex não conseguiu responder agora. Tente mais tarde."
 DAILY_LIMIT = (
@@ -40,6 +43,9 @@ OVERLOADED = (
     "Tente outra vez dentro de instantes."
 )
 TOO_SLOW = "O modelo demorou demasiado a responder. Tente outra vez."
+# The page's own paths besides /, which it routes on the client (web/src/App.tsx): each is served
+# the page itself, so a link to the results or to an article opens on that view.
+PAGES = ("/artigos", "/resultados", "/sobre")
 
 
 def unavailable(error: Exception) -> str:
@@ -264,7 +270,11 @@ def create_app(
         if as_of > today():
             raise HTTPException(422, "A data não pode ser futura: a lei desse dia não é conhecida.")
         if as_of < FIRST_DAY:
-            raise HTTPException(422, "O Código do Trabalho só está em vigor desde 17/02/2009.")
+            raise HTTPException(
+                422,
+                "O Lex guarda a lei do arrendamento desde 27/06/2006 e o Código do Trabalho desde "
+                "17/02/2009, quando entrou em vigor.",
+            )
         key = cache_key(question.question, as_of)
         who = visitor(request)
         with state:
@@ -335,7 +345,7 @@ def create_app(
 
     @app.get("/api/search")
     def search(q: str, as_of: dt.date | None = None, k: int = 20) -> list[Hit]:
-        """Browse the code by words, with no model and no quota."""
+        """Browse the corpus by words, with no model and no quota."""
         if find is None:
             raise HTTPException(404, "Pesquisa indisponível.")
         found = find(q[:200], as_of or today(), max(1, min(k, 50)))
@@ -346,5 +356,12 @@ def create_app(
         return leaderboard or []
 
     if static is not None:
+        index = static / "index.html"
+
+        def page() -> FileResponse:
+            return FileResponse(index, media_type="text/html")
+
+        for path in PAGES:
+            app.get(path, include_in_schema=False)(page)
         app.mount("/", StaticFiles(directory=static, html=True), name="page")
     return app

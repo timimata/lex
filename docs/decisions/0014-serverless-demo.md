@@ -2,7 +2,8 @@
 
 Date: 2026-09-30
 Status: accepted; supersedes the hosting and the demo's system in ADR 0013; amended
-2026-10-01 (answers a citation per sentence)
+2026-10-01 (answers a citation per sentence) and 2026-10-02 (questions in the model's query
+format)
 
 ## Context
 
@@ -67,3 +68,29 @@ answers; both formats make 4 citations outside the labels out of 47. Answering w
 not cover is the worse error, and a citation on every sentence is what the project's rule asks of
 an answer ("no citation, no claim"). `LEX_ANSWER_FORMAT=answer` brings the old format back.
 - `space/` stays as the container image for any host that runs Docker.
+
+## Amendment, 2026-10-02: questions in the model's own query format
+
+Gemini Embedding 2 takes no task parameter. Google's embeddings guide puts the task in the text
+instead: a question as `task: question answering | query: {question}`, a document as
+`title: {title} | text: {text}`. The demo embedded both as they are. Questions now carry the
+guide's prefix for question answering, the row of its table that fits, chosen before measuring;
+no other prefix was tried. On dev v2 (66 answerable items, with the reference parser;
+`results/dev/dense-gemini-embedding-2+refs.json`):
+
+| Questions embedded | recall@1 | recall@3 | recall@5 | recall@10 |
+|---|---|---|---|---|
+| as they are | 0.65 | 0.81 | 0.84 | 0.92 |
+| `task: question answering \| query: ...` | 0.75 | 0.88 | 0.90 | 0.95 |
+| of which labour (54 items), before and after | 0.69, 0.75 | 0.85, 0.87 | 0.89, 0.89 | 0.93, 0.94 |
+| of which tenancy (12 items), before and after | 0.50, 0.75 | 0.58, 0.92 | 0.63, 0.92 | 0.92, 1.00 |
+
+Tenancy gains most where it was weakest: the eviction procedure, 22 articles (15.º to 15.º-S of
+the NRAU) whose texts all speak of the same requerimento, now has the asked article in the top 5
+for 4 of its 5 dev questions, from 0. One labour question lost ground at 5 (a composite one, 2
+of 3 articles to 1 of 3).
+
+Documents stay embedded as they were: their format means embedding all 1,213 versions again,
+more than the 1,000 texts a day the free tier allows, and the demo's visitors spend from the same
+quota. The query format lives with the embedder (`ApiEmbedder.query_format`), so the eval, the
+demo and the MCP server embed questions the same way, and the eval's ranking cache keys on it.

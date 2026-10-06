@@ -33,8 +33,20 @@ def test_references_by_number_and_by_position() -> None:
         "no artigo seguinte. 2 - O artigo 10.º da Lei n.º 23/2012 não é do código. "
         "3 - Remete para o artigo 387.º."
     )
-    assert cited_by(text, "387") == ["238", "250", "251", "252", "388"]
-    assert cited_by("o n.º 2 do artigo anterior", "199-A") == []  # no neighbour for 199-A
+    assert cited_by(text, cite("387")) == [cite(a) for a in ["238", "250", "251", "252", "388"]]
+    assert cited_by("o n.º 2 do artigo anterior", cite("199-A")) == []  # no neighbour for 199-A
+
+
+def test_a_reference_to_another_diploma_of_the_corpus_is_followed_there() -> None:
+    # The NRAU's art. 9.º, n.º 7, and the Código Civil's art. 1113.º, n.º 2.
+    nrau_9 = Citation(diploma="lei-6-2006", article="9")
+    cc_1113 = Citation(diploma="dl-47344-1966", article="1113")
+    assert cited_by("nos termos do n.º 2 do artigo 1084.º do Código Civil", nrau_9) == [
+        Citation(diploma="dl-47344-1966", article="1084")
+    ]
+    assert cited_by("É aplicável o disposto no artigo 1107.º", cc_1113) == [
+        Citation(diploma="dl-47344-1966", article="1107")
+    ]
 
 
 class Fixed:

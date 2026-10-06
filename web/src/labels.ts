@@ -3,7 +3,16 @@
 import type { Citation } from "./api";
 import type { Lang } from "./i18n";
 
-export const FIRST_DAY = "2009-02-17";
+// From this day every tenancy article has its full history; the Labour Code starts 2009-02-17.
+export const FIRST_DAY = "2006-06-27";
+
+// The diplomas the corpus holds, as lex.domain.DIPLOMAS has them.
+export const CT = "lei-7-2009";
+export const DIPLOMAS: Record<string, { short: string; name: string }> = {
+  [CT]: { short: "CT", name: "Código do Trabalho" },
+  "dl-47344-1966": { short: "CC", name: "Código Civil" },
+  "lei-6-2006": { short: "NRAU", name: "NRAU" },
+};
 
 export function today(): string {
   const d = new Date();
@@ -17,24 +26,37 @@ export function day(iso: string): string {
   return `${d}/${m}/${y}`;
 }
 
-/** 199-A -> art. 199.º-A */
-export function articleLabel(c: Citation): string {
-  const [number, suffix] = c.article.split("-");
-  return `art. ${number}.º${suffix ? `-${suffix}` : ""}`;
+/** 199-A -> 199.º-A */
+export function articleNumberLabel(article: string): string {
+  const [number, suffix] = article.split("-");
+  return `${number}.º${suffix ? `-${suffix}` : ""}`;
 }
 
-/** lei-23-2012 -> Lei n.º 23/2012 */
-export function diplomaLabel(id: string): string {
-  const match = id.match(/^(.*)-(\d+)-(\d{4})$/);
+/** {lei-7-2009, 199-A} -> art. 199.º-A do CT */
+export function articleLabel(c: Citation): string {
+  const short = DIPLOMAS[c.diploma]?.short;
+  return `art. ${articleNumberLabel(c.article)}${short ? ` do ${short}` : ""}`;
+}
+
+/** lei-23-2012 -> Lei n.º 23/2012, dl-321-b-1990 -> Decreto-Lei n.º 321-B/1990; the diploma
+ * itself, when `of` is its id, is the original version. */
+export function diplomaLabel(id: string, of?: string): string {
+  const issue = id.match(/^retificacao-(dg|dr)-(\d+)-(\d{4})$/);
+  if (issue) {
+    const journal = issue[1] === "dg" ? "Diário do Governo" : "Diário da República";
+    return `Retificação (${journal} n.º ${issue[2]}/${issue[3]})`;
+  }
+  const match = id.match(/^(.*?)-(\d+)(?:-([a-z]{1,2}))?-(\d{4})$/);
   if (!match) return id;
-  const [, kind, number, year] = match;
-  if (id === "lei-7-2009") return "Lei n.º 7/2009 (versão original)";
+  const [, kind, number, letter, year] = match;
   const names: Record<string, string> = {
     lei: "Lei",
     dl: "Decreto-Lei",
     retificacao: "Declaração de Retificação",
+    "acordao-tc": "Acórdão do Tribunal Constitucional",
   };
-  return `${names[kind] ?? kind} n.º ${number}/${year}`;
+  const label = `${names[kind] ?? kind} n.º ${number}${letter ? `-${letter.toUpperCase()}` : ""}/${year}`;
+  return id === of ? `${label} (versão original)` : label;
 }
 
 const PARTS: Record<string, string> = {

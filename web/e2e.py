@@ -10,6 +10,7 @@ cited article, compare it with its previous version, reload. Needs the `ingest` 
 
 import argparse
 import datetime as dt
+import re
 import sys
 import threading
 import time
@@ -23,7 +24,7 @@ from playwright.sync_api import Locator, Page, expect, sync_playwright  # noqa: 
 
 from lex.api.app import create_app, leaderboard  # noqa: E402
 from lex.domain import Answer, Citation  # noqa: E402
-from lex.store.memory import Corpus  # noqa: E402
+from lex.store.memory import Corpus, corpus_files  # noqa: E402
 
 PORT = 8765
 URL = f"http://127.0.0.1:{PORT}/"
@@ -38,13 +39,13 @@ class Scripted:
     def answer(self, question: str, as_of: dt.date) -> Answer:
         time.sleep(0.2)
         return Answer(
-            text=f"Resposta de teste para {as_of:%d/%m/%Y}. (art. 238.º)",
+            text=f"Resposta de teste para {as_of:%d/%m/%Y}. (art. 238.º do CT)",
             citations=[Citation(diploma="lei-7-2009", article="238")],
         )
 
 
 def serve() -> None:
-    corpus = Corpus.load(ROOT / "data" / "processed" / "ct" / "versions.jsonl")
+    corpus = Corpus.load(*corpus_files(ROOT / "data" / "processed"))
     app = create_app(
         Scripted(),
         library=corpus.versions_of,
@@ -57,7 +58,7 @@ def serve() -> None:
 
 def check(page: Page, shots: Path | None) -> None:
     def tab(name: str) -> Locator:
-        return page.get_by_role("navigation").get_by_role("button", name=name, exact=True)
+        return page.get_by_role("navigation").get_by_role("link", name=name, exact=True)
 
     submit = page.locator(".ask form button[type=submit]")
 
@@ -69,7 +70,7 @@ def check(page: Page, shots: Path | None) -> None:
     page.goto(URL)
     page.get_by_role("button", name="EN", exact=True).click()
     expect(tab("Ask")).to_be_visible()
-    expect(page.locator(".notice")).to_contain_text("not legal advice")
+    expect(page.locator(".notice")).to_contain_text(re.compile("not legal advice", re.IGNORECASE))
     page.reload()
     expect(tab("Results")).to_be_visible()
     page.get_by_role("button", name="PT", exact=True).click()
@@ -79,8 +80,9 @@ def check(page: Page, shots: Path | None) -> None:
     # A shared link asks its question on arrival, on its date, and the answer says how long.
     page.goto(URL + "?q=Quantos+dias+de+f%C3%A9rias%3F&d=2011-06-01&lang=pt")
     expect(page.locator(".answer-text")).to_contain_text("01/06/2011")
-    expect(page.locator(".kicker")).to_contain_text(" s")
+    expect(page.locator(".answer-details")).to_contain_text(" s")
     assert "d=2011-06-01" in page.url, page.url
+    expect(page.locator(".examples")).to_have_count(0)  # the answer took the examples' place
 
     # The article cited after the sentence opens on the 2011 version, its first: nothing to
     # compare.
@@ -100,8 +102,11 @@ def check(page: Page, shots: Path | None) -> None:
     submit.click()
     expect(page.locator(".kicker")).to_contain_text("resposta guardada")
 
-    # Articles, with no model: by number on a date, by words, and from a link.
+    # Articles, with no model: by number on a date, by words, and from a link. The page has a
+    # path of its own, and the title follows.
     tab("Artigos").click()
+    assert page.url.startswith(URL + "artigos"), page.url
+    expect(page).to_have_title("Artigos · Lex")
     page.fill("#browse", "art. 238.º")
     page.locator(".browse form input[type=date]").fill("2011-06-01")
     page.locator(".browse form button[type=submit]").click()
@@ -117,7 +122,36 @@ def check(page: Page, shots: Path | None) -> None:
     page.goto(URL + "?art=252-B&d=2024-01-01&lang=pt")
     expect(page.locator(".browse .reader")).to_contain_text("Nenhuma versão")  # not yet law
 
-    # Results and About render in both languages.
+    # Tenancy: a diploma named in the query, one chosen in the list, and one in a link.
+    page.fill("#browse", "NRAU 9")
+    page.locator(".browse form input[type=date]").fill("2026-09-30")
+    page.locator(".browse form button[type=submit]").click()
+    expect(page.locator(".browse .reader-code")).to_contain_text("NRAU")
+    expect(page.locator(".browse .reader")).to_contain_text("Forma da comunicação")
+    assert "dip=NRAU" in page.url, page.url
+    page.locator(".browse form select").select_option(label="Código Civil")
+    page.fill("#browse", "1083")
+    page.locator(".browse form button[type=submit]").click()
+    expect(page.locator(".browse .reader")).to_contain_text("Fundamento da resolução")
+    expect(page.locator(".browse .reader")).to_contain_text("Lei n.º 13/2019")
+    page.goto(URL + "?art=1083&dip=CC&d=2012-01-01&lang=pt")
+    expect(page.locator(".browse .reader-code")).to_contain_text("Código Civil")
+    expect(page.locator(".browse .reader-meta")).to_contain_text("Lei n.º 6/2006")
+
+    # Results and About open by their own paths, as the API serves them.
+    page.goto(URL + "resultados?lang=pt")
+    expect(page.locator("table").first).to_be_visible()
+    page.goto(URL + "sobre?lang=en")
+    expect(page.locator(".prose")).to_contain_text("Gemini embeddings")
+    page.go_back()
+    expect(page.locator("table").first).to_be_visible()  # the browser's back button works
+
+    # The home page shows the demo's own numbers, once it has a judged test run.
+    page.goto(URL + "?lang=pt")
+    if any(r["task"] == "answers" for r in leaderboard(ROOT / "results" / "test")):
+        expect(page.locator(".figures dt").first).to_be_visible()
+
+    # Results and About render in both languages, and an answer survives the tabs.
     page.goto(URL + "?q=Quantos+dias+de+f%C3%A9rias%3F&d=2011-06-01&lang=pt")
     expect(page.locator(".answer-text")).to_contain_text("01/06/2011")
     tab("Resultados").click()
@@ -127,7 +161,7 @@ def check(page: Page, shots: Path | None) -> None:
     tab("About").click()
     expect(page.locator(".prose")).to_contain_text("Gemini embeddings")
     tab("Ask").click()
-    expect(page.locator(".answer")).to_be_visible()  # the answer survived the tabs
+    expect(page.locator(".answer")).to_be_visible()
 
 
 def main() -> int:
@@ -145,9 +179,7 @@ def main() -> int:
             check(page, args.shots)
             mobile = browser.new_page(viewport={"width": 390, "height": 844}, locale="en-GB")
             mobile.goto(URL)
-            expect(
-                mobile.get_by_role("navigation").get_by_role("button", name="Ask")
-            ).to_be_visible()
+            expect(mobile.get_by_role("navigation").get_by_role("link", name="Ask")).to_be_visible()
             if args.shots:
                 mobile.screenshot(
                     path=str(args.shots / "4-mobile-en.png"), full_page=True, animations="disabled"

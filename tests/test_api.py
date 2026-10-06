@@ -82,6 +82,7 @@ def test_an_answer_comes_dated_cited_and_with_the_disclaimer() -> None:
             "citations": [{"diploma": "lei-7-2009", "article": "238"}],
             "refused": False,
             "timings": {},
+            "requests": [],
         },
         "seconds": response.json()["seconds"],
         "cached": False,
@@ -91,7 +92,7 @@ def test_an_answer_comes_dated_cited_and_with_the_disclaimer() -> None:
     assert system.asked == [("Quantos dias de férias?", TODAY)]
 
 
-def test_dates_outside_the_codes_life_are_refused() -> None:
+def test_dates_outside_the_corpus_are_refused() -> None:
     system = Echo()
     api = client(system)
     past = api.post("/api/answer", json={"question": "Férias?", "as_of": "2011-06-01"})
@@ -101,11 +102,14 @@ def test_dates_outside_the_codes_life_are_refused() -> None:
         api.post("/api/answer", json={"question": "Férias?", "as_of": "2026-10-01"}).status_code
         == 422
     )
+    # Tenancy's complete history starts on 2006-06-27, before the Código do Trabalho's.
     assert (
-        api.post("/api/answer", json={"question": "Férias?", "as_of": "2009-02-16"}).status_code
-        == 422
+        api.post("/api/answer", json={"question": "Rendas?", "as_of": "2008-01-01"}).status_code
+        == 200
     )
-    assert system.asked == [("Férias?", dt.date(2011, 6, 1))]
+    refused = api.post("/api/answer", json={"question": "Rendas?", "as_of": "2006-06-26"})
+    assert refused.status_code == 422 and "27/06/2006" in refused.json()["detail"]
+    assert system.asked == [("Férias?", dt.date(2011, 6, 1)), ("Rendas?", dt.date(2008, 1, 1))]
 
 
 def test_a_repeated_question_is_answered_once() -> None:
@@ -317,3 +321,16 @@ def test_the_leaderboard_keeps_each_systems_newest_run_and_how_it_was_judged(
     assert board[0]["correctness"] == {"answerable": {"correta": 0.8}}
     assert board[0]["judge"] == {"model": "gemma", "measured_on_dev": measured}
     assert board[1]["correctness"] is None and board[1]["judge"] is None
+
+
+def test_the_pages_own_paths_are_served_the_page(tmp_path: Path) -> None:
+    (tmp_path / "index.html").write_text("<!doctype html><title>Lex</title>", encoding="utf-8")
+    (tmp_path / "app.js").write_text("// built", encoding="utf-8")
+    app = create_app(Echo(), static=tmp_path)
+    with TestClient(app) as c:
+        for path in ("/", "/artigos", "/resultados", "/sobre"):
+            response = c.get(path)
+            assert response.status_code == 200 and "<title>Lex</title>" in response.text, path
+        assert c.get("/app.js").text == "// built"
+        assert c.get("/nada").status_code == 404
+        assert c.get("/api/health").json()["status"] == "ok"

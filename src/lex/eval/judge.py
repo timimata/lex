@@ -26,9 +26,10 @@ JUDGE_MODEL = "gemma-4-26b-a4b-it"
 LABELS = Path(__file__).resolve().parents[3] / "bench" / "labels" / "dev.jsonl"
 
 SYSTEM = """\
-Avalias respostas a perguntas sobre o Código do Trabalho português. Recebes a pergunta, a data \
-a que se refere, a resposta de referência (certa, escrita a partir da lei em vigor nessa data) e \
-a resposta de um sistema. Julga só o conteúdo jurídico da resposta do sistema face à referência.
+Avalias respostas a perguntas sobre a lei portuguesa (o Código do Trabalho e o arrendamento). \
+Recebes a pergunta, a data a que se refere, a resposta de referência (certa, escrita a partir da \
+lei em vigor nessa data) e a resposta de um sistema. Julga só o conteúdo jurídico da resposta do \
+sistema face à referência.
 
 - "correta": diz o essencial da referência (os mesmos direitos, prazos, números e condições) e \
 nada que a contradiga. Pode dizer mais, desde que não seja errado face à referência.

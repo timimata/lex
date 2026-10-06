@@ -62,6 +62,11 @@ def _words(text: str) -> list[str]:
     return re.findall(r"[a-z0-9]+", plain)
 
 
+def corpus_files(processed: Path) -> list[Path]:
+    """Every diploma's ingestion output, processed/<code>/versions.jsonl, in folder order."""
+    return sorted(processed.glob("*/versions.jsonl"))
+
+
 def _order(article: str) -> tuple[int, str]:
     """'199-A' after '199', before '200'."""
     number, _, suffix = article.partition("-")
@@ -78,9 +83,13 @@ class Corpus:
             history.sort(key=lambda v: v.valid_from)
 
     @classmethod
-    def load(cls, path: Path) -> "Corpus":
-        lines = path.read_text(encoding="utf-8").splitlines()
-        return cls([ArticleVersion.model_validate_json(line) for line in lines if line])
+    def load(cls, *paths: Path) -> "Corpus":
+        """Every version in the given versions.jsonl files, in their order."""
+        versions = []
+        for path in paths:
+            lines = path.read_text(encoding="utf-8").splitlines()
+            versions += [ArticleVersion.model_validate_json(line) for line in lines if line]
+        return cls(versions)
 
     def article_at(self, diploma: str, article: str, as_of: dt.date) -> ArticleVersion | None:
         """The version of an article in force on `as_of`, or None if there was none that day."""

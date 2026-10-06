@@ -6,7 +6,7 @@ citations are not claims.
 """
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from lex.bench.schema import Item
 from lex.domain import Citation, Retriever, System
@@ -20,7 +20,7 @@ class ItemResult:
     id: str
     type: str
     recall: dict[int, float]  # k -> recall@k
-    retrieved: list[str]  # article numbers, best first
+    retrieved: list[str]  # "diploma/article", best first
     expected: list[str]
 
 
@@ -37,8 +37,8 @@ def run_retrieval(
                 id=item.id,
                 type=item.type,
                 recall={k: recall_at_k(item.must_cite, ranked, k) for k in ks},
-                retrieved=[c.article for c in ranked],
-                expected=[c.article for c in item.must_cite],
+                retrieved=_ids(ranked),
+                expected=_ids(item.must_cite),
             )
         )
     return results
@@ -68,6 +68,7 @@ class AnswerResult:
     expected: list[str]  # must_cite
     allowed: list[str]  # may_cite
     text: str
+    requests: list[str] = field(default_factory=list)  # what the system asked for first
 
 
 def _ids(citations: list[Citation]) -> list[str]:
@@ -93,6 +94,7 @@ def run_answers(items: list[Item], system: System) -> list[AnswerResult]:
                 expected=_ids(item.must_cite),
                 allowed=_ids(item.may_cite),
                 text=answer.text,
+                requests=answer.requests,
             )
         )
     return results

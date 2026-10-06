@@ -1,57 +1,57 @@
 {
   "split": "dev",
   "bench": {
-    "items": 70,
-    "sha": "8b4ac7025370"
+    "items": 84,
+    "sha": "ebae32d87d5a"
   },
   "system": "judge-check",
   "config": {
     "judge": "gemma-4-26b-a4b-it",
-    "judge_prompt": "b103c12eae1b",
+    "judge_prompt": "a4aecc7ccf8a",
     "pass_share": 0.9,
     "unparsed": 0,
     "usage": {
-      "calls": 95,
-      "cached": 78,
-      "prompt_tokens": 43691,
-      "completion_tokens": 4272
+      "calls": 114,
+      "cached": 101,
+      "prompt_tokens": 54769,
+      "completion_tokens": 5143
     }
   },
-  "commit": "e8f11edcbe13e90079a4fce88b0174ca6d4191f2",
+  "commit": "11362b3f1624328c8016aeb48f2e1dc86e993814",
   "uncommitted_changes": false,
-  "run_at": "2026-10-01T17:52:38+01:00",
+  "run_at": "2026-10-02T00:21:57+01:00",
   "summary": {
     "reference": {
-      "cases": 54,
-      "as_expected": 54,
+      "cases": 66,
+      "as_expected": 66,
       "share": 1.0,
-      "correta": 54,
+      "correta": 66,
       "parcial": 0,
       "errada": 0
     },
     "yes-no": {
-      "cases": 14,
-      "as_expected": 14,
+      "cases": 15,
+      "as_expected": 15,
       "share": 1.0,
       "correta": 0,
       "parcial": 0,
-      "errada": 14
+      "errada": 15
     },
     "altered": {
-      "cases": 41,
-      "as_expected": 41,
+      "cases": 48,
+      "as_expected": 48,
       "share": 1.0,
       "correta": 0,
       "parcial": 1,
-      "errada": 40
+      "errada": 47
     },
     "number": {
-      "cases": 27,
-      "as_expected": 27,
+      "cases": 33,
+      "as_expected": 33,
       "share": 1.0,
       "correta": 0,
       "parcial": 1,
-      "errada": 26
+      "errada": 32
     },
     "passed": true
   },
@@ -718,6 +718,139 @@
       "id": "ct-0162",
       "kind": "number",
       "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até seis dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0001",
+      "kind": "reference",
+      "answer": "É um meio processual que se destina a efetivar a cessação do arrendamento, qualquer que seja o fim a que este se destina, quando o arrendatário não desocupa o locado na data prevista na lei ou na data fixada por convenção entre as partes (art. 15.º, n.º 1, do NRAU). Com o pedido de despejo pode ser pedido também o pagamento de rendas, encargos ou despesas em dívida, desde que o montante tenha sido comunicado ao arrendatário (n.º 6).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0002",
+      "kind": "reference",
+      "answer": "No Balcão do Arrendatário e do Senhorio (BAS), criado junto da Direção-Geral da Administração da Justiça para tramitar o procedimento especial de despejo e a injunção em matéria de arrendamento, com competência em todo o território nacional (art. 15.º-A do NRAU). O requerimento de despejo é apresentado no BAS, em modelo próprio (art. 15.º-B, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0003",
+      "kind": "reference",
+      "answer": "Qualquer que seja o fim do arrendamento, à cessação do contrato por revogação (acordo das partes), por caducidade pelo decurso do prazo, não sendo o contrato renovável, por oposição à renovação, por denúncia pelo senhorio, por resolução por comunicação (por falta de pagamento de rendas, encargos ou despesas, ou por oposição do arrendatário à realização de obras) e por denúncia pelo arrendatário em resposta à iniciativa do senhorio; cada caso exige os documentos que o art. 15.º, n.º 2, do NRAU indica, a começar pelo contrato de arrendamento. Também se pode recorrer a ele quando se tenha frustrado a comunicação de resolução ao arrendatário (n.º 4).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0004",
+      "kind": "reference",
+      "answer": "O requerimento tem de se basear nos documentos que o art. 15.º, n.º 2, do NRAU indica para cada forma de cessação, a começar pelo contrato de arrendamento (por exemplo, o contrato escrito com o prazo, na caducidade pelo decurso do prazo), e o procedimento só pode ser usado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC (n.º 5). O requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos quatro anos, salvo contrato mais recente (art. 15.º-C, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0004",
+      "kind": "number",
+      "answer": "O requerimento tem de se basear nos documentos que o art. 15.º, n.º 2, do NRAU indica para cada forma de cessação, a começar pelo contrato de arrendamento (por exemplo, o contrato escrito com o prazo, na caducidade pelo decurso do prazo), e o procedimento só pode ser usado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC (n.º 5). O requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos oito anos, salvo contrato mais recente (art. 15.º-C, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0005",
+      "kind": "reference",
+      "answer": "Só para deduzir oposição ao requerimento de despejo e nos atos processuais posteriores à distribuição do processo a tribunal, em que as partes têm de se fazer representar por advogado (art. 15.º-S, n.os 3 e 4, do NRAU).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0011",
+      "kind": "reference",
+      "answer": "Sim: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há seis meses (n.º 2).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0011",
+      "kind": "number",
+      "answer": "Sim: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há nove meses (n.º 2).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0011",
+      "kind": "yes-no",
+      "answer": "Não: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há seis meses (n.º 2).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0012",
+      "kind": "reference",
+      "answer": "Só se tivesse duração superior a seis meses: em 2010, o art. 1069.º do Código Civil, na redação da Lei n.º 6/2006, exigia a forma escrita ao contrato de arrendamento urbano com duração superior a seis meses.",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0012",
+      "kind": "number",
+      "answer": "Só se tivesse duração superior a nove meses: em 2010, o art. 1069.º do Código Civil, na redação da Lei n.º 6/2006, exigia a forma escrita ao contrato de arrendamento urbano com duração superior a seis meses.",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0014",
+      "kind": "reference",
+      "answer": "A mora igual ou superior a três meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art. 1083.º, n.º 3, do Código Civil); também o é a mora superior a oito dias por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses, se o senhorio tiver avisado o arrendatário por carta registada com aviso de receção, após o terceiro atraso, de que tenciona pôr fim ao contrato (n.os 4 e 6). A resolução por mora de três meses opera por comunicação e fica sem efeito se o arrendatário puser fim à mora no prazo de um mês, o que só pode fazer uma vez por contrato (art. 1084.º, n.os 2 a 4).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0014",
+      "kind": "number",
+      "answer": "A mora igual ou superior a seis meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art. 1083.º, n.º 3, do Código Civil); também o é a mora superior a oito dias por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses, se o senhorio tiver avisado o arrendatário por carta registada com aviso de receção, após o terceiro atraso, de que tenciona pôr fim ao contrato (n.os 4 e 6). A resolução por mora de três meses opera por comunicação e fica sem efeito se o arrendatário puser fim à mora no prazo de um mês, o que só pode fazer uma vez por contrato (art. 1084.º, n.os 2 a 4).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0015",
+      "kind": "reference",
+      "answer": "É o arrendamento conjunto de uma parte urbana e de uma parte rústica. É havido por urbano quando essa seja a vontade dos contratantes; na dúvida, atende-se ao fim principal do contrato e, depois, à renda que atribuíram a cada parte, e, se esses critérios faltarem ou não bastarem, o arrendamento tem-se por urbano (art. 1066.º do Código Civil).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0019",
+      "kind": "reference",
+      "answer": "O destino do arrendamento é decidido por acordo dos cônjuges, que podem optar pela transmissão ou pela concentração do arrendamento a favor de um deles; na falta de acordo, decide o tribunal, tendo em conta a necessidade de cada um, os interesses dos filhos e outros fatores relevantes. A transferência ou a concentração acordada e homologada, ou a decisão judicial, é notificada oficiosamente ao senhorio (art. 1105.º do Código Civil).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0022",
+      "kind": "reference",
+      "answer": "Como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em quinze dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art. 1038.º do Código Civil).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0022",
+      "kind": "number",
+      "answer": "Como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em vinte dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art. 1038.º do Código Civil).",
+      "verdict": "errada",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0023",
+      "kind": "reference",
+      "answer": "Depende do fundamento. Com base nas causas do n.º 2 do art. 1083.º do Código Civil (por exemplo, a violação de regras de sossego ou de boa vizinhança, ou o uso do prédio para fim diverso), a resolução é decretada nos termos da lei de processo, isto é, pelo tribunal (art. 1084.º, n.º 1). Fundada em mora igual ou superior a três meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art. 1083.º, n.º 3), ou em atrasos repetidos (n.º 4), opera por comunicação ao arrendatário em que se invoque fundamentadamente a obrigação incumprida (art. 1084.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true
+    },
+    {
+      "id": "ar-0023",
+      "kind": "number",
+      "answer": "Depende do fundamento. Com base nas causas do n.º 2 do art. 1083.º do Código Civil (por exemplo, a violação de regras de sossego ou de boa vizinhança, ou o uso do prédio para fim diverso), a resolução é decretada nos termos da lei de processo, isto é, pelo tribunal (art. 1084.º, n.º 1). Fundada em mora igual ou superior a seis meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art. 1083.º, n.º 3), ou em atrasos repetidos (n.º 4), opera por comunicação ao arrendatário em que se invoque fundamentadamente a obrigação incumprida (art. 1084.º, n.º 2).",
       "verdict": "errada",
       "as_expected": true
     }

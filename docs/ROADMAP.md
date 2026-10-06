@@ -285,7 +285,7 @@ stay the stronger measure (`label`, then `judge`).
 40 right answers accepted, 28 of 28 altered ones caught): 82% of the demo's answers on the
 held-out test set judged correct."
 
-## Phase 6: Wider corpus, benchmark v1, publication (current)
+## Phase 6: Wider corpus, benchmarks v1 and v2, publication (done 2026-10-06 but the legal review)
 
 Phases 3 to 5 report their test numbers on benchmark v0 (54 test items). From 2026-10-01 the
 README and the leaderboard report v1; v0's test runs are kept in `results/test/v0/`.
@@ -328,7 +328,50 @@ README and the leaderboard report v1; v0's test runs are kept in `results/test/v
   101.º-C and 101.º-D for carers) or a refusal. The demo leads the reference system on
   correctness (0.76 against 0.67), mostly through fewer partial answers; the two differ in
   embeddings and in answer format, so this does not say which change helps.
-- Add tenancy (Código Civil and NRAU) and the Código do IRS.
+- ~~Add tenancy (Código Civil and NRAU)~~; the Código do IRS waits ([ADR 0017](decisions/0017-tenancy.md)).
+  Tenancy's corpus is in, 2026-10-01: the Código Civil's articles 1022.º to 1113.º (94
+  articles, 147 versions) and the NRAU (86 articles, 177 versions), every version dated from the
+  DR, with the PGDL's labels corrected where they credit a republication, three of the DR's own
+  dates corrected, and 48 spot checks against the DR's history (all agree but two, where the
+  DR is the one wrong). Retrieval, answers, the MCP server and the page work across the three
+  diplomas: articles are cited by id ("CT 238", "NRAU 9"), a bare article number goes to the
+  diploma the question speaks of, and the page has a diploma list and `dip=` links.
+
+  **Benchmark v2, 181 items** (2026-10-02): 23 tenancy items (`ar-`), 14 in dev and 9 in test,
+  from the DGAJ's pages on the eviction procedure (tribunais.org.pt) and the Diário da
+  República's Lexionário; gov.pt and the Portal da Habitação, whose terms allow only
+  non-commercial reuse, are not used. Dev 84 items, test 97. v1's test runs are in
+  `results/test/v1/`.
+
+  On dev, the demo's retrieval was weakest on tenancy (recall@5 0.63 on 12 items against 0.89 on
+  labour): the eviction procedure's 22 articles read alike. Embedding questions in Gemini
+  Embedding 2's documented query format (ADR 0014, amended) took dev recall@5 from 0.84 to 0.90,
+  tenancy to 0.92; on test the demo's recall@1 went from 0.71 to 0.79.
+
+  **Test results on v2** (`results/test/`; 80 answerable and 17 unanswerable items):
+
+  | Retrieval | recall@1 | recall@5 | recall@10 | composite recall@10 |
+  |---|---|---|---|---|
+  | BM25 | 0.48 | 0.69 | 0.74 | 0.71 |
+  | Dense (BGE-M3) | 0.59 | 0.79 | 0.82 | 0.83 |
+  | BGE-M3 + reranker + parser (reference) | 0.76 | 0.91 | 0.95 | 0.85 |
+  | Gemini Embedding 2 + parser (the demo) | 0.79 | 0.96 | 0.99 | 0.97 |
+
+  | Answers (Flash-Lite, top 5) | Correct | Citation recall / precision | Refused: answerable, unanswerable | Composite: recall, correct |
+  |---|---|---|---|---|
+  | The demo (a citation per sentence) | 0.71 | 0.92 / 0.92 | 0 of 80, 15 of 17 | 0.67, 0.41 |
+  | Reference (BGE-M3 + reranker) | 0.72 | 0.90 / 0.89 | 1 of 80, 14 of 17 | 0.70, 0.53 |
+
+  On dev (84 items) the demo: 0.68 judged correct (labour 37 of 54, tenancy 8 of 12), citation
+  recall 0.83 and precision 0.90, 4 of 66 answerable questions refused, all 18 unanswerable ones
+  refused. The judge passed its known-answer checks on dev v2: 66 of 66 references, 48 of 48
+  altered answers. What the numbers say: correctness on test fell from v1's 0.76 to 0.71, almost
+  all of it into partial answers (0.26), not wrong ones (0.03); composite questions remain the
+  weak spot, and their articles are mostly retrieved, so what is left out is the answer's. The
+  reference system, behind the demo on v1 (0.67 against 0.76), is level with it on v2 (0.72
+  against 0.71) and ahead on composite questions (0.53 against 0.41).
+  A fault found on the way: the reference system's BGE-M3 embeddings were never committed to
+  the store, so each run embedded tenancy again (results unaffected; fixed).
 - Legal review by a law student or lecturer (Faculdade de Direito, Universidade Lusófona).
 - ~~Licences for the code and the data, with a decision on whether test stays hidden.~~ Done
   ([ADR 0016](decisions/0016-licences-and-hidden-test.md)): MIT for the code, CC BY 4.0 for the
@@ -341,14 +384,19 @@ README and the leaderboard report v1; v0's test runs are kept in `results/test/v
 - Keep the corpus current: the weekly amendment check is in place; rebuilding after an
   amendment stays a person's call, since dating new versions needs checking.
 
-## Phase 7: Optional
+## Phase 7: Optional (current)
 
 Chosen by what the numbers and job ads say:
 - fine-tuned embeddings (was Phase 5): Gemini Embedding 2 already finds the right article in the
   top 5 for 0.95 of dev questions, and 40 dev items cannot tell a small gain from noise, so it
   waits for benchmark v1; it also needs a GPU this machine cannot give PyTorch;
-- an agent (LangGraph) for `composite` questions: decomposition and cross-references did not
-  help them on dev (Phase 4), so an agent is next, kept only if it beats them on that subset;
+- ~~an agent for `composite` questions~~: built without a framework (`--format agent`) and not
+  kept ([ADR 0018](decisions/0018-agent.md)). On dev v2 the model never asked for more (0
+  searches and 0 reads in 168 answers), yet its prompt scored 0.74 correct in both of two runs
+  against the per-sentence format's 0.68 and 0.70, and refused none of the 66 answerable
+  questions against 4 (all 18 unanswerable refused either way). The gain is the prompt's, and
+  two runs of the same system differ by about one item (`--repeat`). Next: the coverage
+  instruction alone in the per-sentence prompt, twice on dev, then a test run if it holds;
 - tracing (Langfuse), model routing, cost per question;
 - a local model for the answers on a Raspberry Pi (ADR 0012 has the quality; speed not measured);
 - a hand-scored comparison with Lia and TogaAI on a small dev subset, after checking their terms.

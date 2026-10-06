@@ -1,0 +1,48 @@
+# 0018. The agent is not kept; what helped was its prompt
+
+Date: 2026-10-06
+Status: accepted
+
+## Context
+
+Composite questions are the benchmark's weak spot (on test v2 the demo gets 0.41 of them
+correct). Deciding the parts before retrieval and following cross-references did not help them
+on dev (ROADMAP, Phase 4), so Phase 7 tried an agent (`lex.generation.agent`): the demo's
+per-sentence answer, after the model may ask, up to three times, for a search on a subject or
+for articles by id. Its system prompt is the per-sentence one plus a paragraph: "before
+answering, check whether the given articles cover every part of the question; if an article is
+missing you may ask for more", and the two request formats.
+
+Measured on dev v2 (84 items, 66 answerable; `results/dev/`, each run twice with `--repeat 1`,
+a fresh sample of the same prompts, since Gemini's endpoint takes no seed):
+
+| Dev v2 | Correct (run 1, run 2) | Answerable refused | Unanswerable refused | Citation recall | Composite correct |
+|---|---|---|---|---|---|
+| Per-sentence (the demo) | 0.68, 0.70 | 4, 4 of 66 | 18, 18 of 18 | 0.83, 0.83 | 0.47, 0.47 |
+| Agent | 0.74, 0.74 | 0, 0 of 66 | 18, 18 of 18 | 0.87, 0.87 | 0.58, 0.53 |
+
+In both agent runs the model made **no request**: 0 searches and 0 reads in 168 answers. Every
+difference therefore comes from the system prompt, not from the loop. The two runs of each
+system differ by one item in correct answers, so the gap between them (3 to 4 items, and the
+four refusals of answerable questions gone) is larger than the noise measured, though on 66
+items.
+
+## Decision
+
+- The agent loop is not kept: it adds code and, when used, calls and latency, and the model does
+  not use it. `--format agent` stays runnable, as the record of this result.
+- The demo keeps the per-sentence format for now. Its test numbers on v2 were measured with it,
+  and the agent prompt mixes two things: the instruction to check that every part of the
+  question is covered, and the description of requests the model could make. Which of them
+  stops the refusals is not known.
+- Next: measure the per-sentence prompt with the coverage instruction alone, twice on dev; if it
+  holds, it becomes the demo's prompt, with a test run at that milestone.
+
+## Consequences
+
+- Every comparison on dev now has a measured noise floor to stand on: about one item in 66
+  between two runs of the same system and prompt (two pairs of runs; more would narrow it).
+  Earlier decisions taken on differences of one or two items (ROADMAP, Phases 3 and 4) may have
+  been within it.
+- Revisit an agent if the questions grow beyond what five retrieved articles can hold (the
+  model never found anything missing here, with the demo's retrieval at dev recall@5 0.90).

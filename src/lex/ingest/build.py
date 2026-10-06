@@ -5,10 +5,23 @@ change come from the DR, the official source. Earlier versions come from the PGD
 article, both sources must name the same amending diplomas, and the PGDL's current text is
 compared with the DR's as a measure of how far the PGDL can be trusted for the older ones.
 
-A version's start date is resolved in this order, and anything but the first is logged:
-1. the DR's note on that article for the diploma that introduced the version;
-2. READ_FROM_DIPLOMA, dates read by hand from a diploma's own entry-into-force article, for
-   diplomas that start on different dates for different articles;
+Where they name different diplomas, two cases have been seen. The PGDL may credit a text to the
+act that republished the whole diploma rather than to the one that changed the article (the
+NRAU's texts of 2012, credited to Lei n.º 79/2014): if it has as many texts as the DR lists
+changes, its texts are taken in order as those changes. Or the PGDL may lack a change, such as
+the Código Civil's revocation of its articles 1064.º to 1082.º in 1975, whose text it does not
+show: then its most recent texts are kept as long as they match the DR's most recent changes,
+one for one, and the older ones are dropped, since the text before a missing change would
+otherwise be stretched over it. A rectification the PGDL folds into the text it rectifies is
+not a missing change. Either way the article is logged, and in the second its history is marked
+incomplete.
+
+A version's start date is resolved in this order, and anything but the DR's note is logged:
+0. a correction (codes.py), where the DR's own note is wrong, with the reason;
+1. the DR's note on that article for the diploma that introduced the version, or, for the
+   diploma's own first text, its entry into force;
+2. read_from_diploma (codes.py), dates read by hand from a diploma's own entry-into-force
+   article, for diplomas that start on different dates for different articles;
 3. for a rectification, the date of the diploma it rectifies: "as declarações de retificação
    reportam os efeitos à data da entrada em vigor do texto retificado" (Lei n.º 74/98, art. 5.º,
    n.º 4);
@@ -22,31 +35,13 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 
 from lex.ingest import dr, pgdl
+from lex.ingest.codes import CT as CT_CODE
+from lex.ingest.codes import Code
 from lex.ingest.fetch import Page
 from lex.ingest.labels import diploma_id
 from lex.store.models import ArticleVersion
 
-CT = "lei-7-2009"
-# The code's own entry into force, as the DR dates the Declaração de Rectificação n.º 21/2009.
-CT_IN_FORCE = dt.date(2009, 2, 17)
-# Which diploma each rectification corrects, as the DR's list of amending acts describes them.
-RECTIFIES = {
-    "retificacao-21-2009": CT,
-    "retificacao-28-2017": "lei-73-2017",
-    "retificacao-13-2023": "lei-13-2023",
-}
-# (diploma, article) -> entry into force, where the DR's note on the article has no date.
-READ_FROM_DIPLOMA: dict[tuple[str, str], dt.date] = {
-    # Lei n.º 90/2019, art. 9.º, n.º 1, as rectified by Retificação n.º 48/2019: "com o Orçamento
-    # do Estado posterior à sua publicação", i.e. Lei n.º 2/2020, published 2020-03-31 and in
-    # force the next day (its art. 430.º).
-    **{
-        ("lei-90-2019", article): dt.date(2020, 4, 1)
-        for article in ("35", "37-A", "40", "42", "43", "53", "65", "94")
-    },
-    # Lei n.º 90/2019, art. 9.º, n.º 2: "30 dias após a publicação", published 2019-09-04.
-    **{("lei-90-2019", article): dt.date(2019, 10, 4) for article in ("33-A", "252-A")},
-}
+CT_IN_FORCE = CT_CODE.in_force
 
 
 @dataclass
@@ -55,16 +50,42 @@ class Report:
     versions: int = 0
     problems: list[str] = field(default_factory=list)
     resolved: list[str] = field(default_factory=list)  # dates found by rules 2 or 3
+    # Articles whose PGDL texts were credited, in order, to the DR's list of changes.
+    relabelled: list[str] = field(default_factory=list)
+    # Articles where the PGDL lacks a change the DR lists: only the texts after it are kept.
+    gaps: list[str] = field(default_factory=list)
     incomplete_history: list[str] = field(default_factory=list)  # articles; no temporal items
     missing_current: list[str] = field(default_factory=list)  # articles with no version stored
     text_mismatches: list[str] = field(default_factory=list)
     rulings: dict[str, list[str]] = field(default_factory=dict)
+    # Articles whose effects another diploma defers or suspends, in part or whole: their
+    # versions start when the DR says the change entered into force, so these are listed.
+    remarks: dict[str, list[str]] = field(default_factory=dict)
 
 
 def normalise(text: str) -> str:
     text = text.replace(chr(0x2013), "-")  # en dash
     text = re.sub(r"[(\[]\s*(Revogad[oa])\s*\.?\s*[)\]]\.?", r"(\1.)", text)
     return " ".join(text.split())
+
+
+def _changes(ref: dr.Article, code: Code) -> list[str]:
+    """Who gave the article each of its texts, oldest first, by the DR's notes, which the page
+    lists newest first: the diploma itself, unless an act added the article, then each act that
+    changed, rectified or revoked it."""
+    authors = [] if any(note.kind == "aditado" for note in ref.notes) else [code.diploma]
+    for note in reversed(ref.notes):
+        if not authors or authors[-1] != note.diploma:
+            authors.append(note.diploma)
+    return authors
+
+
+def _matching_tail(authors: list[str], changes: list[str]) -> int:
+    """How many of the most recent texts the two lists credit to the same acts, one for one."""
+    n = 0
+    while n < min(len(authors), len(changes)) and authors[-1 - n] == changes[-1 - n]:
+        n += 1
+    return n
 
 
 def _unanimous_dates(reference: dict[str, dr.Article]) -> dict[str, dt.date]:
@@ -81,6 +102,7 @@ def build(
     old: dict[tuple[str, int], tuple[pgdl.OldVersion, Page]],
     reference: dict[str, dr.Article],
     reference_fetched: dt.date,
+    code: Code = CT_CODE,
 ) -> tuple[list[ArticleVersion], Report]:
     versions: list[ArticleVersion] = []
     report = Report(articles=len(current))
@@ -94,40 +116,64 @@ def build(
             continue
         if ref.rulings:
             report.rulings[number] = list(ref.rulings)
+        if ref.remarks:
+            report.remarks[number] = list(ref.remarks)
         notes = {note.diploma: note.in_force for note in ref.notes}
         chain = [old[(article_id, r.number)] for r in sorted(article.old_versions, key=_number)]
         latest = article.amended_by[-1] if article.amended_by else article.added_by
-        latest_by = diploma_id(latest) if latest else CT
+        latest_by = diploma_id(latest) if latest else code.diploma
 
         pgdl_diplomas = {diploma_id(label) for label in article.amended_by}
         pgdl_diplomas |= {diploma_id(v.introduced_by) for v, _ in chain}
         if article.added_by:
             pgdl_diplomas.add(diploma_id(article.added_by))
-        comparable = {d for d in pgdl_diplomas if d != CT and not d.startswith("retificacao")}
+        comparable = {
+            d for d in pgdl_diplomas if d != code.diploma and not d.startswith("retificacao")
+        }
         on_dr = {d for d in notes if not d.startswith("retificacao")}
+        # Who gave the article each of its texts, oldest first, the current one last.
+        authors = [diploma_id(v.introduced_by) for v, _ in chain] + [latest_by]
         if comparable != on_dr:
-            report.problems.append(
-                f"{number}: amended by {sorted(comparable)} on the PGDL, {sorted(on_dr)} on the DR"
-            )
+            changes = _changes(ref, code)
+            # A rectification the PGDL folds into the text it rectifies is not a missing change.
+            folded = [c for c in changes if not c.startswith("retificacao") or c in authors]
+            if len(changes) == len(authors):
+                report.relabelled.append(f"{number}: {authors} on the PGDL, {changes} on the DR")
+                authors = changes
+            elif tail := _matching_tail(authors, folded):
+                report.gaps.append(
+                    f"{number}: {authors} on the PGDL, {changes} on the DR; the {tail} most"
+                    " recent texts kept"
+                )
+                report.incomplete_history.append(number)
+                chain, authors = chain[len(chain) + 1 - tail :], authors[-tail:]
+            else:
+                report.problems.append(
+                    f"{number}: amended by {sorted(comparable)} on the PGDL, {sorted(on_dr)} on "
+                    "the DR; only the current text is kept"
+                )
+                report.incomplete_history.append(number)
+                chain, authors = [], changes[-1:]
         if ref.text and normalise(article.text) != normalise(ref.text):
             report.text_mismatches.append(number)
 
         # (heading, text, introduced_by, source url, fetched), oldest first. The current text is
         # the DR's; a revoked article has none there, so the PGDL's is kept.
         steps = [
-            (v.heading, v.text, diploma_id(v.introduced_by), p.url, p.fetched) for v, p in chain
+            (v.heading, v.text, by, p.url, p.fetched)
+            for (v, p), by in zip(chain, authors[:-1], strict=True)
         ]
         if ref.text:
-            steps.append((ref.heading, ref.text, latest_by, dr.CT_URL, reference_fetched))
+            steps.append((ref.heading, ref.text, authors[-1], code.dr_url, reference_fetched))
         else:
-            steps.append((article.heading, article.text, latest_by, page.url, page.fetched))
+            steps.append((article.heading, article.text, authors[-1], page.url, page.fetched))
 
         # A version without a start date also leaves the one before it without an end, so only
         # the versions after the last undated one are kept. The article's history is then
         # incomplete, and it is listed so no temporal item relies on it.
         dated: list[tuple[dt.date, str, str, str, str, dt.date]] = []
         for heading, text, by, source_url, fetched in steps:
-            start = _start_of(by, number, notes, by_diploma, report.resolved)
+            start = _start_of(by, number, notes, by_diploma, report.resolved, code)
             if start is None:
                 report.problems.append(f"{number}: no entry-into-force date for {by}")
                 report.incomplete_history.append(number)
@@ -148,7 +194,7 @@ def build(
                 continue  # replaced the day it started, e.g. by a rectification
             versions.append(
                 ArticleVersion(
-                    diploma=CT,
+                    diploma=code.diploma,
                     article=number,
                     heading=heading,
                     path=list(ref.path),
@@ -170,20 +216,26 @@ def _start_of(
     notes: dict[str, dt.date | None],
     by_diploma: dict[str, dt.date],
     resolved: list[str],
+    code: Code = CT_CODE,
 ) -> dt.date | None:
     """When the version of `article` introduced by `by` entered into force (rules in the module
     docstring)."""
-    if by == CT:
-        return CT_IN_FORCE
+    if (by, article) in code.corrections:
+        corrected, why = code.corrections[(by, article)]
+        resolved.append(f"{article}: {by} dated {corrected}, corrected: {why}")
+        return corrected
+    read = code.read_from_diploma
+    if by == code.diploma and (by, article) not in read:
+        return code.in_force
     noted = notes.get(by)
-    if noted is not None:
+    if noted is not None and by != code.diploma:
         return noted
-    if (by, article) in READ_FROM_DIPLOMA:
-        start: dt.date | None = READ_FROM_DIPLOMA[(by, article)]
+    if (by, article) in read:
+        start: dt.date | None = read[(by, article)]
         rule = "read from the diploma's entry-into-force article"
-    elif by in RECTIFIES:
-        start = _start_of(RECTIFIES[by], article, notes, by_diploma, resolved)
-        rule = f"as {RECTIFIES[by]}, which it rectifies"
+    elif by in code.rectifies:
+        start = _start_of(code.rectifies[by], article, notes, by_diploma, resolved, code)
+        rule = f"as {code.rectifies[by]}, which it rectifies"
     else:
         start = by_diploma.get(by)
         rule = "the DR's date for it on every other article"

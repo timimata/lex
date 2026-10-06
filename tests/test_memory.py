@@ -54,6 +54,7 @@ class Words:
     """Embeds a text as counts of four words, normalised."""
 
     name = "words@4"
+    query_format = "{}"
     WORDS = ("férias", "majoração", "faltas", "falta")
 
     def __init__(self) -> None:
@@ -83,6 +84,27 @@ def test_dense_search_ranks_only_the_law_in_force(tmp_path: Path) -> None:
     assert [c.article for c in dense.search("faltas", TODAY, 3)] == ["251", "252-B", "238"]
     assert dense.search("falta", dt.date(2024, 1, 1), 3)[1].article != "252-B"  # not yet law
     assert dense.search("férias", dt.date(2008, 1, 1), 3) == []
+
+
+def test_a_question_is_embedded_as_the_model_asks_and_documents_are_not(tmp_path: Path) -> None:
+    class Asked(Words):
+        query_format = "task: question answering | query: {}"
+
+        def __init__(self) -> None:
+            super().__init__()
+            self.texts: list[str] = []
+
+        def encode(self, texts: list[str]) -> list[list[float]]:
+            self.texts += texts
+            return super().encode(texts)
+
+    embedder = Asked()
+    vectors, _ = embed_corpus(Corpus(VERSIONS), embedder, tmp_path / "v.npz")
+    DenseInMemory(Corpus(VERSIONS), embedder, vectors).search("faltas {x}", TODAY, 1)
+
+    *documents, question = embedder.texts
+    assert documents[0] == "Epígrafe\nférias com majoração" and len(documents) == 4
+    assert question == "task: question answering | query: faltas {x}"
 
 
 def test_vectors_are_reused_until_a_text_changes(tmp_path: Path) -> None:

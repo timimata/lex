@@ -18,8 +18,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CORPUS = ROOT / "data" / "processed" / "ct"
-VECTORS = CORPUS / "vectors-gemini-embedding-2-768.npz"
+PROCESSED = ROOT / "data" / "processed"  # one folder per diploma, vectors beside
+VECTORS = PROCESSED / "vectors-gemini-embedding-2-768.npz"
 SKIP = shutil.ignore_patterns("__pycache__", "*.pyc")
 
 
@@ -42,7 +42,10 @@ def assemble(out: Path) -> None:
         assert "items" not in json.loads(run.read_text(encoding="utf-8")), run
         shutil.copy(run, out / "results" / run.name)
     (out / "data").mkdir()
-    shutil.copy(CORPUS / "versions.jsonl", out / "data" / "versions.jsonl")
+    # Every diploma's versions in one file, in the order the vectors follow.
+    files = sorted(PROCESSED.glob("*/versions.jsonl"))  # as lex.store.memory.corpus_files
+    joined = "".join(f.read_text(encoding="utf-8") for f in files)
+    (out / "data" / "versions.jsonl").write_text(joined, encoding="utf-8", newline="\n")
     if not VECTORS.exists():
         raise SystemExit(f"no {VECTORS.name}: run python -m lex.eval retrieval dense-gemini+refs")
     shutil.copy(VECTORS, out / "data" / "vectors.npz")
@@ -58,10 +61,10 @@ def warm(out: Path) -> None:
 
     from lex.api.__main__ import demo_system
     from lex.api.app import lisbon_today
-    from lex.store.memory import Corpus
+    from lex.store.memory import Corpus, corpus_files
 
     load_dotenv(ROOT / ".env")
-    system = demo_system(Corpus.load(CORPUS / "versions.jsonl"), VECTORS)
+    system = demo_system(Corpus.load(*corpus_files(PROCESSED)), VECTORS)
     today = lisbon_today()
     rows = []
     for example in json.loads((ROOT / "web" / "src" / "examples.json").read_text(encoding="utf-8")):

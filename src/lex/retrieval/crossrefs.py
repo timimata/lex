@@ -19,16 +19,19 @@ PER_ARTICLE = 2  # references taken from each, in the order the text gives them
 _RELATIVE = re.compile(r"\bartigo\s+(anterior|seguinte)\b", re.IGNORECASE)
 
 
-def cited_by(text: str, article: str) -> list[str]:
-    """The code's articles an article's text refers to, in order, itself excluded: by number
-    ("artigo 238.º", with the reference parser's rules for other diplomas) and by position
-    ("o artigo anterior", "o artigo seguinte")."""
-    refs = find_references(text)
-    if article.isdigit():
+def cited_by(text: str, citing: Citation) -> list[Citation]:
+    """The articles an article's text refers to, in order, itself excluded: by number ("artigo
+    238.º", in its own diploma unless the text names another the corpus holds; others are left
+    out) and by position ("o artigo anterior", "o artigo seguinte")."""
+    refs = [
+        Citation(diploma=ref.diploma or citing.diploma, article=ref.article)
+        for ref in find_references(text)
+    ]
+    if citing.article.isdigit():
         for match in _RELATIVE.finditer(text):
             step = 1 if match.group(1).lower() == "seguinte" else -1
-            refs.append(str(int(article) + step))
-    return [r for r in dict.fromkeys(refs) if r != article]
+            refs.append(Citation(diploma=citing.diploma, article=str(int(citing.article) + step)))
+    return [r for r in dict.fromkeys(refs) if r != citing]
 
 
 class WithCrossReferences:
@@ -53,11 +56,10 @@ class WithCrossReferences:
             if version is None:
                 continue
             taken = 0
-            for ref in cited_by(version.text, citation.article):
+            for target in cited_by(version.text, citation):
                 if taken == self.per_article:
                     break
-                target = Citation(diploma=citation.diploma, article=ref)
-                if target in out or self.article_at(target.diploma, ref, as_of) is None:
+                if target in out or self.article_at(target.diploma, target.article, as_of) is None:
                     continue
                 out.append(target)  # moved up if the base ranked it lower: two signals agree
                 taken += 1

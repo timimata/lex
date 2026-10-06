@@ -16,6 +16,7 @@ BGE_M3_REVISION = "5617a9f61b028005a4858fdac845db406aefb181"
 
 class Embedder(Protocol):
     name: str  # stored with each embedding; different models or revisions never mix
+    query_format: str  # how a question is written before it is embedded; "{}" as it is
 
     def encode(self, texts: list[str]) -> list[list[float]]:
         """One normalised vector per text."""
@@ -24,6 +25,7 @@ class Embedder(Protocol):
 
 class BgeM3:
     name = f"{BGE_M3}@{BGE_M3_REVISION[:7]}"
+    query_format = "{}"  # BGE-M3's dense vectors take no instruction
 
     def __init__(self) -> None:
         from sentence_transformers import SentenceTransformer  # the optional `dense` extra
@@ -37,6 +39,12 @@ class BgeM3:
 
 GEMINI_OPENAI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 RATE_LIMIT_WAITS = (30, 60, 120)  # seconds; free tiers limit requests per minute
+# Gemini Embedding 2 takes its task in the text, not as a parameter: Google's embeddings guide
+# writes a question asked for question answering like this, and a document as "title: ... |
+# text: ...". Taken from the guide, not tuned; on dev it raised recall@5 from 0.84 to 0.90
+# (ROADMAP, Phase 6). The stored vectors still embed documents as `document` writes them:
+# embedding the corpus again takes more texts (1,213) than the free tier allows in a day (1,000).
+GEMINI_QUERY = "task: question answering | query: {}"
 
 
 class ApiEmbedder:
@@ -54,10 +62,12 @@ class ApiEmbedder:
         waits: tuple[int, ...] = RATE_LIMIT_WAITS,  # () for a visitor who should not wait
         timeout: float = 120,  # seconds per request
         max_retries: int = 2,  # the client's own quick retries of transient errors
+        query_format: str = GEMINI_QUERY,
     ) -> None:
         from openai import OpenAI  # the optional `llm` extra
 
         self.waits = waits
+        self.query_format = query_format
         self.model = model
         self.dimensions = dimensions
         self.name = f"{model}@{dimensions}"
@@ -135,6 +145,9 @@ def embed_missing(conn: psycopg.Connection, embedder: Embedder, batch: int = 32)
                     for (d, a, vf, _, sha), vec in zip(chunk, vectors, strict=True)
                 ],
             )
+        # Inside the transaction the SELECT opened, `conn.transaction()` is only a savepoint:
+        # commit each batch, or a connection closed without a commit discards them all.
+        conn.commit()
         print(f"  embedded {min(start + batch, len(todo))}/{len(todo)}", flush=True)
     return len(todo)
 
@@ -146,7 +159,7 @@ class Dense:
         self.name = f"dense-{embedder.name.split('/')[-1].split('@')[0]}"
 
     def search(self, question: str, as_of: dt.date, k: int) -> list[Citation]:
-        query = _vector(self.embedder.encode([question])[0])
+        query = _vector(self.embedder.encode([self.embedder.query_format.format(question)])[0])
         rows = self.conn.execute(
             """
             SELECT v.diploma, v.article

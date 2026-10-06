@@ -1,0 +1,59 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 97,
+    "sha": "2a5e69546d80"
+  },
+  "system": "dense-gemini-embedding-2+refs",
+  "config": {
+    "model": "gemini-embedding-2@768",
+    "store": "memory",
+    "references": "ADR 0004 parser",
+    "ks": [
+      1,
+      3,
+      5,
+      10
+    ]
+  },
+  "commit": "35924357bc243c9f80b02bf2b484a8bc061faa9c",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-02T00:22:31+01:00",
+  "summary": {
+    "all": {
+      "items": 80,
+      "recall@1": 0.7108333333333333,
+      "recall@3": 0.9258333333333333,
+      "recall@5": 0.9429166666666667,
+      "recall@10": 0.99125
+    },
+    "composite": {
+      "items": 17,
+      "recall@1": 0.303921568627451,
+      "recall@3": 0.7450980392156863,
+      "recall@5": 0.8137254901960784,
+      "recall@10": 0.9705882352941176
+    },
+    "explicit_reference": {
+      "items": 9,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0
+    },
+    "simple": {
+      "items": 41,
+      "recall@1": 0.8048780487804879,
+      "recall@3": 0.975609756097561,
+      "recall@5": 0.975609756097561,
+      "recall@10": 1.0
+    },
+    "temporal": {
+      "items": 13,
+      "recall@1": 0.7461538461538461,
+      "recall@3": 0.9538461538461539,
+      "recall@5": 0.9692307692307692,
+      "recall@10": 0.9846153846153847
+    }
+  }
+}

@@ -97,10 +97,11 @@ python -m lex.bench snapshot    # the public mirror: every tracked file but test
 cd build/public && git add -A && git commit -m "Lex: snapshot of private commit <sha>" && git push
 hf upload timimata/lex build/hf . --repo-type dataset   # the dev split, after a snapshot
 python -m lex.ingest ct --offline   # rebuild article versions from data/raw (no network)
+python -m lex.ingest code nrau --offline   # or cc: tenancy (ADR 0017); codes.py lists them
 docker compose up -d --wait         # the store; tests that need it skip without it
 python -m lex.store load            # replace the store's contents with the ingestion output
 python -m lex.store show 238 --as-of 2011-06-01
-python -m lex.ingest spot-check 20 --offline   # store vs the DR's history view
+python -m lex.ingest spot-check 20 --offline   # versions vs the DR's history view; --code KEY
 python -m lex.eval retrieval bm25   # dev by default; --split test only at milestones
 python -m lex.eval answers          # the reference system on dev; needs LLM_API_KEY in .env
 python -m lex.api                   # the reference system over HTTP, on 127.0.0.1:8000

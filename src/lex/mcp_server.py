@@ -1,4 +1,5 @@
-"""python -m lex.mcp_server: Lex's Código do Trabalho as tools for an MCP client (an agent).
+"""python -m lex.mcp_server: Lex's corpus as tools for an MCP client (an agent): the Código do
+Trabalho and, on tenancy, the Código Civil's articles on leases and the NRAU (ADR 0017).
 
 Tools: `artigo` (an article as in force on a date), `versoes` (its timeline), `pesquisar` (the
 articles most relevant to a question, on a date) and `responder` (the demo's answer, with
@@ -23,13 +24,13 @@ from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 
 from lex.api.app import DISCLAIMER, lisbon_today
-from lex.domain import Answer, Citation, Retriever
-from lex.store.memory import Corpus
+from lex.domain import DIPLOMAS, Answer, Citation, Retriever
+from lex.store.memory import Corpus, corpus_files
 from lex.store.models import ArticleVersion
 
 ROOT = Path(__file__).resolve().parents[2]
-CORPUS = ROOT / "data" / "processed" / "ct"
-CT = "lei-7-2009"
+PROCESSED = ROOT / "data" / "processed"  # one folder per diploma, vectors beside
+SHORT = {d.short: diploma for diploma, d in DIPLOMAS.items()}  # 'CT' -> 'lei-7-2009'
 
 Search = Callable[[str, dt.date, int], list[Citation]]
 Respond = Callable[[str, dt.date], Answer]
@@ -37,6 +38,18 @@ Respond = Callable[[str, dt.date], Answer]
 
 def _date(value: str | None) -> dt.date:
     return dt.date.fromisoformat(value) if value else lisbon_today()
+
+
+def _diploma(short: str) -> str:
+    """'CT', 'CC' or 'NRAU' -> our id for the diploma."""
+    if short.upper() not in SHORT:
+        raise ToolError(f"Diploma desconhecido: {short}. Use um de {', '.join(SHORT)}.")
+    return SHORT[short.upper()]
+
+
+def _id(citation: Citation) -> str:
+    """'CT 238'."""
+    return f"{DIPLOMAS[citation.diploma].short} {citation.article}"
 
 
 def _number(article: str) -> str:
@@ -55,22 +68,30 @@ def build_server(
     no model start without a key."""
     server = MCPServer(
         name="lex",
-        title="Lex: Código do Trabalho",
+        title="Lex: lei do trabalho e do arrendamento",
         instructions=(
-            "O Código do Trabalho português (Lei n.º 7/2009) em todas as versões desde 2009. "
-            "Datas em AAAA-MM-DD; sem data, é a lei em vigor hoje em Lisboa. " + DISCLAIMER
+            "O Código do Trabalho português (CT, Lei n.º 7/2009) em todas as versões desde "
+            "2009 e, sobre o arrendamento, os artigos 1022.º a 1113.º do Código Civil (CC) e o "
+            "NRAU (Lei n.º 6/2006), com o histórico completo desde 27/06/2006. Diplomas como "
+            "CT, CC ou NRAU; datas em AAAA-MM-DD; sem data, é a lei em vigor hoje em Lisboa. "
+            + DISCLAIMER
         ),
     )
     built: dict[str, Any] = {}
 
     @server.tool()
-    def artigo(numero: str, data: str | None = None) -> dict[str, Any]:
-        """Um artigo do Código do Trabalho na versão em vigor numa data (por omissão, hoje)."""
-        day, number = _date(data), _number(numero)
-        version = corpus.article_at(CT, number, day)
+    def artigo(numero: str, diploma: str = "CT", data: str | None = None) -> dict[str, Any]:
+        """Um artigo de um diploma (CT, CC ou NRAU; por omissão, CT) na versão em vigor numa
+        data (por omissão, hoje)."""
+        day, number, which = _date(data), _number(numero), _diploma(diploma)
+        version = corpus.article_at(which, number, day)
         if version is None:
-            return {"erro": f"Nenhuma versão do artigo {number} em vigor a {day.isoformat()}."}
+            return {
+                "erro": f"Nenhuma versão do artigo {number} do {DIPLOMAS[which].short} em vigor"
+                f" a {day.isoformat()}."
+            }
         return {
+            "diploma": DIPLOMAS[which].short,
             "artigo": number,
             "epigrafe": version.heading,
             "texto": version.text,
@@ -82,21 +103,22 @@ def build_server(
         }
 
     @server.tool()
-    def versoes(numero: str) -> list[dict[str, Any]]:
-        """Todas as versões de um artigo do Código do Trabalho, da mais antiga à atual."""
+    def versoes(numero: str, diploma: str = "CT") -> list[dict[str, Any]]:
+        """Todas as versões de um artigo de um diploma (CT, CC ou NRAU; por omissão, CT), da
+        mais antiga à atual."""
         return [
             {
                 "em_vigor_desde": v.valid_from.isoformat(),
                 "em_vigor_ate": v.valid_to.isoformat() if v.valid_to else None,
                 "introduzido_por": v.introduced_by,
             }
-            for v in corpus.versions_of(CT, _number(numero))
+            for v in corpus.versions_of(_diploma(diploma), _number(numero))
         ]
 
     @server.tool()
     def pesquisar(pergunta: str, data: str | None = None, k: int = 5) -> list[dict[str, str]]:
-        """Os artigos do Código do Trabalho mais relevantes para uma pergunta, entre os em vigor
-        numa data (por omissão, hoje)."""
+        """Os artigos mais relevantes para uma pergunta, entre os em vigor numa data (por
+        omissão, hoje)."""
         if search is None:
             raise ToolError("Pesquisa indisponível neste servidor.")
         if "search" not in built:
@@ -106,13 +128,19 @@ def build_server(
         out = []
         for c in found:
             version = corpus.article_at(c.diploma, c.article, day)
-            out.append({"artigo": c.article, "epigrafe": version.heading if version else ""})
+            out.append(
+                {
+                    "diploma": DIPLOMAS[c.diploma].short,
+                    "artigo": c.article,
+                    "epigrafe": version.heading if version else "",
+                }
+            )
         return out
 
     @server.tool()
     def responder(pergunta: str, data: str | None = None) -> dict[str, Any]:
-        """Resposta do Lex a uma pergunta sobre o Código do Trabalho, com os artigos citados, ou
-        a recusa quando os artigos não permitem responder."""
+        """Resposta do Lex a uma pergunta sobre o trabalho ou o arrendamento, com os artigos
+        citados ('CT 238'), ou a recusa quando os artigos não permitem responder."""
         if respond is None:
             raise ToolError("Respostas indisponíveis neste servidor.")
         if "respond" not in built:
@@ -120,7 +148,7 @@ def build_server(
         answer: Answer = built["respond"](pergunta, _date(data))
         return {
             "resposta": answer.text,
-            "citacoes": [c.article for c in answer.citations],
+            "citacoes": [_id(c) for c in answer.citations],
             "recusa": answer.refused,
             "aviso": DISCLAIMER,
         }
@@ -130,7 +158,7 @@ def build_server(
 
 def main() -> int:
     load_dotenv(ROOT / ".env")
-    corpus = Corpus.load(CORPUS / "versions.jsonl")
+    corpus = Corpus.load(*corpus_files(PROCESSED))
 
     @functools.cache
     def retriever() -> Retriever:
@@ -140,7 +168,7 @@ def main() -> int:
         from lex.retrieval.references import WithReferences
 
         key = os.environ.get("EMBEDDING_API_KEY") or os.environ.get("LLM_API_KEY", "")
-        vectors = Vectors.load(CORPUS / "vectors-gemini-embedding-2-768.npz")
+        vectors = Vectors.load(PROCESSED / "vectors-gemini-embedding-2-768.npz")
         dense = DenseInMemory(corpus, ApiEmbedder(api_key=key, waits=()), vectors)
         return WithReferences(dense, corpus.article_at)
 

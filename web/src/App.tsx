@@ -1,29 +1,47 @@
-import { type ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
+import { type ReactNode, Suspense, lazy, useEffect, useRef, useState } from "react";
 import * as api from "./api";
 import type { ArticleView, Citation, Hit, Period, Reply, Run } from "./api";
 import { changes } from "./changes";
 import examples from "./examples.json";
-import { type Lang, STRINGS, type Strings, initialLang, saveLang } from "./i18n";
+import { type Lang, STRINGS, initialLang, saveLang } from "./i18n";
 import {
+  CT,
+  DIPLOMAS,
   FIRST_DAY,
   articleLabel,
-  count,
+  articleNumberLabel,
   day,
   diplomaLabel,
   number,
   systemLabel,
   today,
 } from "./labels";
+import * as links from "./links";
+import { PATHS, type View, VIEWS, Words, useWords } from "./words";
 
-type View = "ask" | "articles" | "results" | "about";
-const VIEWS: View[] = ["ask", "articles", "results", "about"];
-const CT = "lei-7-2009";
+// The pages a visitor reaches by a click, loaded then: the tables and the prose are not needed
+// to ask a question.
+const Results = lazy(() => import("./Results"));
+const About = lazy(() => import("./About"));
 
-const Words = createContext<{ lang: Lang; t: Strings }>({ lang: "pt", t: STRINGS.pt });
-const useWords = () => useContext(Words);
+// 'CT' -> 'lei-7-2009', for links and typed references.
+const BY_SHORT: Record<string, string> = Object.fromEntries(
+  Object.entries(DIPLOMAS).map(([id, d]) => [d.short, id]),
+);
+
+function same(a: Citation | null, b: Citation): boolean {
+  return a !== null && a.diploma === b.diploma && a.article === b.article;
+}
 
 // Shared with vercel/assemble.py, which answers them at deploy so they come back at once.
 const EXAMPLES: { question: string; asOf?: string }[] = examples;
+
+/** The view a location names: its path, or the article link, which opens under Articles. */
+function viewFromLocation(): View {
+  if (linkedArticle()) return "articles";
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  return VIEWS.find((v) => PATHS[v] === path) ?? "ask";
+}
 
 /** A question and date from the link (?q=...&d=...), so an answer can be shared. */
 function linkedQuestion(): { question: string; asOf?: string } | null {
@@ -34,40 +52,43 @@ function linkedQuestion(): { question: string; asOf?: string } | null {
   return { question, asOf: date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : undefined };
 }
 
-/** An article and date from the link (?art=238&d=...), to share an article as it was. */
-function linkedArticle(): { article: string; asOf?: string } | null {
+/** An article and date from the link (?art=238&dip=CT&d=...), to share an article as it was. */
+function linkedArticle(): { citation: Citation; asOf?: string } | null {
   const params = new URLSearchParams(window.location.search);
   const article = params.get("art");
   if (!article || !/^\d+(-[A-Z]{1,2})?$/i.test(article)) return null;
   const date = params.get("d") ?? undefined;
   return {
-    article: article.toUpperCase(),
+    citation: { diploma: BY_SHORT[params.get("dip") ?? "CT"] ?? CT, article: article.toUpperCase() },
     asOf: date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : undefined,
   };
 }
 
-/** "238", "art. 199.º-A", "artigo 252-b" -> "238", "199-A", "252-B"; anything else -> null. */
-function articleNumber(text: string): string | null {
-  const match = text.trim().match(/^(?:art(?:igo)?\.?\s*)?(\d+)\s*(?:\.?º)?\s*(?:-\s*([a-z]{1,2}))?$/i);
+/** "238", "art. 199.º-A", "artigo 1083.º do CC", "NRAU 9" -> the article and the diploma it
+ * names, if any; anything else -> null. */
+function articleRef(text: string): { article: string; diploma: string | null } | null {
+  const shorts = Object.keys(BY_SHORT).join("|");
+  const match = text
+    .trim()
+    .match(
+      new RegExp(
+        `^(?:(${shorts})\\s+)?(?:art(?:igo)?\\.?\\s*)?(\\d+)\\s*(?:\\.?º)?\\s*(?:-\\s*([a-z]{1,2}))?(?:\\s+(?:d[oa]\\s+)?(${shorts}))?$`,
+        "i",
+      ),
+    );
   if (!match) return null;
-  return match[2] ? `${Number(match[1])}-${match[2].toUpperCase()}` : String(Number(match[1]));
+  const article = match[3] ? `${Number(match[2])}-${match[3].toUpperCase()}` : String(Number(match[2]));
+  const short = (match[1] ?? match[4])?.toUpperCase();
+  return { article, diploma: short ? BY_SHORT[short] : null };
 }
 
-/** 2026-10-01 -> "quarta-feira, 1 de outubro de 2026" (or the English), for the masthead. */
-function longDate(iso: string, lang: Lang): string {
-  return new Intl.DateTimeFormat(lang === "pt" ? "pt-PT" : "en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(`${iso}T12:00:00Z`));
-}
-
-function setLink(params: Record<string, string>): void {
+/** Points the address at a view, keeping only the given query (a question, an article). */
+function setLink(view: View, params: Record<string, string>, push = false): void {
   const url = new URL(window.location.href);
+  url.pathname = PATHS[view];
   url.search = new URLSearchParams(params).toString();
-  window.history.replaceState(null, "", url.toString());
+  if (push) window.history.pushState(null, "", url.toString());
+  else window.history.replaceState(null, "", url.toString());
 }
 
 /** The answer's own text, and its list of sources ("Fontes (...):" lines), which the page shows
@@ -86,7 +107,8 @@ function splitSources(text: string): { body: string; sources: { label: string; s
   return { body: text.slice(0, at), sources };
 }
 
-// "(art. 238.º)" or "(arts. 238.º e 239.º)" after a sentence of a per-sentence answer.
+// "(art. 238.º do CT)", "(arts. 238.º e 239.º do CT)" or "(art. 1083.º do CC; art. 9.º do
+// NRAU)" after a sentence of a per-sentence answer.
 const MARKER = /\(arts?\. [^)]*\)/g;
 const NUMBER = /(\d+)\.º(?:-([A-Z]{1,2}))?/g;
 
@@ -112,14 +134,20 @@ function AnswerLine({
     for (const number of text.matchAll(NUMBER)) {
       const i = number.index ?? 0;
       const article = number[2] ? `${number[1]}-${number[2]}` : number[1];
-      const citation = citations.find((c) => c.article === article);
+      // The diploma the marker's part names after its numbers: "... do CC; ...".
+      const part = text.slice(i).split(";")[0];
+      const short = part.match(/ do ([A-Z]+)\)?\s*$/)?.[1];
+      const diploma = short ? BY_SHORT[short] : undefined;
+      const citation = citations.find(
+        (c) => c.article === article && (diploma === undefined || c.diploma === diploma),
+      );
       parts.push(text.slice(inner, i));
       parts.push(
         citation ? (
           <button
             key={i}
             type="button"
-            className={open?.article === article ? "on" : ""}
+            className={citation && same(open, citation) ? "on" : ""}
             onClick={() => onOpen(citation)}
           >
             {number[0]}
@@ -143,10 +171,34 @@ function AnswerLine({
   return <p>{pieces}</p>;
 }
 
+/** The azulejo as a mark: quarter circles meeting at the corners around a ring. */
+function Mark() {
+  return (
+    <svg className="mark" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+      <clipPath id="mark-clip">
+        <rect width="32" height="32" rx="5" />
+      </clipPath>
+      <g clipPath="url(#mark-clip)">
+        <rect width="32" height="32" fill="currentColor" />
+        <g className="mark-ground">
+          <circle r="8" />
+          <circle cx="32" r="8" />
+          <circle cy="32" r="8" />
+          <circle cx="32" cy="32" r="8" />
+          <circle cx="16" cy="16" r="3.2" />
+        </g>
+        <circle className="mark-ring" cx="16" cy="16" r="8.6" strokeWidth="2.2" />
+      </g>
+    </svg>
+  );
+}
+
 export default function App() {
   const [lang, setLang] = useState<Lang>(initialLang);
-  const [view, setView] = useState<View>(linkedArticle() ? "articles" : "ask");
+  const [view, setView] = useState<View>(viewFromLocation);
   const [demoSystem, setDemoSystem] = useState<string>("");
+  const [runs, setRuns] = useState<Run[] | null>(null);
+  const [runsError, setRunsError] = useState("");
   // Lisbon's date, from the server: the law asked about is Portuguese.
   const [serverToday, setServerToday] = useState<string>(today());
   const t = STRINGS[lang];
@@ -159,85 +211,136 @@ export default function App() {
       },
       () => setDemoSystem(""),
     );
+    api.leaderboard().then(setRuns, (e: Error) => setRunsError(e.message));
+    const back = () => setView(viewFromLocation());
+    window.addEventListener("popstate", back);
+    return () => window.removeEventListener("popstate", back);
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang === "pt" ? "pt-PT" : "en";
-  }, [lang]);
+    document.title = t.titles[view];
+  }, [lang, view, t]);
 
   function choose(next: Lang) {
     setLang(next);
     saveLang(next);
   }
 
+  /** Opens a view from the nav: its path on the address, the question or article kept. */
+  function go(next: View) {
+    if (next !== view) {
+      const url = new URL(window.location.href);
+      url.pathname = PATHS[next];
+      if (next !== "ask") url.searchParams.delete("q");
+      if (next !== "articles") url.searchParams.delete("art");
+      if (next !== "ask" && next !== "articles") url.searchParams.delete("d");
+      window.history.pushState(null, "", url.toString());
+    }
+    setView(next);
+    window.scrollTo({ top: 0 });
+  }
+
+  const demoRun = runs?.find((r) => r.task === "answers" && r.system === demoSystem) ?? null;
+
   return (
     <Words.Provider value={{ lang, t }}>
-      <header className="masthead">
-        <div className="wrap masthead-inner">
+      <a className="skip" href="#content">
+        {t.skip}
+      </a>
+      <header className="topbar">
+        <div className="wrap topbar-inner">
           <a
             className="wordmark"
             href="/"
             onClick={(e) => {
               e.preventDefault();
-              setView("ask");
+              go("ask");
             }}
           >
+            <Mark />
             <span className="wordmark-name">Lex</span>
             <span className="wordmark-tagline">{t.tagline}</span>
           </a>
-          <div className="masthead-side">
-            <span className="dateline">
-              {t.place}, {longDate(serverToday, lang)}
-            </span>
-            <div className="lang-switch" role="group" aria-label="Língua / Language">
-              {(["pt", "en"] as Lang[]).map((l) => (
-                <button key={l} className={lang === l ? "on" : ""} aria-pressed={lang === l} onClick={() => choose(l)}>
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
+          <nav className="nav" aria-label="Lex">
+            {VIEWS.map((v) => (
+              <a
+                key={v}
+                href={PATHS[v]}
+                className={view === v ? "on" : ""}
+                aria-current={view === v ? "page" : undefined}
+                onClick={(e) => {
+                  e.preventDefault();
+                  go(v);
+                }}
+              >
+                {t.pages[v]}
+              </a>
+            ))}
+          </nav>
+          <div className="lang-switch" role="group" aria-label={t.langSwitch}>
+            {(["pt", "en"] as Lang[]).map((l) => (
+              <button key={l} className={lang === l ? "on" : ""} aria-pressed={lang === l} onClick={() => choose(l)}>
+                {l.toUpperCase()}
+              </button>
+            ))}
           </div>
         </div>
       </header>
-      <nav className="navbar">
-        <div className="wrap tabs">
-          {VIEWS.map((v) => (
-            <button
-              key={v}
-              className={view === v ? "tab on" : "tab"}
-              aria-current={view === v ? "page" : undefined}
-              onClick={() => setView(v)}
-            >
-              {t.tabs[v]}
-            </button>
-          ))}
-        </div>
-      </nav>
+      <p className="notice" role="note">
+        <span className="wrap">{t.notice}</span>
+      </p>
 
-      <div className="notice" role="note">
-        <p className="wrap">{t.disclaimer}</p>
-      </div>
-
-      <main className="wrap main">
-        {/* Kept mounted across tabs, so a question and its answer survive a look elsewhere. */}
+      <main id="content" className="wrap main">
+        {/* Kept mounted across views, so a question and its answer survive a look elsewhere. */}
         <div hidden={view !== "ask"}>
-          <Ask latest={serverToday} />
+          <Ask latest={serverToday} demoRun={demoRun} onResults={() => go("results")} />
         </div>
         <div hidden={view !== "articles"}>
           <Browse latest={serverToday} />
         </div>
-        {view === "results" && <Results demoSystem={demoSystem} />}
-        {view === "about" && <About demoSystem={demoSystem} />}
+        <Suspense fallback={<p className="muted">{t.loading}…</p>}>
+          {view === "results" && <Results runs={runs} error={runsError} demoSystem={demoSystem} />}
+          {view === "about" && <About demoSystem={demoSystem} />}
+        </Suspense>
       </main>
 
       <footer className="site-footer">
-        <div className="wrap">
-          <p>{t.footerAbout}</p>
-          <p>{t.footerSources}</p>
+        <div className="wrap footer-grid">
+          <div className="footer-col">
+            <p className="footer-about">{t.footerAbout}</p>
+            <p>{t.footerSources}</p>
+          </div>
+          <div className="footer-col">
+            <h2 className="footer-head">{t.footerLinks}</h2>
+            <ul className="footer-links">
+              <li>
+                <a href={links.REPO}>{t.footerCode}</a>
+              </li>
+              <li>
+                <a href={links.DATASET}>{t.footerDataset}</a>
+              </li>
+              <li>
+                <a href={links.DR}>{t.footerDR}</a>
+              </li>
+              <li>
+                <a href={links.PGDL}>{t.footerPGDL}</a>
+              </li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h2 className="footer-head">{t.footerLicences}</h2>
+            <p>{t.footerLicenceText}</p>
+            <p>
+              {t.footerBy} {links.AUTHOR}.
+            </p>
+          </div>
+        </div>
+        <div className="wrap footer-legal">
           <p>{t.disclaimer}</p>
           {demoSystem && (
             <p>
-              {t.systemOfDemo}: {systemLabel(demoSystem, lang)}
+              {t.systemOfDemo}: {systemLabel(demoSystem, lang)}.
             </p>
           )}
         </div>
@@ -246,7 +349,63 @@ export default function App() {
   );
 }
 
-function Ask({ latest }: { latest: string }) {
+/** Beside the question: what the page is, and the demo's own numbers from the leaderboard. */
+function Measured({ run, onResults }: { run: Run | null; onResults: () => void }) {
+  const { lang, t } = useWords();
+  const correct = run?.correctness?.answerable?.correta;
+  const precision = run?.summary.answerable?.citation_precision;
+  const answerable = run?.summary.answerable?.items;
+  const unanswerable = run?.summary.unanswerable?.items;
+  const total = answerable != null && unanswerable != null ? answerable + unanswerable : null;
+  const figures = [
+    { value: correct != null ? number(correct, lang) : null, label: t.correctShare },
+    { value: precision != null ? number(precision, lang) : null, label: t.precisionShare },
+    { value: total != null ? String(total) : null, label: t.testQuestions },
+  ].filter((f) => f.value !== null);
+  return (
+    <aside className="measured" aria-label={t.measuredTitle}>
+      {figures.length > 0 && (
+        <>
+          <h2 className="section-label">{t.measuredTitle}</h2>
+          <p className="measured-lead">{t.measuredLead}</p>
+          <dl className="figures">
+            {figures.map((f) => (
+              <div key={f.label}>
+                <dt>{f.value}</dt>
+                <dd>{f.label}</dd>
+              </div>
+            ))}
+          </dl>
+          <p>
+            <a
+              href={PATHS.results}
+              onClick={(e) => {
+                e.preventDefault();
+                onResults();
+              }}
+            >
+              {t.seeResults}
+            </a>
+            {run && (
+              <span className="measured-run">
+                {" "}
+                · {t.runOf} {day(run.run_at.slice(0, 10))}
+              </span>
+            )}
+          </p>
+        </>
+      )}
+      <h2 className="section-label">{t.howTitle}</h2>
+      <ol className="how">
+        {t.howShort.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
+    </aside>
+  );
+}
+
+function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | null; onResults: () => void }) {
   const { lang, t } = useWords();
   const linked = useRef(linkedQuestion());
   const [question, setQuestion] = useState(linked.current?.question ?? "");
@@ -272,7 +431,7 @@ function Ask({ latest }: { latest: string }) {
     try {
       const answer = await api.ask(q.trim(), date);
       setReply(answer);
-      setLink({ q: answer.question, d: answer.as_of, lang });
+      setLink("ask", { q: answer.question, d: answer.as_of, lang });
     } catch (e) {
       setError(e instanceof Error ? e.message : t.unexpected);
     } finally {
@@ -297,115 +456,122 @@ function Ask({ latest }: { latest: string }) {
   const fmt = (n: number) => n.toLocaleString(lang === "pt" ? "pt-PT" : "en", { maximumFractionDigits: 2 });
   const stages = reply?.answer.timings;
   const timing =
-    reply &&
-    (reply.cached
-      ? t.cached
-      : `${fmt(reply.seconds)} s` +
+    reply && !reply.cached
+      ? `${t.answered} ${fmt(reply.seconds)} s` +
         (stages?.retrieval !== undefined && stages.generation !== undefined
           ? ` (${t.retrievalShort} ${fmt(stages.retrieval)} s, ${t.modelShort} ${fmt(stages.generation)} s)`
-          : ""));
+          : "")
+      : "";
   const { body, sources } = reply ? splitSources(reply.answer.text) : { body: "", sources: [] };
+  const toggle = (c: Citation) => setOpen(same(open, c) ? null : c);
+  const idle = !reply && !busy;
 
   return (
     <section className="ask">
-      <header className="page-head reveal d1">
-        <h1>{t.askTitle}</h1>
-        <p className="lead">{t.askLead}</p>
-      </header>
-      <form
-        className="query reveal d2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          submit();
-        }}
-      >
-        <label htmlFor="question" className="field-label">
-          {t.question}
-        </label>
-        <textarea
-          id="question"
-          value={question}
-          maxLength={1000}
-          rows={3}
-          placeholder={t.placeholder}
-          onChange={(e) => setQuestion(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+      <div className={idle ? "home" : "home answered"}>
+        <div className="home-main">
+          <header className="page-head">
+            <h1>{t.askTitle}</h1>
+            <p className="lead">{t.askLead}</p>
+          </header>
+          <form
+            className="query"
+            onSubmit={(e) => {
               e.preventDefault();
               submit();
-            }
-          }}
-        />
-        <div className="query-row">
-          <label className="date-field">
-            <span className="field-label">{t.lawInForceOn}</span>
-            <input
-              type="date"
-              value={asOf}
-              min={FIRST_DAY}
-              max={latest}
-              onChange={(e) => {
-                setPicked(true);
-                setAsOf(e.target.value || latest);
+            }}
+          >
+            <label htmlFor="question" className="field-label">
+              {t.question}
+            </label>
+            <textarea
+              id="question"
+              value={question}
+              maxLength={1000}
+              rows={2}
+              placeholder={t.placeholder}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  submit();
+                }
               }}
             />
-          </label>
-          <button type="submit" className="button primary" disabled={busy || question.trim().length < 3}>
-            {busy ? t.asking : t.ask}
-          </button>
-        </div>
-      </form>
-
-      <div className="examples reveal d3">
-        <h2 className="section-label">{t.examples}</h2>
-        <ol>
-          {EXAMPLES.map((ex) => (
-            <li key={ex.question}>
-              <button
-                type="button"
-                className="example"
-                onClick={() => {
-                  const date = ex.asOf ?? latest;
-                  setQuestion(ex.question);
-                  setPicked(Boolean(ex.asOf));
-                  setAsOf(date);
-                  submit(ex.question, date);
-                }}
-              >
-                {ex.question}
+            <div className="query-row">
+              <label className="date-field">
+                <span className="field-label">{t.lawInForceOn}</span>
+                <input
+                  type="date"
+                  value={asOf}
+                  min={FIRST_DAY}
+                  max={latest}
+                  onChange={(e) => {
+                    setPicked(true);
+                    setAsOf(e.target.value || latest);
+                  }}
+                />
+              </label>
+              <button type="submit" className="button primary" disabled={busy || question.trim().length < 3}>
+                {busy ? t.asking : t.ask}
               </button>
-              {ex.asOf && (
-                <span className="muted">
-                  {" "}
-                  — {t.onDate} {day(ex.asOf)}
-                </span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </div>
+            </div>
+          </form>
 
-      {busy && (
-        <p className="status" aria-live="polite">
-          {t.searchingOn} {day(asOf)}…
-        </p>
-      )}
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
+          {idle && (
+            <div className="examples">
+              <h2 className="section-label">{t.examples}</h2>
+              <ul>
+                {EXAMPLES.map((ex) => (
+                  <li key={ex.question}>
+                    <button
+                      type="button"
+                      className="example"
+                      onClick={() => {
+                        const date = ex.asOf ?? latest;
+                        setQuestion(ex.question);
+                        setPicked(Boolean(ex.asOf));
+                        setAsOf(date);
+                        submit(ex.question, date);
+                      }}
+                    >
+                      {ex.question}
+                    </button>
+                    {ex.asOf && (
+                      <span className="muted">
+                        {" "}
+                        {t.onDate} {day(ex.asOf)}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {busy && (
+            <p className="status" aria-live="polite">
+              {t.searchingOn} {day(asOf)}…
+            </p>
+          )}
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
+        </div>
+        {idle && <Measured run={demoRun} onResults={onResults} />}
+      </div>
 
       {reply && (
         <div className={open ? "workspace split" : "workspace"}>
-          <article className={reply.answer.refused ? "answer refused" : "answer"}>
+          <article id="answer" className={reply.answer.refused ? "answer refused" : "answer"}>
             <div className="kicker">
-              <div className="kicker-meta">
-                <span className="stamp">{reply.answer.refused ? t.noAnswer : t.answer}</span>
-                <span>
-                  {t.lawOn} {day(reply.as_of)} · {timing}
-                </span>
-              </div>
+              <span className="label">{reply.answer.refused ? t.noAnswer : t.answer}</span>
+              <span className="kicker-meta">
+                {t.lawOn} {day(reply.as_of)}
+                {reply.cached && ` · ${t.cached}`}
+              </span>
               <button type="button" className="text-button" onClick={copy}>
                 {copied ? t.copied : t.copyLink}
               </button>
@@ -415,13 +581,7 @@ function Ask({ latest }: { latest: string }) {
             <div className="answer-text" lang="pt-PT">
               {body.split("\n").map((line, i) =>
                 line.trim() ? (
-                  <AnswerLine
-                    key={i}
-                    line={line}
-                    citations={reply.answer.citations}
-                    open={open}
-                    onOpen={(c) => setOpen(open?.article === c.article ? null : c)}
-                  />
+                  <AnswerLine key={i} line={line} citations={reply.answer.citations} open={open} onOpen={toggle} />
                 ) : null,
               )}
             </div>
@@ -430,14 +590,13 @@ function Ask({ latest }: { latest: string }) {
                 <h3 className="section-label">{t.legalBasis}</h3>
                 <ol>
                   {reply.answer.citations.map((c, i) => (
-                    <li key={`${c.diploma}/${c.article}`} className={open?.article === c.article ? "on" : ""}>
-                      <button type="button" className="cite" onClick={() => setOpen(open?.article === c.article ? null : c)}>
+                    <li key={`${c.diploma}/${c.article}`} className={same(open, c) ? "on" : ""}>
+                      <button type="button" className="cite" onClick={() => toggle(c)}>
                         {sources[i]?.label ?? articleLabel(c)}
                       </button>
                       {sources[i]?.since && (
                         <span className="muted">
-                          {" "}
-                          — {t.inForceSince} {sources[i].since}
+                          {t.inForceSince} {sources[i].since}
                         </span>
                       )}
                     </li>
@@ -445,8 +604,9 @@ function Ask({ latest }: { latest: string }) {
                 </ol>
               </section>
             )}
+            {timing && <p className="answer-details">{timing}</p>}
           </article>
-          {open && <Reader citation={open} asOf={reply.as_of} />}
+          {open && <Reader citation={open} asOf={reply.as_of} backTo="#answer" onClose={() => setOpen(null)} />}
         </div>
       )}
     </section>
@@ -457,7 +617,8 @@ function Ask({ latest }: { latest: string }) {
 function Browse({ latest }: { latest: string }) {
   const { lang, t } = useWords();
   const linked = useRef(linkedArticle());
-  const [query, setQuery] = useState(linked.current?.article ?? "");
+  const [query, setQuery] = useState(linked.current?.citation.article ?? "");
+  const [diploma, setDiploma] = useState(linked.current?.citation.diploma ?? CT);
   const [asOf, setAsOf] = useState(linked.current?.asOf ?? latest);
   const [picked, setPicked] = useState(Boolean(linked.current?.asOf));
   useEffect(() => {
@@ -465,19 +626,19 @@ function Browse({ latest }: { latest: string }) {
   }, [latest, picked]);
   const [hits, setHits] = useState<Hit[] | null>(null);
   const [open, setOpen] = useState<{ citation: Citation; asOf: string } | null>(
-    linked.current
-      ? { citation: { diploma: CT, article: linked.current.article }, asOf: linked.current.asOf ?? latest }
-      : null,
+    linked.current ? { citation: linked.current.citation, asOf: linked.current.asOf ?? latest } : null,
   );
   const [error, setError] = useState("");
 
   async function go() {
     setError("");
     setHits(null);
-    const found = articleNumber(query);
+    const found = articleRef(query);
     if (found) {
-      setOpen({ citation: { diploma: CT, article: found }, asOf });
-      setLink({ art: found, d: asOf, lang });
+      const citation = { diploma: found.diploma ?? diploma, article: found.article };
+      if (found.diploma) setDiploma(found.diploma);
+      setOpen({ citation, asOf });
+      setLink("articles", { art: citation.article, dip: DIPLOMAS[citation.diploma].short, d: asOf, lang });
       return;
     }
     setOpen(null);
@@ -490,12 +651,12 @@ function Browse({ latest }: { latest: string }) {
 
   return (
     <section className="browse">
-      <header className="page-head reveal d1">
+      <header className="page-head">
         <h1>{t.browseTitle}</h1>
         <p className="lead">{t.browseIntro}</p>
       </header>
       <form
-        className="query reveal d2"
+        className="query"
         onSubmit={(e) => {
           e.preventDefault();
           go();
@@ -511,6 +672,16 @@ function Browse({ latest }: { latest: string }) {
               placeholder={t.browsePlaceholder}
               onChange={(e) => setQuery(e.target.value)}
             />
+          </label>
+          <label className="select-field">
+            <span className="field-label">{t.diploma}</span>
+            <select value={diploma} onChange={(e) => setDiploma(e.target.value)}>
+              {Object.entries(DIPLOMAS).map(([id, d]) => (
+                <option key={id} value={id}>
+                  {d.short === "NRAU" ? t.nrau : d.name}
+                </option>
+              ))}
+            </select>
           </label>
           <label className="date-field">
             <span className="field-label">{t.lawInForceOn}</span>
@@ -537,13 +708,13 @@ function Browse({ latest }: { latest: string }) {
       )}
       <div className={hits?.length && open ? "workspace split" : "workspace"}>
         {hits && (
-          <div>
+          <div id="hits">
             {hits.length === 0 ? (
               <p className="muted">{t.nothingFound}</p>
             ) : (
               <ol className="hits">
                 {hits.map((h) => (
-                  <li key={h.article} className={open?.citation.article === h.article ? "on" : ""}>
+                  <li key={`${h.diploma}/${h.article}`} className={open && same(open.citation, h) ? "on" : ""}>
                     <button type="button" className="cite" onClick={() => setOpen({ citation: h, asOf })}>
                       {articleLabel(h)}
                     </button>
@@ -554,7 +725,7 @@ function Browse({ latest }: { latest: string }) {
             )}
           </div>
         )}
-        {open && <Reader citation={open.citation} asOf={open.asOf} />}
+        {open && <Reader citation={open.citation} asOf={open.asOf} backTo={hits?.length ? "#hits" : null} />}
       </div>
     </section>
   );
@@ -605,7 +776,17 @@ function LegalText({ text }: { text: string }) {
   );
 }
 
-function Reader({ citation, asOf }: { citation: Citation; asOf: string }) {
+function Reader({
+  citation,
+  asOf,
+  backTo,
+  onClose,
+}: {
+  citation: Citation;
+  asOf: string;
+  backTo: string | null;
+  onClose?: () => void;
+}) {
   const { t } = useWords();
   const [shown, setShown] = useState(asOf);
   const [comparing, setComparing] = useState(false);
@@ -619,77 +800,90 @@ function Reader({ citation, asOf }: { citation: Citation; asOf: string }) {
   const current = view && index >= 0 ? view.versions[index] : null;
   const previous = view && index > 0 ? view.versions[index - 1] : null;
   const before = useArticle(citation, comparing && previous ? previous.valid_from : null);
-  const [numberPart, suffix] = citation.article.split("-");
+  const title = `${t.article} ${articleNumberLabel(citation.article)}`;
 
-  if (error)
-    return (
-      <aside className="reader">
-        <p className="error">{error}</p>
-      </aside>
-    );
-  if (!view)
-    return (
-      <aside className="reader">
-        <p className="muted">{`${t.loading} ${articleLabel(citation)}…`}</p>
-      </aside>
-    );
   return (
-    <aside className="reader" aria-label={`${t.article} ${citation.article}`}>
-      <p className="reader-code">{t.code}</p>
-      <h2 className="reader-title">
-        {t.article} {numberPart}.º{suffix ? `-${suffix}` : ""}
-      </h2>
-      {view.heading && <p className="reader-heading">{view.heading}</p>}
-      <p className="reader-meta">
-        {t.versionInForceOn} {day(view.as_of)}
-        {current && (
-          <>
-            {" "}
-            · {t.since} {day(current.valid_from)} · {t.introducedBy} {diplomaLabel(current.introduced_by)}
-          </>
-        )}
-      </p>
-      <div className="reader-actions">
-        {view.text &&
-          (previous ? (
-            <button type="button" className="text-button" onClick={() => setComparing(!comparing)}>
-              {comparing ? t.hideChanges : t.compare}
-            </button>
-          ) : (
-            <span className="muted">{t.noPrevious}</span>
-          ))}
-        {view.source_url && (
-          <a href={view.source_url} target="_blank" rel="noreferrer">
-            {t.source}
+    <aside className="reader" aria-label={title}>
+      <div className="reader-bar">
+        <span className="reader-code">
+          {DIPLOMAS[citation.diploma]?.short === "NRAU" ? t.nrau : DIPLOMAS[citation.diploma]?.name}
+        </span>
+        {backTo && (
+          <a className="reader-back" href={backTo}>
+            {t.backToAnswer}
           </a>
         )}
+        {onClose && (
+          <button type="button" className="text-button reader-close" onClick={onClose}>
+            {t.close}
+          </button>
+        )}
       </div>
-      {view.text ? (
-        comparing && previous ? (
-          <Changes before={before.view?.text ?? null} after={view.text} since={previous.valid_from} />
-        ) : (
-          <LegalText text={view.text} />
-        )
-      ) : (
-        <p className="muted">{t.noVersion}</p>
-      )}
-      <section className="history">
-        <h3 className="section-label">{t.versions}</h3>
-        <ol className="timeline">
-          {view.versions.map((p) => {
-            const on = inForce(p, view.as_of);
-            return (
-              <li key={p.valid_from} className={on ? "on" : ""}>
-                <button type="button" className="text-button" onClick={() => setShown(p.valid_from)}>
-                  {day(p.valid_from)} – {p.valid_to ? day(p.valid_to) : t.today}
+      {error && <p className="error">{error}</p>}
+      {!error && !view && <p className="muted">{`${t.loading} ${articleLabel(citation)}…`}</p>}
+      {view && (
+        <>
+          <h2 className="reader-title">{title}</h2>
+          {view.heading && <p className="reader-heading">{view.heading}</p>}
+          <p className="reader-meta">
+            <span>
+              {t.versionInForceOn} <b>{day(view.as_of)}</b>
+            </span>
+            {current && (
+              <>
+                <span>
+                  {t.since} {day(current.valid_from)}
+                  {current.valid_to && ` ${t.until} ${day(current.valid_to)}`}
+                </span>
+                <span>
+                  {t.introducedBy} {diplomaLabel(current.introduced_by, citation.diploma)}
+                </span>
+              </>
+            )}
+          </p>
+          <div className="reader-actions">
+            {view.text &&
+              (previous ? (
+                <button type="button" className="text-button" onClick={() => setComparing(!comparing)}>
+                  {comparing ? t.hideChanges : t.compare}
                 </button>
-                <span className="muted">{diplomaLabel(p.introduced_by)}</span>
-                {on && <span className="tag">{t.shown}</span>}
-              </li>
-            );
-          })}
-        </ol>
-      </section>
+              ) : (
+                <span className="muted">{t.noPrevious}</span>
+              ))}
+            {view.source_url && (
+              <a href={view.source_url} target="_blank" rel="noreferrer">
+                {t.source}
+              </a>
+            )}
+          </div>
+          {view.text ? (
+            comparing && previous ? (
+              <Changes before={before.view?.text ?? null} after={view.text} since={previous.valid_from} />
+            ) : (
+              <LegalText text={view.text} />
+            )
+          ) : (
+            <p className="muted">{t.noVersion}</p>
+          )}
+          <section className="history">
+            <h3 className="section-label">{t.versions}</h3>
+            <ol className="timeline">
+              {view.versions.map((p) => {
+                const on = inForce(p, view.as_of);
+                return (
+                  <li key={p.valid_from} className={on ? "on" : ""}>
+                    <button type="button" className="text-button" onClick={() => setShown(p.valid_from)}>
+                      {day(p.valid_from)} – {p.valid_to ? day(p.valid_to) : t.today}
+                    </button>
+                    <span className="muted">{diplomaLabel(p.introduced_by, citation.diploma)}</span>
+                    {on && <span className="tag">{t.shown}</span>}
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        </>
+      )}
     </aside>
   );
 }
@@ -719,218 +913,5 @@ function Changes({ before, after, since }: { before: string | null; after: strin
         ))}
       </div>
     </div>
-  );
-}
-
-function Results({ demoSystem }: { demoSystem: string }) {
-  const { lang, t } = useWords();
-  const [runs, setRuns] = useState<Run[] | null>(null);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    api.leaderboard().then(setRuns, (e: Error) => setError(e.message));
-  }, []);
-
-  if (error) return <p className="error">{error}</p>;
-  if (!runs) return <p className="muted">{t.loadingResults}</p>;
-  // Ranked: answers by share judged correct (unjudged last), then citation recall; retrieval by
-  // recall@10.
-  const answers = runs
-    .filter((r) => r.task === "answers")
-    .sort(
-      (a, b) =>
-        (b.correctness?.answerable?.correta ?? -1) - (a.correctness?.answerable?.correta ?? -1) ||
-        (b.summary.answerable?.citation_recall ?? 0) - (a.summary.answerable?.citation_recall ?? 0),
-    );
-  const retrieval = runs
-    .filter((r) => r.task === "retrieval")
-    .sort((a, b) => (b.summary.all?.["recall@10"] ?? 0) - (a.summary.all?.["recall@10"] ?? 0));
-  const run = (r: Run) => `${day(r.run_at.slice(0, 10))} · ${r.commit}`;
-  const judged = answers.find((r) => r.correctness && r.judge)?.judge;
-  // The test set's size, as the answer runs counted it.
-  const counted = answers[0]?.summary;
-  const sizes =
-    counted?.answerable?.items != null && counted.unanswerable?.items != null
-      ? {
-          answerable: counted.answerable.items,
-          unanswerable: counted.unanswerable.items,
-          total: counted.answerable.items + counted.unanswerable.items,
-        }
-      : null;
-  const checks = judged?.measured_on_dev.known_answer_checks;
-  const labels = judged?.measured_on_dev.hand_labels;
-  const share = (n: number) => n.toLocaleString(lang === "pt" ? "pt-PT" : "en", { maximumFractionDigits: 2 });
-
-  return (
-    <section className="results">
-      <header className="page-head reveal d1">
-        <h1>{t.resultsTitle}</h1>
-        {sizes && <p className="lead">{t.resultsIntro(sizes.total, sizes.answerable, sizes.unanswerable)}</p>}
-      </header>
-
-      <section className="table-block reveal d2">
-        <h2>{t.answersTitle}</h2>
-        <div className="table-scroll">
-          <table className="data">
-            <thead>
-              <tr>
-                <th>{t.system}</th>
-                {judged && <th className="num">{t.correct}</th>}
-                <th className="num">{t.citationRecall}</th>
-                <th className="num">{t.precision}</th>
-                <th className="num">{t.wrongRefusals}</th>
-                <th className="num">{t.rightRefusals}</th>
-                <th>{t.run}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {answers.map((r) => (
-                <tr key={r.run_at + r.system}>
-                  <td>
-                    {systemLabel(r.system, lang)}
-                    {r.system === demoSystem && <span className="tag">{t.thisDemo}</span>}
-                  </td>
-                  {judged &&
-                    (r.correctness ? (
-                      <Share value={r.correctness.answerable?.correta} />
-                    ) : (
-                      <td className="num muted-cell">—</td>
-                    ))}
-                  <Share value={r.summary.answerable?.citation_recall} />
-                  <Share value={r.summary.answerable?.citation_precision} />
-                  <td className="num">{count(r.summary.answerable?.refused, r.summary.answerable?.items, t.of)}</td>
-                  <td className="num">{count(r.summary.unanswerable?.refused, r.summary.unanswerable?.items, t.of)}</td>
-                  <td className="muted">{run(r)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="note">{t.answersNote}</p>
-        {judged && checks && (
-          <p className="note">
-            {t.judgedByChecks(
-              systemLabel(judged.model, lang),
-              `${checks.reference.as_expected} ${t.of} ${checks.reference.cases}`,
-              `${checks.altered.as_expected} ${t.of} ${checks.altered.cases}`,
-            )}
-          </p>
-        )}
-        {judged && !checks && labels && (
-          <p className="note">
-            {t.judgedByLabels(systemLabel(judged.model, lang), labels.items, share(labels.agreement), share(labels.kappa))}
-          </p>
-        )}
-        <details>
-          <summary>{t.byType}</summary>
-          {answers.map((r) => (
-            <div key={r.run_at + r.system} className="by-type">
-              <h3>{systemLabel(r.system, lang)}</h3>
-              <div className="table-scroll">
-                <table className="data">
-                  <thead>
-                    <tr>
-                      <th>{t.type}</th>
-                      <th className="num">{t.questions}</th>
-                      <th className="num">{t.recall}</th>
-                      <th className="num">{t.precision}</th>
-                      <th className="num">{t.refused}</th>
-                      {r.correctness && <th className="num">{t.correctShort}</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(t.types).map(([type, label]) => {
-                      const row = r.summary[type];
-                      if (!row) return null;
-                      return (
-                        <tr key={type}>
-                          <td>{label}</td>
-                          <td className="num">{row.items}</td>
-                          <td className="num">{number(row.citation_recall, lang)}</td>
-                          <td className="num">{number(row.citation_precision, lang)}</td>
-                          <td className="num">{count(row.refused, row.items, t.of)}</td>
-                          {r.correctness && <td className="num">{number(r.correctness[type]?.correta, lang)}</td>}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-        </details>
-      </section>
-
-      <section className="table-block reveal d3">
-        <h2>{t.retrievalTitle}</h2>
-        <div className="table-scroll">
-          <table className="data">
-            <thead>
-              <tr>
-                <th>{t.system}</th>
-                <th className="num">recall@1</th>
-                <th className="num">recall@10</th>
-                <th className="num">{t.namedArticle}</th>
-                <th>{t.run}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {retrieval.map((r) => (
-                <tr key={r.run_at + r.system}>
-                  <td>{systemLabel(r.system, lang)}</td>
-                  <Share value={r.summary.all?.["recall@1"]} />
-                  <Share value={r.summary.all?.["recall@10"]} />
-                  <td className="num">
-                    {count(r.summary.explicit_reference?.["recall@10"], r.summary.explicit_reference?.items, t.of)}
-                  </td>
-                  <td className="muted">{run(r)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="note">{t.retrievalNote}</p>
-      </section>
-    </section>
-  );
-}
-
-/** A share in a table: its figure, and a bar of its size. */
-function Share({ value }: { value: number | null | undefined }) {
-  const { lang } = useWords();
-  return (
-    <td className="num">
-      <span className="share">
-        <span className="share-track" aria-hidden="true">
-          <span style={{ width: `${Math.max(0, Math.min(1, value ?? 0)) * 100}%` }} />
-        </span>
-        {number(value, lang)}
-      </span>
-    </td>
-  );
-}
-
-function About({ demoSystem }: { demoSystem: string }) {
-  const { lang, t } = useWords();
-  return (
-    <article className="prose reveal d1">
-      <h1>{t.about.title}</h1>
-      <p className="lead">{t.about.intro}</p>
-      <h2>{t.about.howTitle}</h2>
-      <ol>
-        {t.about.how.map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-      <p>
-        {t.about.demoRuns} {demoSystem ? <strong>{systemLabel(demoSystem, lang)}</strong> : "Lex"}: {t.about.demoWhy}
-      </p>
-      <h2>{t.about.limitsTitle}</h2>
-      <ul>
-        {t.about.limits.map((limit) => (
-          <li key={limit}>{limit}</li>
-        ))}
-      </ul>
-    </article>
   );
 }

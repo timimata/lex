@@ -69,6 +69,9 @@ def test_an_article_on_a_date_and_its_timeline() -> None:
     assert "Nenhuma versão" in call("artigo", {"numero": "238", "data": "2008-01-01"})["erro"]
     timeline = call("versoes", {"numero": "238.º"})["result"]
     assert [v["em_vigor_desde"] for v in timeline] == ["2009-02-17", "2012-08-01"]
+    # Another diploma's article of the same number is another article.
+    assert "Nenhuma versão" in call("artigo", {"numero": "238", "diploma": "NRAU"})["erro"]
+    assert "Diploma desconhecido" in call("artigo", {"numero": "238", "diploma": "CPC"})["error"]
 
 
 def test_search_and_answers_use_the_parts_they_are_given() -> None:
@@ -85,8 +88,10 @@ def test_search_and_answers_use_the_parts_they_are_given() -> None:
         return lambda q, day: Answer(text=f"Resposta a {day:%d/%m/%Y}.", citations=[cite("238")])
 
     found = call("pesquisar", {"pergunta": "férias", "data": "2011-06-01", "k": 99}, search=search)
-    assert found["result"] == [{"artigo": "238", "epigrafe": "Duração do período de férias"}]
+    assert found["result"] == [
+        {"diploma": "CT", "artigo": "238", "epigrafe": "Duração do período de férias"}
+    ]
     assert asked == [("férias", dt.date(2011, 6, 1), 20)]  # k capped at 20
     answer = call("responder", {"pergunta": "Férias?", "data": "2011-06-01"}, respond=respond)
-    assert (answer["resposta"], answer["citacoes"]) == ("Resposta a 01/06/2011.", ["238"])
+    assert (answer["resposta"], answer["citacoes"]) == ("Resposta a 01/06/2011.", ["CT 238"])
     assert "indisponíveis" in call("responder", {"pergunta": "Férias?"})["error"]

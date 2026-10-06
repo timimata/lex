@@ -1,7 +1,9 @@
 # The benchmark
 
 Questions about Portuguese legislation in European Portuguese, each with the date it is asked
-about and the articles a correct answer must cite.
+about and the articles a correct answer must cite. The corpus they are asked of is the Código do
+Trabalho and, since 2026-10-01, tenancy: the Código Civil's articles 1022.º to 1113.º and the
+NRAU ([ADR 0017](../docs/decisions/0017-tenancy.md)).
 
 ## Files
 
@@ -20,8 +22,10 @@ items about the same article always share a split
 the question first in `must_cite`.
 `python -m lex.bench validate` checks every file and prints counts, never content: the schema,
 that `as_of` fits the item type, that each item sits in its group's split, no repeated questions,
-and, when the corpus has been ingested, that every cited article of the code exists and every
-`must_cite` article has a version in force on `as_of`. CI runs it (without the corpus, which is
+and, when the corpus has been ingested, that every cited article of a diploma it holds exists
+and every `must_cite` article has a version in force on `as_of`. It also names, by id, any
+`unanswerable` item written for the Código do Trabalho alone that speaks of tenancy, for a
+person to check that refusing is still right. CI runs it (without the corpus, which is
 not committed).
 
 ## An item
@@ -47,7 +51,7 @@ One JSON object per line. Wrapped here for reading:
 
 | Field | Meaning |
 |---|---|
-| `id` | Corpus prefix and number: `ct-0001` is the first Código do Trabalho item. Never reused |
+| `id` | Corpus prefix and number: `ct-0001` is the first Código do Trabalho item, `ar-0001` the first tenancy (arrendamento) item. Never reused |
 | `question` | As a person would ask it, self-contained, in PT-PT |
 | `as_of` | The date the question is about. The right answer is the law in force that day |
 | `type` | See below |
@@ -60,8 +64,9 @@ One JSON object per line. Wrapped here for reading:
 | `notes` | Anything a reviewer should know |
 
 A citation is `{"diploma": ..., "article": ...}`. The diploma id is type, number and year in
-lowercase (`lei`, `dl`, `portaria`, ...). The Código do Trabalho is `lei-7-2009`, the law that
-approved it. Article numbers are written as the DR prints them, without ".º": `238`, `238-A`.
+lowercase (`lei`, `dl`, `portaria`, ...), with the number's letter if it has one
+(`dl-321-b-1990`). The Código do Trabalho is `lei-7-2009`, the law that approved it; the Código
+Civil is `dl-47344-1966`, and the NRAU `lei-6-2006`. Article numbers are written as the DR prints them, without ".º": `238`, `238-A`.
 
 ## Types
 
@@ -73,10 +78,12 @@ approved it. Article numbers are written as the DR prints them, without ".º": `
 | `explicit_reference` | Names an article: "o que diz o artigo 238.º do Código do Trabalho?" |
 | `unanswerable` | Outside the corpus, or not answerable from the law. The right response is to say so |
 
-Benchmark v1 (2026-10-01) has 158 items: 58 `simple`, 33 `composite`, 22 `temporal`, 16
-`explicit_reference` and 29 `unanswerable`; 70 in dev and 88 in test. Every run records which
-version of its split it used (`bench` in `results/`); v0's test runs are in `results/test/v0/`,
-and those on the intermediate 132-item state in `results/test/v1-132/`.
+Benchmark v2 (2026-10-02) has 181 items: 70 `simple`, 36 `composite`, 23 `temporal`, 17
+`explicit_reference` and 35 `unanswerable`; 84 in dev and 97 in test. Of these, 23 are on
+tenancy (`ar-`), 14 in dev and 9 in test; the rest are the 158 items of v1 (2026-10-01), on the
+Código do Trabalho. Every run records which version of its split it used (`bench` in
+`results/`); v0's test runs are in `results/test/v0/`, those on the intermediate 132-item state
+in `results/test/v1-132/`, and v1's in `results/test/v1/`.
 
 Targets for v0 (100 items): at least 15 `temporal`, 15 `explicit_reference` and 15 `composite`,
 about 10 `unanswerable`, the rest `simple`. For non-temporal items, `as_of` is the date the item
@@ -84,8 +91,10 @@ was written.
 
 ## Writing rules
 
-1. Every item comes from a public page with a URL: ACT's guidance, Portal das Finanças, gov.pt,
-   public legal-information pages. Questions are never invented, by a person or an LLM. An LLM
+1. Every item comes from a public page with a URL: the ACT's guidance, the DGAJ's pages, the
+   Diário da República's Lexionário, other public bodies' legal information. A source whose terms
+   allow only non-commercial reuse (gov.pt, the Portal da Habitação) is not used: the benchmark
+   is CC BY 4.0. Questions are never invented, by a person or an LLM. An LLM
    may draft an item from a source it was given. Before it goes into `incoming`, the draft is
    checked against the source and the law, and `reviewed_by` names who did it. When that is the
    model that drafted it, the review is not independent; results can be reported separately for

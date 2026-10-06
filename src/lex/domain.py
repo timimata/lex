@@ -6,14 +6,31 @@ whose answers were typed in by hand. Anything that ranks articles for a question
 """
 
 import datetime as dt
-from typing import Protocol
+from typing import NamedTuple, Protocol
 
 from pydantic import BaseModel, Field
 
-# Type, number and year, lowercase: lei-7-2009, dl-157-2006, portaria-112-2024.
-DIPLOMA_PATTERN = r"^[a-z]+(-[a-z]+)*-\d+-\d{4}$"
+# Type, number (with its letter, if any) and year, lowercase: lei-7-2009, dl-321-b-1990.
+DIPLOMA_PATTERN = r"^[a-z]+(-[a-z]+)*-\d+(-[a-z]{1,2})?-\d{4}$"
 # The article number as the DR prints it, without ".º": 238, 238-A.
 ARTICLE_PATTERN = r"^\d+(-[A-Z]+)?$"
+
+
+class Diploma(NamedTuple):
+    short: str  # how a citation names it: "CT 238"
+    name: str  # how a sentence names it: "Código do Trabalho, art. 238.º"
+
+
+# The diplomas the corpus holds (ADRs 0003 and 0017). The Código Civil only in part: its
+# articles 1022.º to 1113.º, on leases.
+CT = "lei-7-2009"
+CC = "dl-47344-1966"
+NRAU = "lei-6-2006"
+DIPLOMAS = {
+    CT: Diploma("CT", "Código do Trabalho"),
+    CC: Diploma("CC", "Código Civil"),
+    NRAU: Diploma("NRAU", "NRAU"),
+}
 
 
 class Citation(BaseModel, frozen=True):
@@ -29,6 +46,9 @@ class Answer(BaseModel):
     refused: bool = False
     # Seconds spent per stage ("retrieval", "generation"), where a system measures them.
     timings: dict[str, float] = Field(default_factory=dict)
+    # What the system asked for before answering, in order, with what each request added: the
+    # agent's searches and reads (Phase 7). Empty for a system that does not ask.
+    requests: list[str] = Field(default_factory=list)
 
 
 class System(Protocol):

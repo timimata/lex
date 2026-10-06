@@ -5,7 +5,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from lex.bench.corpus_check import check_citations
+from lex.bench.corpus_check import Periods, check_citations, refusals_to_review
 from lex.bench.schema import Item
 from lex.bench.splits import assign, check, split_for
 
@@ -179,9 +179,10 @@ def test_problems_never_echo_item_content(tmp_path: Path) -> None:
 
 
 def test_citations_are_checked_against_the_corpus_without_naming_the_article() -> None:
-    periods: dict[str, list[tuple[str, str | None]]] = {
-        "238": [("2009-02-17", "2012-08-01"), ("2012-08-01", None)],
-        "401": [("2009-02-17", None)],
+    periods: Periods = {
+        ("lei-7-2009", "238"): [("2009-02-17", "2012-08-01"), ("2012-08-01", None)],
+        ("lei-7-2009", "401"): [("2009-02-17", None)],
+        ("lei-6-2006", "9"): [("2006-06-27", None)],
     }
     good = Item.model_validate(make())
     missing = Item.model_validate(
@@ -193,14 +194,36 @@ def test_citations_are_checked_against_the_corpus_without_naming_the_article() -
     elsewhere = Item.model_validate(
         make(id="ct-0004", may_cite=[{"diploma": "lei-23-2012", "article": "10"}])
     )  # other diplomas are outside the corpus by design
+    tenancy = Item.model_validate(
+        make(id="ct-0005", may_cite=[{"diploma": "lei-6-2006", "article": "99"}])
+    )  # but every diploma the corpus holds is checked
 
-    problems = check_citations({"test": [good, missing, too_early, elsewhere]}, periods)
+    problems = check_citations({"test": [good, missing, too_early, elsewhere, tenancy]}, periods)
 
     assert problems == [
         "test ct-0002: must_cite[0] is not in the corpus",
         "test ct-0003: must_cite[0] has no version in force on as_of",
+        "test ct-0005: may_cite[0] is not in the corpus",
     ]
     assert "999" not in "\n".join(problems)
+
+
+def test_refusals_about_tenancy_are_named_for_review_by_id_only() -> None:
+    labour = Item.model_validate(
+        make(id="ct-0006", type="unanswerable", must_cite=[], question="Que seguro cobre isto?")
+    )
+    tenancy = Item.model_validate(
+        make(
+            id="ct-0007",
+            type="unanswerable",
+            must_cite=[],
+            question="SEGREDO: o senhorio pode aumentar a renda?",
+        )
+    )
+
+    flagged = refusals_to_review({"test": [labour, tenancy]})
+
+    assert flagged == ["test ct-0007"] and "SEGREDO" not in "\n".join(flagged)
 
 
 def test_a_snapshot_is_refused_while_a_file_holds_test_content_or_a_key() -> None:

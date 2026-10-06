@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from lex.domain import Citation
+from lex.domain import DIPLOMAS, Citation
 from lex.generation.answer import ReferenceSystem, parse, prompt
 from lex.generation.llm import (
     DEFAULT_MODEL,
@@ -16,6 +16,7 @@ from lex.generation.llm import (
     OpenAiCompatible,
     from_env,
 )
+from lex.retrieval.references import Reference
 
 TODAY = dt.date(2026, 9, 30)
 
@@ -103,7 +104,9 @@ def test_the_model_reads_the_date_and_the_given_versions_only() -> None:
 
     [sent] = model.prompts
     assert "Data da pergunta: 30/09/2026" in sent
-    assert '<artigo numero="199-A" epigrafe="Trabalho no domicílio" ' in sent
+    assert (
+        '<artigo id="CT 199-A" diploma="Código do Trabalho" epigrafe="Trabalho no domicílio" '
+    ) in sent
     assert "Mínimo de 22 dias úteis." not in sent  # 238 was not among the k retrieved
     assert sent.endswith("Pergunta: P?")
 
@@ -143,11 +146,15 @@ def test_parse_tolerates_a_code_fence_and_article_labels() -> None:
     fenced = (
         '```json\n{"resposta": "Sim.", "citacoes": ["art. 199.º-A", 238], "recusa": false}\n```'
     )
-    assert parse(fenced) == ("Sim.", ["199-A", "238"], False)
+    assert parse(fenced) == ("Sim.", [bare("199-A"), bare("238")], False)
     assert parse('{"resposta": "Sim.", "citacoes": "238", "recusa": false}') is None
-    assert parse('{"resposta": "Sim.", "citacoes": ["238"]}') == ("Sim.", ["238"], False)
+    assert parse('{"resposta": "Sim.", "citacoes": ["238"]}') == ("Sim.", [bare("238")], False)
     assert parse('{"resposta": "Sim.", "citacoes": [], "recusa": "não"}') is None
     assert parse('{"citacoes": ["238"]}') is None
+
+
+def bare(article: str) -> Reference:
+    return Reference(article, None)
 
 
 @pytest.mark.parametrize(
@@ -156,7 +163,7 @@ def test_parse_tolerates_a_code_fence_and_article_labels() -> None:
         # A note after the object, with braces of its own, used to make the whole reply malformed.
         ('{"resposta": "Sim.", "citacoes": ["238"], "recusa": false}\nNota: {n.º 2}', ["238"]),
         ('Texto {não JSON} antes. {"resposta": "Sim.", "citacoes": ["238"]}', ["238"]),
-        # Another diploma's article is not one of the code's.
+        # A diploma the corpus does not hold.
         ('{"resposta": "Sim.", "citacoes": ["artigo 10.º da Lei n.º 23/2012"]}', []),
         # Several articles in one entry, and a range.
         (
@@ -164,6 +171,12 @@ def test_parse_tolerates_a_code_fence_and_article_labels() -> None:
             ["238", "239", "344", "345", "346"],
         ),
         ('{"resposta": "Sim.", "citacoes": ["n.º 2 do artigo 131.º", 238, "238"]}', ["131", "238"]),
+        # Ids as the prompt gives them, and a diploma named after the number.
+        (
+            '{"resposta": "Sim.", "citacoes": ["CT 238", "NRAU 15-A", '
+            '"art. 1083.º do Código Civil"]}',
+            ["CT:238", "NRAU:15-A", "CC:1083"],
+        ),
     ],
 )
 def test_parse_reads_citations_as_the_reference_parser_reads_questions(
@@ -171,7 +184,34 @@ def test_parse_reads_citations_as_the_reference_parser_reads_questions(
 ) -> None:
     parsed = parse(reply)
     assert parsed is not None
-    assert parsed[1] == expected
+    short = {d.short: diploma for diploma, d in DIPLOMAS.items()}
+    assert parsed[1] == [
+        Reference(t.rpartition(":")[2], short.get(t.rpartition(":")[0])) for t in expected
+    ]
+
+
+def test_a_bare_number_two_given_articles_share_names_neither() -> None:
+    nrau_9 = Citation(diploma="lei-6-2006", article="9")
+    given = {
+        cite("9"): Version("Forma (CT)", "Texto do CT.", dt.date(2009, 2, 17)),
+        nrau_9: Version("Forma da comunicação", "Texto do NRAU.", dt.date(2017, 6, 15)),
+    }
+
+    class Both:
+        name = "both"
+
+        def search(self, question: str, as_of: dt.date, k: int) -> list[Citation]:
+            return list(given)
+
+    def read(citation: Citation, as_of: dt.date) -> Version | None:
+        return given.get(citation)
+
+    ambiguous = ReferenceSystem(Both(), read, Scripted(reply("Sim.", ["9"])))
+    assert ambiguous.answer("P?", TODAY).refused
+    named = ReferenceSystem(Both(), read, Scripted(reply("Sim.", ["NRAU 9"])))
+    answer = named.answer("P?", TODAY)
+    assert answer.citations == [nrau_9]
+    assert "- NRAU, art. 9.º (versão em vigor desde 15/06/2017)" in answer.text
 
 
 def test_the_prompt_lists_each_article_with_its_version_date() -> None:
@@ -206,6 +246,17 @@ def test_the_cache_key_changes_with_model_and_params(tmp_path: Path) -> None:
     c = Cached(Scripted(""), tmp_path)
     c.params = {"reasoning_effort": "high"}
     assert len({x.key("s", "u") for x in (a, b, c)}) == 3
+
+
+def test_a_repeat_asks_again_and_keeps_the_first_answers(tmp_path: Path) -> None:
+    first = Cached(Scripted("primeira"), tmp_path)
+    first.complete("s", "u")
+    model = Scripted("segunda")
+    again = Cached(model, tmp_path, repeat=1)
+
+    assert again.complete("s", "u").text == "segunda" and len(model.prompts) == 1
+    assert Cached(Scripted("outra"), tmp_path).complete("s", "u").text == "primeira"
+    assert again.key("s", "u") != first.key("s", "u")
 
 
 # A chat completion as the OpenAI-compatible endpoint returns it.
@@ -342,7 +393,8 @@ def test_claims_keep_each_sentence_with_its_articles_and_drop_the_unsupported() 
 
     assert system.name == "fixed+scripted+claims"
     assert answer.text.startswith(
-        "São cinco dias consecutivos. (art. 251.º) As férias têm 22 dias úteis. (art. 238.º)"
+        "São cinco dias consecutivos. (art. 251.º do CT) "
+        "As férias têm 22 dias úteis. (art. 238.º do CT)"
     )
     assert "estudante" not in answer.text
     assert answer.citations == [cite("251"), cite("238")]
@@ -370,4 +422,4 @@ def test_a_sentence_may_rest_on_several_articles() -> None:
     answer = ReferenceSystem(
         Fixed(["251", "238"]), articles, Scripted(reply), format="claims"
     ).answer("P?", TODAY)
-    assert answer.text.startswith("Ambos se aplicam. (arts. 238.º e 251.º)")
+    assert answer.text.startswith("Ambos se aplicam. (arts. 238.º e 251.º do CT)")

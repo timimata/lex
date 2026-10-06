@@ -18,8 +18,8 @@ from lex.domain import Citation, Retriever
 MOST = 3  # parts searched besides the whole question; set, not tuned
 
 SYSTEM = """\
-Divides perguntas sobre o Código do Trabalho português nas partes que precisam de artigos \
-diferentes.
+Divides perguntas sobre a lei portuguesa (o Código do Trabalho e o arrendamento) nas partes que \
+precisam de artigos diferentes.
 
 Regras:
 1. Se a pergunta trata de um só assunto, devolve-a como única parte.

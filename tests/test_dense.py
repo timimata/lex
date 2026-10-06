@@ -17,6 +17,7 @@ class Toy:
     real model."""
 
     name = "toy@1"
+    query_format = "{}"
 
     def __init__(self) -> None:
         self.calls = 0
@@ -65,6 +66,16 @@ def test_embeddings_are_computed_once_and_redone_when_a_text_changes(
     db.load(conn, [*LAW[:2], version("258", "salário e férias", START, dt.date(2012, 8, 1))])
     assert embed_missing(conn, toy) == 1
     assert toy.calls == 4
+
+
+def test_embeddings_are_kept_on_a_connection_that_does_not_autocommit(
+    conn: psycopg.Connection,
+) -> None:
+    db.load(conn, LAW)
+    conn.autocommit = False  # as the eval's and the API's connections are
+    assert embed_missing(conn, Toy()) == 3
+    conn.rollback()  # what closing the connection without a commit does
+    assert embed_missing(conn, Toy()) == 0
 
 
 def test_dense_ranks_by_similarity_among_the_law_in_force(conn: psycopg.Connection) -> None:

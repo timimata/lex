@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 from lex.api.__main__ import demo_app  # noqa: E402
 
 app = demo_app(
-    versions=ROOT / "data" / "versions.jsonl",
+    versions=[ROOT / "data" / "versions.jsonl"],  # every diploma's, joined by assemble.py
     vectors=ROOT / "data" / "vectors.npz",
     results=ROOT / "results",
     static=ROOT / "web",  # the built page; Vercel serves its files from the CDN

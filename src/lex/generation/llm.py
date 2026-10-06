@@ -128,8 +128,11 @@ class Cached:
     """Answers a repeated (model, params, prompt) from disk, so re-running an eval is free and
     gives the same answers. Counts what the run cost, cached answers included."""
 
-    def __init__(self, llm: Llm, directory: Path) -> None:
+    def __init__(self, llm: Llm, directory: Path, repeat: int = 0) -> None:
         self.llm = llm
+        # A repeat (1, 2, ...) asks every prompt again, a fresh sample kept apart from the first:
+        # what two runs of the same system differ by is the noise any comparison stands on.
+        self.repeat = repeat
         self.name = llm.name
         self.params = llm.params
         self.directory = directory
@@ -139,7 +142,14 @@ class Cached:
         self.completion_tokens = 0
 
     def key(self, system: str, user: str) -> str:
-        request = {"model": self.name, "params": self.params, "system": system, "user": user}
+        request: dict[str, object] = {
+            "model": self.name,
+            "params": self.params,
+            "system": system,
+            "user": user,
+        }
+        if self.repeat:
+            request["repeat"] = self.repeat
         return hashlib.sha256(json.dumps(request, sort_keys=True).encode()).hexdigest()
 
     def complete(self, system: str, user: str) -> Completion:

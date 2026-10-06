@@ -1,4 +1,4 @@
-"""python -m lex.store load [--versions FILE] | show ARTICLE [--as-of DATE] [--diploma ID]
+"""python -m lex.store load [--versions FILE ...] | show ARTICLE [--as-of DATE] [--diploma ID]
 python -m lex.store dump-embeddings FILE | load-embeddings FILE
 
 The embedding files let the demo start with every article embedded (ADR 0013).
@@ -13,17 +13,18 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from lex.store import db
+from lex.store.memory import corpus_files
 from lex.store.models import ArticleVersion
 
 ROOT = Path(__file__).resolve().parents[3]
-VERSIONS = ROOT / "data" / "processed" / "ct" / "versions.jsonl"
+PROCESSED = ROOT / "data" / "processed"  # one folder per diploma (lex.ingest.codes)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m lex.store")
     commands = parser.add_subparsers(dest="command", required=True)
-    ld = commands.add_parser("load", help=f"replace the store's contents with {VERSIONS.name}")
-    ld.add_argument("--versions", type=Path, default=VERSIONS)
+    ld = commands.add_parser("load", help="replace the store's contents with the corpus")
+    ld.add_argument("--versions", type=Path, nargs="+", help="default: every diploma's")
     dump = commands.add_parser("dump-embeddings", help="write every embedding to a JSONL file")
     dump.add_argument("file", type=Path)
     restore = commands.add_parser("load-embeddings", help="insert embeddings from a JSONL file")
@@ -38,7 +39,8 @@ def main(argv: list[str] | None = None) -> int:
     with db.connect() as conn:
         db.create_schema(conn)
         if args.command == "load":
-            lines = args.versions.read_text(encoding="utf-8").splitlines()
+            files = args.versions or corpus_files(PROCESSED)
+            lines = [ln for f in files for ln in f.read_text(encoding="utf-8").splitlines()]
             count = db.load(conn, map(ArticleVersion.model_validate_json, lines))
             print(f"loaded {count} article versions")
             return 0

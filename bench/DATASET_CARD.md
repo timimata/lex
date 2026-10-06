@@ -9,6 +9,7 @@ tags:
 - legal
 - portuguese
 - labour-law
+- tenancy-law
 - benchmark
 - retrieval-augmented-generation
 size_categories:
@@ -20,7 +21,7 @@ configs:
     path: data/dev.jsonl
 ---
 
-# Lex: questions on Portuguese labour law, each with its date and the articles it must cite
+# Lex: questions on Portuguese labour and tenancy law, each with its date and the articles it must cite
 
 Lex is an open benchmark for question answering over Portuguese legislation, in European
 Portuguese. Each question comes with the date it is asked about (`as_of`): the right answer is
@@ -28,35 +29,38 @@ the law in force that day, so the same question can have different answers in 20
 Each also lists the articles a correct answer must cite. Some questions cannot be answered from
 the corpus, and the right response to those is to say so.
 
-The corpus is the Código do Trabalho (Lei n.º 7/2009), every article in every version since 2009.
-It is not part of this dataset: the code rebuilds it from the Diário da República and the PGDL.
+The corpus is the Código do Trabalho (Lei n.º 7/2009), every article in every version since 2009,
+and, on tenancy, the Código Civil's articles 1022.º to 1113.º and the NRAU (Lei n.º 6/2006), in
+every version since 2006. It is not part of this dataset: the code rebuilds it from the Diário da
+República and the PGDL.
 
 - **Code, corpus builder, evaluation harness and reference system:** https://github.com/timimata/lex
 - **Live demo and leaderboard:** https://lex-beryl.vercel.app
 
 ## This dataset: the dev split
 
-70 items of benchmark v1 (2026-10-01). The test split, 88 items, stays private so that its scores
+84 items of benchmark v2 (2026-10-02), 14 of them on tenancy. The test split, 97 items, stays
+private so that its scores
 keep their meaning; results on it are published on the leaderboard and in the code repository
 (`results/test/`). To have a system scored on test, open an issue on the code repository.
 
 | Type | What it tests | Dev items |
 |---|---|---|
-| `simple` | One fact, one or two articles | 20 |
-| `composite` | Several articles combined | 17 |
-| `temporal` | `as_of` in the past; the answer depends on the law in force that day | 9 |
+| `simple` | One fact, one or two articles | 29 |
+| `composite` | Several articles combined | 19 |
+| `temporal` | `as_of` in the past; the answer depends on the law in force that day | 10 |
 | `explicit_reference` | The question names its article | 8 |
-| `unanswerable` | Outside the corpus; the right response is to say so | 16 |
+| `unanswerable` | Outside the corpus; the right response is to say so | 18 |
 
 ## Fields
 
 | Field | Meaning |
 |---|---|
-| `id` | `ct-0001` is the first Código do Trabalho item |
+| `id` | `ct-0001` is the first Código do Trabalho item, `ar-0001` the first tenancy (arrendamento) item |
 | `question` | As a person would ask it, in PT-PT |
 | `as_of` | The date the question is about |
 | `type` | One of the types above |
-| `must_cite` | Articles without which the answer is wrong: `{"diploma": "lei-7-2009", "article": "238"}` |
+| `must_cite` | Articles without which the answer is wrong: `{"diploma": "lei-7-2009", "article": "238"}`; the Código Civil is `dl-47344-1966`, the NRAU `lei-6-2006` |
 | `may_cite` | Articles a good answer may also cite without penalty |
 | `answer` | A short reference answer, checked against the law in force on `as_of` |
 | `source` | The public page the question came from, and the day it was read |
@@ -66,9 +70,11 @@ keep their meaning; results on it are published on the leaderboard and in the co
 
 ## How it was made
 
-Questions are never invented. Each is drawn from a public page, mostly the FAQ and guidance of
-the Autoridade para as Condições do Trabalho (ACT), and keeps its wording where it stands on its
-own. A language model drafted each item from its source, and the same model checked it against
+Questions are never invented. Each is drawn from a public page: on labour, mostly the FAQ and
+guidance of the Autoridade para as Condições do Trabalho (ACT); on tenancy, the Direção-Geral da
+Administração da Justiça's pages on the eviction procedure and the Diário da República's
+Lexionário. Each keeps its wording where it stands on its own; sources whose terms allow only
+non-commercial reuse are not used. A language model drafted each item from its source, and the same model checked it against
 the article versions in force on `as_of`; where the source was behind the law (several ACT
 answers predate Lei n.º 13/2023), the item follows the law and says so in `notes`. No item has
 been legally validated yet; that review is planned. The split is a hash of each item's main
@@ -80,12 +86,13 @@ test answer.
 Systems are scored on citation recall and precision (against `must_cite` and `may_cite`), on
 refusals (of unanswerable questions, and wrongly of answerable ones), and on correctness, judged
 by an LLM against the reference answer. The judge is checked on known-answer cases rather than
-hand labels: on dev it accepted 54 of 54 reference answers and caught 41 of 41 altered ones.
+hand labels: on dev it accepted 66 of 66 reference answers and caught 48 of 48 altered ones.
 
-On test (75 answerable, 13 unanswerable), the demo's system (Gemini Embedding 2 retrieval with
+On test (80 answerable, 17 unanswerable), the demo's system (Gemini Embedding 2 retrieval with
 an explicit-reference parser, Gemini 3.1 Flash-Lite answering with a citation per sentence):
-0.76 judged correct, citation recall 0.92, precision 0.94, 2 of 75 answerable questions wrongly
-refused, 11 of 13 unanswerable ones refused. Composite questions are the hardest: 0.50 correct.
+0.71 judged correct (0.26 partial, 0.03 wrong), citation recall 0.92, precision 0.92, 0 of 80
+answerable questions wrongly refused, 15 of 17 unanswerable ones refused. Composite questions are
+the hardest: 0.41 correct.
 The full leaderboard is on the demo's Results page.
 
 ## Licence and attribution

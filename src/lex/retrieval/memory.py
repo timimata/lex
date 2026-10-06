@@ -77,7 +77,8 @@ class DenseInMemory:
         self.name = f"dense-{embedder.name.split('/')[-1].split('@')[0]}"
 
     def search(self, question: str, as_of: dt.date, k: int) -> list[Citation]:
-        query = np.asarray(self.embedder.encode([question])[0], dtype=np.float32)
+        written = self.embedder.query_format.format(question)
+        query = np.asarray(self.embedder.encode([written])[0], dtype=np.float32)
         query /= np.linalg.norm(query) or 1.0
         in_force = [i for i, v in enumerate(self.corpus.versions) if v.in_force_on(as_of)]
         if not in_force:

@@ -27,10 +27,10 @@ from lex.retrieval.memory import DenseInMemory, Vectors
 from lex.retrieval.references import WithReferences
 from lex.retrieval.rerank import BgeReranker, Reranked
 from lex.store import db
-from lex.store.memory import Corpus
+from lex.store.memory import Corpus, corpus_files
 
 ROOT = Path(__file__).resolve().parents[3]
-CORPUS = ROOT / "data" / "processed" / "ct"
+PROCESSED = ROOT / "data" / "processed"  # one folder per diploma, vectors beside
 
 
 def limits() -> Limits:
@@ -73,10 +73,14 @@ def load_answers(path: Path | None) -> dict[tuple[str, dt.date], Answer]:
 
 
 def demo_app(
-    versions: Path, vectors: Path, results: Path, static: Path | None, answers: Path | None = None
+    versions: list[Path],
+    vectors: Path,
+    results: Path,
+    static: Path | None,
+    answers: Path | None = None,
 ) -> FastAPI:
     """The public demo: the demo's system, the article library and search, the leaderboard."""
-    corpus = Corpus.load(versions)
+    corpus = Corpus.load(*versions)
     return create_app(
         demo_system(corpus, vectors),
         library=corpus.versions_of,
@@ -102,8 +106,8 @@ def main(argv: list[str] | None = None) -> int:
     import uvicorn  # the optional `api` extra
 
     if args.demo:
-        vectors = CORPUS / "vectors-gemini-embedding-2-768.npz"
-        app = demo_app(CORPUS / "versions.jsonl", vectors, args.results, args.static)
+        vectors = PROCESSED / "vectors-gemini-embedding-2-768.npz"
+        app = demo_app(corpus_files(PROCESSED), vectors, args.results, args.static)
         uvicorn.run(app, host=args.host, port=args.port)
         return 0
     with db.connect() as conn:
@@ -119,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
         app = create_app(
             system,
             library=lambda diploma, article: db.versions_of(conn, diploma, article),
-            find=Corpus.load(CORPUS / "versions.jsonl").search_words,
+            find=Corpus.load(*corpus_files(PROCESSED)).search_words,
             leaderboard=leaderboard(args.results),
             limits=limits(),
             static=args.static,

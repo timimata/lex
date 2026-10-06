@@ -39,6 +39,7 @@ class CachedEmbedder:
     def __init__(self, base: Embedder, directory: Path) -> None:
         self.base = base
         self.name = base.name
+        self.query_format = base.query_format
         self.directory = directory
 
     def _path(self, text: str) -> Path:

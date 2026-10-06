@@ -24,10 +24,11 @@ import psycopg
 from dotenv import load_dotenv
 
 from lex.bench.splits import load
-from lex.domain import Retriever
+from lex.domain import Citation, Retriever
 from lex.eval import judge, results
 from lex.eval.harness import KS, run_answers, run_retrieval, summarise, summarise_answers
 from lex.generation import llm
+from lex.generation.agent import AgentSystem
 from lex.generation.answer import FORMATS, K, ReferenceSystem
 from lex.retrieval import cache
 from lex.retrieval.bm25 import Bm25
@@ -39,10 +40,10 @@ from lex.retrieval.memory import DenseInMemory, embed_corpus
 from lex.retrieval.references import WithReferences
 from lex.retrieval.rerank import BgeReranker, Reranked
 from lex.store import db
-from lex.store.memory import Corpus
-from lex.store.models import ArticleAt
+from lex.store.memory import Corpus, corpus_files
+from lex.store.models import ArticleAt, ArticleVersion
 
-CORPUS = results.ROOT / "data" / "processed" / "ct"
+PROCESSED = results.ROOT / "data" / "processed"  # one folder per diploma, vectors beside
 
 
 class Stores:
@@ -62,7 +63,7 @@ class Stores:
     @property
     def corpus(self) -> Corpus:
         if self._corpus is None:
-            self._corpus = Corpus.load(CORPUS / "versions.jsonl")
+            self._corpus = Corpus.load(*corpus_files(PROCESSED))
         return self._corpus
 
     def close(self) -> None:
@@ -103,10 +104,10 @@ def dense_api(stores: Stores) -> Built:
     embedder = cache.CachedEmbedder(
         ApiEmbedder(api_key=key), results.ROOT / ".cache" / "embeddings"
     )
-    path = CORPUS / f"vectors-{embedder.name.replace('@', '-')}.npz"
+    path = PROCESSED / f"vectors-{embedder.name.replace('@', '-')}.npz"
     vectors, embedded = embed_corpus(corpus, embedder, path)
     print(f"embedded {embedded} article versions that had no up-to-date vector")
-    config = {"model": embedder.name, "store": "memory"}
+    config = {"model": embedder.name, "store": "memory", "query": embedder.query_format}
     return Built(
         DenseInMemory(corpus, embedder, vectors), config, corpus.article_at, corpus.fingerprint()
     )
@@ -460,7 +461,15 @@ def main(argv: list[str] | None = None) -> int:
     answers.add_argument("--k", type=int, default=K, help="article versions given to the model")
     answers.add_argument("--split", choices=["dev", "test"], default="dev")
     answers.add_argument("--judge", action="store_true", help="also judge correctness")
-    answers.add_argument("--format", choices=FORMATS, default="answer", help="claims: per sentence")
+    answers.add_argument(
+        "--format",
+        choices=[*FORMATS, "agent"],
+        default="answer",
+        help="claims: per sentence; agent: claims, after asking for more articles",
+    )
+    answers.add_argument(
+        "--repeat", type=int, default=0, help="N: ask the model again, to measure run-to-run noise"
+    )
     labeling = commands.add_parser("label", help="hand-label a system's dev answers")
     labeling.add_argument("system", help="a results/dev/<system>.json answers run")
     judging = commands.add_parser("judge", help="judge dev answers and measure the judge")
@@ -500,16 +509,21 @@ def main(argv: list[str] | None = None) -> int:
             model = llm.Cached(
                 llm.from_env(overload_waits=llm.OVERLOAD_WAITS),
                 results.ROOT / ".cache" / "llm" / args.split,
+                repeat=args.repeat,
             )
             retriever, built = build(stores, args.retriever, args.split)
             article_at = built.article_at
-            system = ReferenceSystem(
-                retriever,
-                lambda c, day: article_at(c.diploma, c.article, day),
-                model,
-                k=args.k,
-                format=args.format,
+
+            def read(c: Citation, day: dt.date) -> ArticleVersion | None:
+                return article_at(c.diploma, c.article, day)
+
+            system: ReferenceSystem | AgentSystem = (
+                AgentSystem(retriever, read, model, k=args.k)
+                if args.format == "agent"  # Phase 7: it may ask for more articles first
+                else ReferenceSystem(retriever, read, model, k=args.k, format=args.format)
             )
+            if args.repeat:
+                system.name += f"+repeat-{args.repeat}"
             # Checked before any answer is paid for.
             measured = measured_judge(system.name) if args.judge else None
             answer_results = run_answers(items, system)
@@ -521,8 +535,9 @@ def main(argv: list[str] | None = None) -> int:
                 "llm_params": model.params,
                 "k": args.k,
                 "format": args.format,
+                "repeat": args.repeat,
                 "usage": model.usage(),
-                "turned_into_refusals": system.counts,
+                "counts": system.counts,  # what turned answers into refusals; the agent's asks
             }
             if measured is not None:
                 j = judge.Judge(judge_model(args.split))

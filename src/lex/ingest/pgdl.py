@@ -19,6 +19,12 @@ def decode(body: bytes) -> str:
     return body.decode("cp1252", errors="replace")
 
 
+def diploma_url(nid: int) -> str:
+    """The diploma's own page: its first articles (all of them, for a short diploma) and a
+    selector listing every one."""
+    return f"{BASE}lei_mostra_articulado.php?nid={nid}&tabela=leis"
+
+
 def window_url(article_id: str, nid: int = CT_NID) -> str:
     return (
         f"{BASE}lei_mostra_articulado.php?artigo_id={article_id}&nid={nid}"
@@ -96,7 +102,7 @@ _HEADING = re.compile(
     r"class=txt_base_b_l[^>]*>.*?Artigo (\d+)\.º(?:-([A-Z]+))?\s*<br>(.*?)</td>", re.S
 )
 _BODY = re.compile(r"<td valign=top colspan=4 class=txt_base_n_l[^>]*>(.*?)</td>", re.S)
-_LABEL = re.compile(r"([A-Z][^,<>]*?n\.º\s*\d+(?:-[A-Z])?/\d{4}), de \d{2}/\d{2}")
+_LABEL = re.compile(r"([A-Z][^,<>]*?n\.º\s*\d+(?:-[A-Z]{1,2})?/(?:\d{4}|\d{2})), de \d{2}/\d{2}")
 _OLD_REF = re.compile(r"n_versao=(\d+)&so_miolo=['\"]?\s*>\s*\d+ª versão:(?:&nbsp;|\s)*([^<]+)</a>")
 
 

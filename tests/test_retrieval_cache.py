@@ -81,6 +81,7 @@ def test_the_version_follows_the_store_contents_and_the_config(conn: psycopg.Con
 
 class Toy:
     name = "toy@2"
+    query_format = "{}"
 
     def __init__(self) -> None:
         self.seen: list[str] = []
