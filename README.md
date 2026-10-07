@@ -95,11 +95,20 @@ flowchart LR
 - **The demo** ([ADR 0014](docs/decisions/0014-serverless-demo.md)) runs on Vercel's free tier with
   no model server: Gemini Embedding 2 over the corpus held in memory, questions
   in its documented query format (dev v2 recall@5 0.90, above the reference system's 0.85), Gemini 3.1 Flash-Lite for answers, both on the free tier, so it cannot cost
-  anything; past the day's quota it says so. It answered in 3.93 s at the median and 6.12 s at
+  anything; past the day's quota it says so. At paid prices its answers would cost $0.001058
+  each (the agent on test v3, its thinking counted), so the 400 a day the demo allows itself
+  (`LEX_ANSWERS_PER_DAY`) bound it at $0.4232 a day. It answered in 3.93 s at the median and 6.12 s at
   p95 when timed on 2026-10-01, on the labour corpus (14 dev questions from Portugal after a
   first, possibly cold one; `results/dev/`).
+- **Operations** (ROADMAP, Phase 8): CI fails when the demo's prompts change without a new dev
+  run, and `python -m lex.eval regress` compares a change with the committed one against the
+  noise measured; `/api/usage` counts an instance's answers by outcome, with latency, tokens
+  and cost, and logs a JSON line for each; a scheduled workflow probes the live demo every six
+  hours (`python -m lex.probe`) and fails, emailing the owner, if it is down or slow.
 - **For agents:** `python -m lex.mcp_server` serves the code as MCP tools (an article on a date,
-  its versions, search, answers).
+  its versions, what changed between two dates, search, answers).
+- **What changed:** the page's Changes view lists, for a diploma and a period, every article the
+  law changed, added or revoked, grouped by the amending law, each opening on its redline.
 - 18 decisions are written down in [docs/decisions/](docs/decisions/), from the store to why the
   demo has no reranker.
 

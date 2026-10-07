@@ -3,12 +3,13 @@
 import { createContext, useContext } from "react";
 import { type Lang, STRINGS, type Strings } from "./i18n";
 
-export type View = "ask" | "articles" | "results" | "about";
-export const VIEWS: View[] = ["ask", "articles", "results", "about"];
+export type View = "ask" | "articles" | "changes" | "results" | "about";
+export const VIEWS: View[] = ["ask", "articles", "changes", "results", "about"];
 // The page's paths, which the API serves the page on (lex.api.app.PAGES).
 export const PATHS: Record<View, string> = {
   ask: "/",
   articles: "/artigos",
+  changes: "/alteracoes",
   results: "/resultados",
   about: "/sobre",
 };

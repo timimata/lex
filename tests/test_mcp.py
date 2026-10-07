@@ -54,12 +54,27 @@ def call(tool: str, arguments: dict[str, Any], **parts: Any) -> Any:
     return asyncio.run(go())
 
 
-def test_the_server_offers_four_tools() -> None:
+def test_the_server_offers_five_tools() -> None:
     async def names() -> set[str]:
         async with Client(build_server(CORPUS)) as client:
             return {t.name for t in (await client.list_tools()).tools}
 
-    assert asyncio.run(names()) == {"artigo", "versoes", "pesquisar", "responder"}
+    assert asyncio.run(names()) == {"artigo", "versoes", "alteracoes", "pesquisar", "responder"}
+
+
+def test_what_changed_in_a_period() -> None:
+    changed = call("alteracoes", {"desde": "2012-01-01", "ate": "2013-01-01"})["result"]
+    assert changed == [
+        {
+            "artigo": "CT 238",
+            "epigrafe": changed[0]["epigrafe"],
+            "em_vigor_desde": "2012-08-01",
+            "introduzido_por": changed[0]["introduzido_por"],
+            "o_que_fez": "alterado",
+        }
+    ]
+    assert call("alteracoes", {"desde": "2013-01-01", "ate": "2014-01-01"})["result"] == []
+    assert "anterior" in call("alteracoes", {"desde": "2014-01-01", "ate": "2013-01-01"})["error"]
 
 
 def test_an_article_on_a_date_and_its_timeline() -> None:

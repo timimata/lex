@@ -18,6 +18,7 @@
     },
     "k": 5,
     "format": "agent",
+    "prompts": "a77c139494e0",
     "repeat": 0,
     "usage": {
       "calls": 92,
@@ -25,7 +26,7 @@
       "completion_tokens": 13612,
       "thinking_tokens": 937,
       "thinking_unrecorded": 84,
-      "cached": 84
+      "cached": 92
     },
     "cost": {
       "usd_per_million": {
@@ -64,9 +65,9 @@
       "unparsed": 0
     }
   },
-  "commit": "186a6fd48380e21eb424871f075e22f18d45bb29",
-  "uncommitted_changes": false,
-  "run_at": "2026-10-07T16:56:27+01:00",
+  "commit": "374ae5157484ee9f0c2e99c2c9985cb7060ecc69",
+  "uncommitted_changes": true,
+  "run_at": "2026-10-07T18:57:24+01:00",
   "summary": {
     "answerable": {
       "items": 68,

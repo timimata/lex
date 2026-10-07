@@ -5,10 +5,11 @@ export type Lang = "pt" | "en";
 
 const pt = {
   tagline: "A lei do trabalho e do arrendamento, na versão em vigor em cada data",
-  pages: { ask: "Perguntar", articles: "Artigos", results: "Resultados", about: "Sobre" },
+  pages: { ask: "Perguntar", articles: "Artigos", changes: "Alterações", results: "Resultados", about: "Sobre" },
   titles: {
     ask: "Lex: a lei do trabalho e do arrendamento, na versão em vigor em cada data",
     articles: "Artigos · Lex",
+    changes: "Alterações · Lex",
     results: "Resultados · Lex",
     about: "Sobre · Lex",
   },
@@ -65,6 +66,19 @@ const pt = {
   diploma: "Diploma",
   nrau: "NRAU (Lei n.º 6/2006)",
   allDiplomas: "Todos os diplomas",
+  changesTitle: "O que mudou na lei",
+  changesIntro:
+    "Escolha um diploma e um período: cada artigo alterado, aditado ou revogado nesse período, agrupado pela lei que o mudou, abre com as alterações marcadas. Esta consulta não usa modelos de linguagem.",
+  changesFrom: "Depois de",
+  changesUntil: "Até",
+  changesShow: "Ver alterações",
+  changesNone: "Nenhum artigo deste diploma mudou nesse período.",
+  changesInForce: "em vigor desde",
+  changesCount: (n: number) => (n === 1 ? "1 artigo" : `${n} artigos`),
+  changeKinds: { changed: "alterado", added: "aditado", revoked: "revogado", original: "versão original" } as Record<
+    string,
+    string
+  >,
   notFound: "Página não encontrada",
   notFoundTitle: "Página não encontrada · Lex",
   notFoundLead: "Este endereço não corresponde a nenhuma página do Lex. Pode começar pela",
@@ -188,10 +202,11 @@ export type Strings = typeof pt;
 // Typed as the Portuguese, so a word missing in English fails the build.
 const en: Strings = {
   tagline: "Portugal's labour and tenancy law, as in force on any date",
-  pages: { ask: "Ask", articles: "Articles", results: "Results", about: "About" },
+  pages: { ask: "Ask", articles: "Articles", changes: "Changes", results: "Results", about: "About" },
   titles: {
     ask: "Lex: Portugal's labour and tenancy law, as in force on any date",
     articles: "Articles · Lex",
+    changes: "Changes · Lex",
     results: "Results · Lex",
     about: "About · Lex",
   },
@@ -245,6 +260,19 @@ const en: Strings = {
   diploma: "Diploma",
   nrau: "NRAU (Lei n.º 6/2006)",
   allDiplomas: "All diplomas",
+  changesTitle: "What changed in the law",
+  changesIntro:
+    "Choose a diploma and a period: every article changed, added or revoked in it, grouped by the law that changed it, opens with its changes marked. No language model is involved.",
+  changesFrom: "After",
+  changesUntil: "Until",
+  changesShow: "Show changes",
+  changesNone: "No article of this diploma changed in that period.",
+  changesInForce: "in force since",
+  changesCount: (n: number) => (n === 1 ? "1 article" : `${n} articles`),
+  changeKinds: { changed: "changed", added: "added", revoked: "revoked", original: "original text" } as Record<
+    string,
+    string
+  >,
   notFound: "Page not found",
   notFoundTitle: "Page not found · Lex",
   notFoundLead: "This address is no page of Lex. You can start from the",

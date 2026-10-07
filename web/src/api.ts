@@ -90,6 +90,17 @@ export const article = (c: Citation, asOf: string) =>
 
 export const leaderboard = () => call<Run[]>("/api/leaderboard");
 
+export interface ChangeGroup {
+  introduced_by: string;
+  valid_from: string;
+  articles: { article: string; heading: string; kind: "changed" | "added" | "revoked" | "original" }[];
+}
+
+export const changes = (diploma: string, since: string, until: string) =>
+  call<{ groups: ChangeGroup[] }>(
+    `/api/changes?diploma=${encodeURIComponent(diploma)}&since=${since}&until=${until}`,
+  );
+
 export const health = () => call<{ status: string; system: string; today?: string }>("/api/health");
 
 export interface Hit {

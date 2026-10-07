@@ -253,6 +253,8 @@ class Found:
     article: str
     heading: str
     text: str = ""
+    introduced_by: str = "lei-7-2009"
+    valid_from: dt.date = dt.date(2009, 2, 17)
 
 
 def test_articles_can_be_searched_by_word_without_a_model() -> None:
@@ -350,3 +352,81 @@ def test_the_pages_own_paths_are_served_the_page(tmp_path: Path) -> None:
         assert c.get("/api/health").json()["status"] == "ok"
         api_missing = c.get("/api/articles/lei-7-2009/999999")  # the API's errors stay JSON
         assert api_missing.status_code == 404 and "detail" in api_missing.json()
+
+
+class Priced(Echo):
+    """Answers as the demo's model would, its calls and tokens reported; fails on "falha"."""
+
+    name = "dense+gemini-3.1-flash-lite+agent"
+
+    def answer(self, question: str, as_of: dt.date) -> Answer:
+        if "falha" in question:
+            raise Status(429, "quotaId: GenerateRequestsPerDayPerProjectPerModel-FreeTier")
+        tokens = {
+            "calls": 1,
+            "prompt_tokens": 2000,
+            "completion_tokens": 200,
+            "thinking_tokens": 100,
+        }
+        return super().answer(question, as_of).model_copy(update={"tokens": tokens})
+
+
+def test_usage_counts_each_outcome_with_latency_tokens_and_cost(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    api = client(Priced(), limits=Limits(per_visitor_per_hour=2))  # a failure is refunded
+    api.post("/api/answer", json={"question": "Quantos dias de férias?"})
+    api.post("/api/answer", json={"question": "Quantos dias de férias?"})  # from the cache
+    api.post("/api/answer", json={"question": "Isto falha?"})
+    api.post("/api/answer", json={"question": "Outra pergunta?"})
+    assert api.post("/api/answer", json={"question": "Mais uma?"}).status_code == 429
+
+    usage = api.get("/api/usage").json()
+
+    assert usage["counts"] == {"answered": 2, "cached": 1, "failed_quota_day": 1, "limited": 1}
+    assert usage["latency_seconds"]["answers"] == 2 and usage["latency_seconds"]["p95"] >= 0
+    assert usage["tokens"] == {
+        "calls": 2,
+        "prompt_tokens": 4000,
+        "completion_tokens": 400,
+        "thinking_tokens": 200,
+    }
+    assert usage["usd_at_paid_prices"] == round((4000 * 0.25 + 600 * 1.50) / 1e6, 6)
+    assert usage["scope"].startswith("this instance")
+    lines = [json.loads(line) for line in capsys.readouterr().out.splitlines() if "event" in line]
+    assert [line["outcome"] for line in lines][:2] == ["answered", "cached"]
+    assert lines[0]["usd"] == round((2000 * 0.25 + 300 * 1.50) / 1e6, 6)
+
+
+def test_changes_are_grouped_by_the_law_and_day_that_made_them() -> None:
+    asked: list[tuple[str, dt.date, dt.date]] = []
+
+    def changes(diploma: str, since: dt.date, until: dt.date) -> list[tuple[Found, str]]:
+        asked.append((diploma, since, until))
+        law = "lei-13-2019"
+        day = dt.date(2019, 2, 13)
+        return [
+            (Found("dl-47344-1966", "1041", "Mora do locatário", "", law, day), "changed"),
+            (Found("dl-47344-1966", "1067-A", "Igualdade", "", law, day), "added"),
+        ]
+
+    api = TestClient(create_app(Echo(), changes=changes, today=lambda: TODAY))
+    view = api.get(
+        "/api/changes", params={"diploma": "dl-47344-1966", "since": "2019-01-01"}
+    ).json()
+
+    assert asked == [("dl-47344-1966", dt.date(2019, 1, 1), TODAY)]  # until today by default
+    assert view["groups"] == [
+        {
+            "introduced_by": "lei-13-2019",
+            "valid_from": "2019-02-13",
+            "articles": [
+                {"article": "1041", "heading": "Mora do locatário", "kind": "changed"},
+                {"article": "1067-A", "heading": "Igualdade", "kind": "added"},
+            ],
+        }
+    ]
+    bad = api.get(
+        "/api/changes", params={"diploma": "x", "since": "2020-01-01", "until": "2019-01-01"}
+    )
+    assert bad.status_code == 422

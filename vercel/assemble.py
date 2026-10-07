@@ -64,7 +64,7 @@ def warm(out: Path) -> None:
     from lex.store.memory import Corpus, corpus_files
 
     load_dotenv(ROOT / ".env")
-    system = demo_system(Corpus.load(*corpus_files(PROCESSED)), VECTORS)
+    system = demo_system(Corpus.load(*corpus_files(PROCESSED)), VECTORS, patient=True)
     today = lisbon_today()
     rows = []
     for example in json.loads((ROOT / "web" / "src" / "examples.json").read_text(encoding="utf-8")):

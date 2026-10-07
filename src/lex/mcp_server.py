@@ -116,6 +116,26 @@ def build_server(
         ]
 
     @server.tool()
+    def alteracoes(desde: str, ate: str | None = None, diploma: str = "CT") -> list[dict[str, Any]]:
+        """O que mudou num diploma (CT, CC ou NRAU; por omissão, CT) depois de uma data e até
+        outra (por omissão, hoje): cada versão de artigo que entrou em vigor nesse período, com a
+        lei que a introduziu e o que fez (alterado, aditado, revogado ou versão original)."""
+        start, end = _date(desde), _date(ate)
+        if not start < end:
+            raise ToolError("A data inicial tem de ser anterior à final.")
+        kinds = {"changed": "alterado", "added": "aditado", "revoked": "revogado"}
+        return [
+            {
+                "artigo": _id(Citation(diploma=v.diploma, article=v.article)),
+                "epigrafe": v.heading,
+                "em_vigor_desde": v.valid_from.isoformat(),
+                "introduzido_por": v.introduced_by,
+                "o_que_fez": kinds.get(kind, "versão original"),
+            }
+            for v, kind in corpus.changes(_diploma(diploma), start, end)
+        ]
+
+    @server.tool()
     def pesquisar(pergunta: str, data: str | None = None, k: int = 5) -> list[dict[str, str]]:
         """Os artigos mais relevantes para uma pergunta, entre os em vigor numa data (por
         omissão, hoje)."""

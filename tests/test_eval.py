@@ -228,3 +228,22 @@ def test_cost_is_at_the_paid_prices_with_thinking_as_output() -> None:
     partial = cost({**usage, "thinking_unrecorded": 1}, "gemini-3.1-flash-lite", 4)
     assert partial is not None and partial["lower_bound"]
     assert cost(usage, "a-local-model", 4) is None
+
+
+def test_a_changed_prompt_is_caught_until_dev_is_run_again(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from lex.eval import __main__ as cli
+    from lex.generation.agent import AGENT_SYSTEM
+    from lex.retrieval.dense import GEMINI_QUERY
+
+    monkeypatch.setattr(results, "RESULTS", tmp_path)
+    run = tmp_path / "dev" / "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+agent.json"
+    run.parent.mkdir()
+    config = {"prompts": cli.fingerprint("agent"), "query": GEMINI_QUERY}
+    run.write_text(json.dumps({"config": config}), encoding="utf-8")
+    assert cli.prompt_guard() == []
+
+    monkeypatch.setattr(cli, "AGENT_SYSTEM", AGENT_SYSTEM + " Sê breve.")
+    assert "prompts changed" in cli.prompt_guard()[0]
+    assert cli.fingerprint("claims") != cli.fingerprint("agent")

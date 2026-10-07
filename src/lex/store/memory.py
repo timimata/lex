@@ -100,6 +100,10 @@ def corpus_files(processed: Path) -> list[Path]:
     return sorted(processed.glob("*/versions.jsonl"))
 
 
+# "(Revogado.)", "(Revogado pela Lei n.º 23/2012...)": a version that only records a revocation.
+_REVOKED = re.compile(r"^\(?\s*revogad[oa]", re.IGNORECASE)
+
+
 def _order(article: str) -> tuple[int, str]:
     """'199-A' after '199', before '200'."""
     number, _, suffix = article.partition("-")
@@ -128,6 +132,30 @@ class Corpus:
         """The version of an article in force on `as_of`, or None if there was none that day."""
         return next(
             (v for v in self.by_article.get((diploma, article), []) if v.in_force_on(as_of)), None
+        )
+
+    def changes(
+        self, diploma: str, since: dt.date, until: dt.date
+    ) -> list[tuple[ArticleVersion, str]]:
+        """Every version of the diploma's articles that came into force after `since` and by
+        `until`, with what it did: "original" (the diploma's own first text), "added" (an
+        article that did not exist), "revoked" or "changed". By date, then article."""
+        found = []
+        for (d, _), history in self.by_article.items():
+            if d != diploma:
+                continue
+            for i, v in enumerate(history):
+                if not since < v.valid_from <= until:
+                    continue
+                if _REVOKED.match(v.text.strip()):
+                    kind = "revoked"
+                elif i == 0:
+                    kind = "original" if v.introduced_by == diploma else "added"
+                else:
+                    kind = "changed"
+                found.append((v, kind))
+        return sorted(
+            found, key=lambda f: (f[0].valid_from, f[0].introduced_by, _order(f[0].article))
         )
 
     def versions_of(self, diploma: str, article: str) -> list[ArticleVersion]:

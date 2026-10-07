@@ -59,6 +59,7 @@ def serve() -> None:
         Scripted(),
         library=corpus.versions_of,
         find=corpus.search_words,
+        changes=corpus.changes,
         leaderboard=leaderboard(ROOT / "results" / "test"),
         static=ROOT / "web" / "dist",
     )
@@ -211,6 +212,21 @@ def check(page: Page, shots: Path | None) -> None:
     expect(page.locator(".prose")).to_contain_text("Gemini embeddings")
     page.go_back()
     expect(page.locator("table").first).to_be_visible()  # the browser's back button works
+
+    # What changed between two dates: Lei n.º 13/2019 in the Código Civil, its articles opening
+    # on their changes (the late-rent fee, 50 % before, 20 % after).
+    page.goto(URL + "alteracoes?dip=CC&de=2019-01-01&ate=2019-12-31&lang=pt")
+    expect(page).to_have_title("Alterações · Lex")
+    law = page.locator(".change-group", has_text="Lei n.º 13/2019")
+    expect(law.locator(".change-law")).to_contain_text("13/02/2019")
+    expect(law.locator(".hits li")).to_have_count(15)
+    law.get_by_role("button", name="art. 1041.º do CC").click()
+    expect(page.locator(".diff del").first).to_contain_text("50%")
+    expect(page.locator(".diff ins").first).to_contain_text("20 %")
+    shot("7-changes")
+    audit(page, "what changed, an article's changes open")
+    tab("Alterações").click()
+    expect(page.locator(".change-group").first).to_be_visible()  # kept across a reload of view
 
     # The home page shows the demo's own numbers, once it has a judged test run.
     page.goto(URL + "?lang=pt")

@@ -323,6 +323,9 @@ export default function App() {
         <div hidden={missing || view !== "articles"}>
           <Browse latest={serverToday} />
         </div>
+        <div hidden={missing || view !== "changes"}>
+          <ChangesPage latest={serverToday} />
+        </div>
         <Suspense fallback={<p className="muted">{t.loading}…</p>}>
           {!missing && view === "results" && <Results runs={runs} error={runsError} demoSystem={demoSystem} />}
           {!missing && view === "about" && <About demoSystem={demoSystem} />}
@@ -797,6 +800,133 @@ function Browse({ latest }: { latest: string }) {
   );
 }
 
+/** What changed in a diploma between two dates: the laws that changed it and their articles. */
+function ChangesPage({ latest }: { latest: string }) {
+  const { lang, t } = useWords();
+  const params = useRef(new URLSearchParams(window.location.search));
+  const linked = window.location.pathname.startsWith(PATHS.changes);
+  const fromLink = (name: string) => {
+    const value = linked ? params.current.get(name) : null;
+    return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+  };
+  const [diploma, setDiploma] = useState(
+    (linked && BY_SHORT[params.current.get("dip") ?? ""]) || "dl-47344-1966",
+  );
+  const [since, setSince] = useState(fromLink("de") ?? "2019-01-01");
+  const [until, setUntil] = useState(fromLink("ate") ?? latest);
+  const [groups, setGroups] = useState<api.ChangeGroup[] | null>(null);
+  const [open, setOpen] = useState<{ citation: Citation; asOf: string; kind: string } | null>(null);
+  const [error, setError] = useState("");
+
+  async function go() {
+    setError("");
+    setOpen(null);
+    setLink("changes", { dip: DIPLOMAS[diploma].short, de: since, ate: until, lang });
+    try {
+      setGroups((await api.changes(diploma, since, until)).groups);
+    } catch (e) {
+      setGroups(null);
+      setError(e instanceof Error ? e.message : t.unexpected);
+    }
+  }
+
+  // A shared link shows its period on arrival.
+  useEffect(() => {
+    if (linked && params.current.get("de")) go();
+  }, []);
+
+  return (
+    <section className="changes">
+      <header className="page-head">
+        <h1>{t.changesTitle}</h1>
+        <p className="lead">{t.changesIntro}</p>
+      </header>
+      <form
+        className="query"
+        onSubmit={(e) => {
+          e.preventDefault();
+          go();
+        }}
+      >
+        <div className="query-row">
+          <label className="select-field">
+            <span className="field-label">{t.diploma}</span>
+            <select value={diploma} onChange={(e) => setDiploma(e.target.value)}>
+              {Object.entries(DIPLOMAS).map(([id, d]) => (
+                <option key={id} value={id}>
+                  {d.short === "NRAU" ? t.nrau : d.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="date-field">
+            <span className="field-label">{t.changesFrom}</span>
+            <input type="date" value={since} min={FIRST_DAY} max={latest} onChange={(e) => setSince(e.target.value)} />
+          </label>
+          <label className="date-field">
+            <span className="field-label">{t.changesUntil}</span>
+            <input type="date" value={until} min={FIRST_DAY} max={latest} onChange={(e) => setUntil(e.target.value)} />
+          </label>
+          <button type="submit" className="button primary" disabled={!since || !until}>
+            {t.changesShow}
+          </button>
+        </div>
+      </form>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+      <div className={groups?.length && open ? "workspace split" : "workspace"}>
+        {groups && (
+          <div id="changed">
+            {groups.length === 0 ? (
+              <p className="muted">{t.changesNone}</p>
+            ) : (
+              groups.map((g) => (
+                <section key={`${g.introduced_by}/${g.valid_from}`} className="change-group">
+                  <h2 className="change-law">
+                    {diplomaLabel(g.introduced_by, diploma)}{" "}
+                    <span className="muted">
+                      {t.changesInForce} {day(g.valid_from)} · {t.changesCount(g.articles.length)}
+                    </span>
+                  </h2>
+                  <ol className="hits">
+                    {g.articles.map((a) => {
+                      const citation = { diploma, article: a.article };
+                      return (
+                        <li key={a.article} className={open && same(open.citation, citation) ? "on" : ""}>
+                          <button
+                            type="button"
+                            className="cite"
+                            onClick={() => setOpen({ citation, asOf: g.valid_from, kind: a.kind })}
+                          >
+                            {articleLabel(citation)}
+                          </button>
+                          <span className="hit-heading">{a.heading}</span>
+                          <span className={`change-kind ${a.kind}`}>{t.changeKinds[a.kind] ?? a.kind}</span>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </section>
+              ))
+            )}
+          </div>
+        )}
+        {open && (
+          <Reader
+            citation={open.citation}
+            asOf={open.asOf}
+            backTo="#changed"
+            compare={open.kind === "changed" || open.kind === "revoked"}
+          />
+        )}
+      </div>
+    </section>
+  );
+}
+
 /** Copies a link that opens this article as in force on this date, from any page. */
 function CopyArticleLink({ citation, asOf }: { citation: Citation; asOf: string }) {
   const { lang, t } = useWords();
@@ -887,19 +1017,21 @@ function Reader({
   asOf,
   backTo,
   onClose,
+  compare = false,
 }: {
   citation: Citation;
   asOf: string;
   backTo: string | null;
   onClose?: () => void;
+  compare?: boolean; // open on the changes from the previous version
 }) {
   const { t } = useWords();
   const [shown, setShown] = useState(asOf);
-  const [comparing, setComparing] = useState(false);
+  const [comparing, setComparing] = useState(compare);
   useEffect(() => {
     setShown(asOf);
-    setComparing(false);
-  }, [asOf, citation]);
+    setComparing(compare);
+  }, [asOf, citation, compare]);
   const { view, error } = useArticle(citation, shown);
 
   const index = view ? view.versions.findIndex((p) => inForce(p, view.as_of)) : -1;

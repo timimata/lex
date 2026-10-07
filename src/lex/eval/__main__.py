@@ -18,25 +18,44 @@ import urllib.error
 import urllib.request
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import psycopg
 from dotenv import load_dotenv
 
+from lex.bench.schema import Item
 from lex.bench.splits import load
 from lex.domain import Citation, Retriever
 from lex.eval import judge, results
 from lex.eval.check import check_results
-from lex.eval.harness import KS, run_answers, run_retrieval, summarise, summarise_answers
+from lex.eval.harness import (
+    KS,
+    AnswerResult,
+    run_answers,
+    run_retrieval,
+    summarise,
+    summarise_answers,
+)
 from lex.generation import llm
-from lex.generation.agent import AgentSystem
-from lex.generation.answer import FORMATS, K, ReferenceSystem
+from lex.generation.agent import AGENT_SYSTEM, AgentSystem, agent_prompt
+from lex.generation.answer import (
+    CLAIMS_SYSTEM,
+    COVER_SYSTEM,
+    FORMATS,
+    SYSTEM,
+    K,
+    ReferenceSystem,
+    prompt,
+)
 from lex.retrieval import cache
 from lex.retrieval.bm25 import Bm25
 from lex.retrieval.crossrefs import PER_ARTICLE, TOP, WithCrossReferences
 from lex.retrieval.decompose import Decomposed
 from lex.retrieval.dense import (
     GEMINI_DOCUMENT,
+    GEMINI_QUERY,
     PLAIN_DOCUMENT,
     ApiEmbedder,
     BgeM3,
@@ -194,20 +213,13 @@ RETRIEVERS: dict[str, Callable[[Stores], Built]] = {
 }
 
 
-# USD per million tokens on the paid tier, input and output (thinking is billed as output), from
-# ai.google.dev/gemini-api/docs/pricing, read 2026-10-06. The demo runs on the free tier, so
-# this is what its answers would cost, not what they cost.
-PRICES = {"gemini-3.1-flash-lite": (0.25, 1.50)}
-
-
 def cost(usage: dict[str, int], model: str, questions: int) -> dict[str, Any] | None:
     """The run's cost at the paid prices, total and per question; a lower bound while some
     calls' thinking was not recorded (cached before it was)."""
-    if model not in PRICES or not questions:
+    usd = llm.usd(usage, model)
+    if usd is None or not questions:
         return None
-    per_input, per_output = PRICES[model]
-    output = usage["completion_tokens"] + usage["thinking_tokens"]
-    usd = (usage["prompt_tokens"] * per_input + output * per_output) / 1_000_000
+    per_input, per_output = llm.PRICES[model]
     return {
         "usd_per_million": {"input": per_input, "output": per_output},
         "usd": round(usd, 6),
@@ -492,6 +504,160 @@ def latency(url: str, n: int) -> int:
     return 0
 
 
+@dataclass
+class AnswerRun:
+    name: str
+    config: dict[str, Any]
+    summary: dict[str, Any]
+    items: list[AnswerResult]
+    retriever: cache.Cached
+
+
+def answer_run(
+    stores: Stores,
+    items: list[Item],
+    split: str,
+    retriever_name: str,
+    format: str,
+    k: int,
+    repeat: int,
+    judged: bool,
+) -> AnswerRun:
+    """Answers every item with the named system and scores it, judged if asked; writes nothing."""
+    # Per split: test prompts hold test questions, and only the harness reads them.
+    model = llm.Cached(
+        llm.from_env(overload_waits=llm.OVERLOAD_WAITS),
+        results.ROOT / ".cache" / "llm" / split,
+        repeat=repeat,
+    )
+    retriever, built = build(stores, retriever_name, split)
+    article_at = built.article_at
+
+    def read(c: Citation, day: dt.date) -> ArticleVersion | None:
+        return article_at(c.diploma, c.article, day)
+
+    system: ReferenceSystem | AgentSystem = (
+        AgentSystem(retriever, read, model, k=k)
+        if format == "agent"  # Phase 7: it may ask for more articles first
+        else ReferenceSystem(retriever, read, model, k=k, format=format)
+    )
+    if repeat:
+        system.name += f"+repeat-{repeat}"
+    # Checked before any answer is paid for.
+    measured = measured_judge(system.name) if judged else None
+    answer_results = run_answers(items, system)
+    summary: dict[str, Any] = dict(summarise_answers(answer_results))
+    config = {
+        **built.config,
+        "task": "answers",
+        "llm": model.name,
+        "llm_params": model.params,
+        "k": k,
+        "format": format,
+        "prompts": fingerprint(format),
+        "repeat": repeat,
+        "usage": model.usage(),
+        "cost": cost(model.usage(), model.name, len(items)),
+        "counts": system.counts,  # what turned answers into refusals; the agent's asks
+    }
+    if measured is not None:
+        j = judge.Judge(judge_model(split))
+        by_id = {i.id: i for i in items}
+        verdicts = {
+            r.id: j.verdict(by_id[r.id], r.text, r.refused)
+            for r in answer_results
+            if r.type != "unanswerable"
+        }
+        types = {r.id: r.type for r in answer_results}
+        summary["correctness"] = judge.correctness(verdicts, types)
+        config["judge"] = {
+            "model": j.name,
+            "prompt": prompt_version(),
+            "measured_on_dev": measured,
+            "unparsed": j.unparsed,
+        }
+    return AnswerRun(system.name, config, summary, answer_results, retriever)
+
+
+# The demo's system (ADR 0014, ADR 0018): what `prompt_guard` and `regress` watch.
+DEMO_RETRIEVER, DEMO_FORMAT = "dense-gemini+refs", "agent"
+# Two runs of one system on dev differ by about one correct answer in 66 (ADR 0018): a drop of
+# more than this many is a regression, not noise.
+REGRESSION_MARGIN = 2
+
+
+def fingerprint(format: str) -> str:
+    """A hash of what the model is told for an answer format: the system prompts, a user prompt
+    rendered from fixed inputs (so its template counts too), and the judge's prompt."""
+    sample: list[tuple[Citation, Any]] = [
+        (
+            Citation(diploma="lei-7-2009", article="238"),
+            SimpleNamespace(heading="Epígrafe", text="Texto.", valid_from=dt.date(2009, 2, 17)),
+        )
+    ]
+    day = dt.date(2020, 1, 1)
+    if format == "agent":
+        texts = [AGENT_SYSTEM, CLAIMS_SYSTEM, agent_prompt("P?", day, sample, ["pesquisar «x»"])]
+    else:
+        systems = {"answer": SYSTEM, "claims": CLAIMS_SYSTEM, "claims-cover": COVER_SYSTEM}
+        texts = [systems[format], prompt("P?", day, sample)]
+    joined = json.dumps([*texts, judge.SYSTEM], ensure_ascii=False)
+    return hashlib.sha256(joined.encode()).hexdigest()[:12]
+
+
+def demo_dev_run() -> Path | None:
+    """The demo's latest dev answers run, if there is one (not a --repeat)."""
+    paths = [
+        p
+        for p in (results.RESULTS / "dev").glob("dense-gemini-embedding-2+refs+*+agent.json")
+        if "+repeat-" not in p.name
+    ]
+    return paths[0] if len(paths) == 1 else None
+
+
+def prompt_guard() -> list[str]:
+    """The demo's prompts and query format against those its last dev run used: a change to
+    either ships only with a new dev run (Phase 8)."""
+    path = demo_dev_run()
+    if path is None:
+        return ["no dev answers run of the demo's system in results/dev/"]
+    config = json.loads(path.read_text(encoding="utf-8"))["config"]
+    problems = []
+    if config.get("prompts") != fingerprint(DEMO_FORMAT):
+        problems.append(
+            f"{path.name}: the demo's prompts changed since this run; run "
+            f"python -m lex.eval answers --retriever {DEMO_RETRIEVER} --format {DEMO_FORMAT} "
+            "--judge (or regress first)"
+        )
+    if config.get("query") != GEMINI_QUERY:
+        problems.append(f"{path.name}: the demo's query format changed since this run")
+    return problems
+
+
+def regress(stores: Stores, items: list[Item]) -> int:
+    """The demo's system on dev now, judged, against its committed dev run; writes nothing."""
+    path = demo_dev_run()
+    if path is None:
+        raise SystemExit("no committed dev run of the demo's system to compare with")
+    before = json.loads(path.read_text(encoding="utf-8"))
+    run = answer_run(stores, items, "dev", DEMO_RETRIEVER, DEMO_FORMAT, K, 0, True)
+
+    def correct(summary: dict[str, Any]) -> int:
+        row = summary["correctness"]["answerable"]
+        return round(float(row["correta"]) * int(row["items"]))
+
+    def refused(summary: dict[str, Any]) -> int:
+        row = summary["answerable"]
+        return round(float(row["refused"]) * int(row["items"]))
+
+    was, now = correct(before["summary"]), correct(run.summary)
+    refused_was, refused_now = refused(before["summary"]), refused(run.summary)
+    print(f"correct on dev: {was} -> {now}; answerable refused: {refused_was} -> {refused_now}")
+    worse = now < was - REGRESSION_MARGIN or refused_now > refused_was + REGRESSION_MARGIN
+    print("regression: beyond the noise measured" if worse else "no regression beyond the noise")
+    return 1 if worse else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m lex.eval")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -519,6 +685,7 @@ def main(argv: list[str] | None = None) -> int:
     judging.add_argument("--minimum", type=int, default=20, help="hand labels needed")
     commands.add_parser("judge-check", help="measure the judge on known-answer dev cases")
     commands.add_parser("check-results", help="check results/ against itself; no model, for CI")
+    commands.add_parser("regress", help="the demo's system on dev against its committed run")
     timing = commands.add_parser("latency", help="time the deployed demo on dev questions")
     timing.add_argument("url", help="e.g. https://lex-beryl.vercel.app")
     timing.add_argument("--n", type=int, default=15, help="questions (and quota) to spend")
@@ -532,15 +699,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "judge-check":
         return judge_check()
     if args.command == "check-results":
-        problems = check_results(results.RESULTS, results.BENCH)
+        problems = check_results(results.RESULTS, results.BENCH) + prompt_guard()
         print("\n".join(problems) or "results/ adds up, and its test runs share one split")
         return 1 if problems else 0
     if args.command == "latency":
         return latency(args.url, args.n)
 
-    results.ensure_reproducible(args.split)
-    items = load(args.split)
-    stores = Stores(args.split)
+    split = "dev" if args.command == "regress" else args.split
+    results.ensure_reproducible(split)
+    items = load(split)
+    stores = Stores(split)
     try:
         if args.command == "retrieval":
             retriever, built = build(stores, args.system, args.split)
@@ -551,69 +719,32 @@ def main(argv: list[str] | None = None) -> int:
             answerable = len(item_results)
             print(f"{retriever.name} on {args.split}: {len(items)} items, {answerable} answerable")
             table(summary, ["items", *(f"recall@{k}" for k in KS)])
+        elif args.command == "regress":
+            return regress(stores, items)
         else:
-            # Per split: test prompts hold test questions, and only the harness reads them.
-            model = llm.Cached(
-                llm.from_env(overload_waits=llm.OVERLOAD_WAITS),
-                results.ROOT / ".cache" / "llm" / args.split,
-                repeat=args.repeat,
+            run = answer_run(
+                stores,
+                items,
+                args.split,
+                args.retriever,
+                args.format,
+                args.k,
+                args.repeat,
+                args.judge,
             )
-            retriever, built = build(stores, args.retriever, args.split)
-            article_at = built.article_at
-
-            def read(c: Citation, day: dt.date) -> ArticleVersion | None:
-                return article_at(c.diploma, c.article, day)
-
-            system: ReferenceSystem | AgentSystem = (
-                AgentSystem(retriever, read, model, k=args.k)
-                if args.format == "agent"  # Phase 7: it may ask for more articles first
-                else ReferenceSystem(retriever, read, model, k=args.k, format=args.format)
-            )
-            if args.repeat:
-                system.name += f"+repeat-{args.repeat}"
-            # Checked before any answer is paid for.
-            measured = measured_judge(system.name) if args.judge else None
-            answer_results = run_answers(items, system)
-            summary = dict(summarise_answers(answer_results))
-            config = {
-                **built.config,
-                "task": "answers",
-                "llm": model.name,
-                "llm_params": model.params,
-                "k": args.k,
-                "format": args.format,
-                "repeat": args.repeat,
-                "usage": model.usage(),
-                "cost": cost(model.usage(), model.name, len(items)),
-                "counts": system.counts,  # what turned answers into refusals; the agent's asks
-            }
-            if measured is not None:
-                j = judge.Judge(judge_model(args.split))
-                by_id = {i.id: i for i in items}
-                verdicts = {
-                    r.id: j.verdict(by_id[r.id], r.text, r.refused)
-                    for r in answer_results
-                    if r.type != "unanswerable"
-                }
-                types = {r.id: r.type for r in answer_results}
-                summary["correctness"] = judge.correctness(verdicts, types)
-                config["judge"] = {
-                    "model": j.name,
-                    "prompt": prompt_version(),
-                    "measured_on_dev": measured,
-                    "unparsed": j.unparsed,
-                }
-            path = results.write(args.split, system.name, config, summary, answer_results)
-            print(f"{system.name} on {args.split}: {len(items)} items")
+            retriever = run.retriever
+            path = results.write(args.split, run.name, run.config, run.summary, run.items)
+            print(f"{run.name} on {args.split}: {len(items)} items")
             table(
-                {k: v for k, v in summary.items() if k != "correctness"},
+                {k: v for k, v in run.summary.items() if k != "correctness"},
                 ["items", "refused", "cited", "citation_precision", "citation_recall"],
             )
-            if "correctness" in summary:
+            if "correctness" in run.summary:
+                measured = run.config["judge"]["measured_on_dev"]
                 print(f"correctness, judged by {judge.JUDGE_MODEL}, measured on dev by {measured}:")
-                table(summary["correctness"], ["items", *judge.VERDICTS])
-            print(f"llm usage: {model.usage()}; {system.counts}")
-            print(f"cost at paid prices: {config['cost']}")
+                table(run.summary["correctness"], ["items", *judge.VERDICTS])
+            print(f"llm usage: {run.config['usage']}; {run.config['counts']}")
+            print(f"cost at paid prices: {run.config['cost']}")
     finally:
         stores.close()
     print(f"retrieval cache: {retriever.hits} hits, {retriever.misses} misses")

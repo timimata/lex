@@ -167,3 +167,25 @@ def test_an_excerpt_is_the_line_with_most_of_the_words_cut_around_them() -> None
     assert cut.startswith("…") and cut.endswith("…") and len(cut) <= 82
     assert [cut[a:b] for a, b in marks] == ["caução"]
     assert excerpt("Sem nada.", "caução") == ("", [])
+
+
+def test_changes_in_a_period_say_what_each_version_did() -> None:
+    endometriose = version("252-B", "falta por endometriose", dt.date(2025, 4, 26), None)
+    corpus = Corpus(
+        [
+            version("238", "férias com majoração", dt.date(2009, 2, 17), dt.date(2012, 8, 1)),
+            version("238", "férias sem majoração", dt.date(2012, 8, 1), None),
+            version("251", "faltas", dt.date(2009, 2, 17), dt.date(2012, 8, 1)),
+            version("251", "(Revogado.)", dt.date(2012, 8, 1), None),
+            endometriose.model_copy(update={"introduced_by": "lei-15-2025"}),
+        ]
+    )
+    period = corpus.changes("lei-7-2009", dt.date(2012, 1, 1), dt.date(2025, 12, 31))
+    assert [(v.article, kind) for v, kind in period] == [
+        ("238", "changed"),
+        ("251", "revoked"),
+        ("252-B", "added"),
+    ]
+    first = corpus.changes("lei-7-2009", dt.date(2009, 1, 1), dt.date(2009, 12, 31))
+    assert {kind for _, kind in first} == {"original"}
+    assert corpus.changes("lei-6-2006", dt.date(2009, 1, 1), dt.date(2030, 1, 1)) == []

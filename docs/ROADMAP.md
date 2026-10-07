@@ -394,7 +394,7 @@ README and the leaderboard report v1; v0's test runs are kept in `results/test/v
 - Keep the corpus current: the weekly amendment check is in place; rebuilding after an
   amendment stays a person's call, since dating new versions needs checking.
 
-## Phase 7: Optional (current)
+## Phase 7: Optional (done 2026-10-07, the agent; the rest stays optional)
 
 Chosen by what the numbers and job ads say:
 - fine-tuned embeddings (was Phase 5): Gemini Embedding 2 already finds the right article in the
@@ -415,6 +415,57 @@ Chosen by what the numbers and job ads say:
 - tracing (Langfuse), model routing, cost per question;
 - a local model for the answers on a Raspberry Pi (ADR 0012 has the quality; speed not measured);
 - a hand-scored comparison with Lia and TogaAI on a small dev subset, after checking their terms.
+
+## Phase 8: Operating the demo (done 2026-10-07)
+
+The demo is public and the benchmark measured; what is missing is knowing, without looking, that
+it still works, what it costs, and that a change to a prompt has been measured before it ships.
+Every check here runs without spending the model's quota unless it says so.
+
+1. **No prompt ships unmeasured.** Every answers run records a fingerprint of the prompts it
+   used (the answer prompts, the query format, the judge's prompt). CI, which has no key, fails
+   when the demo's prompts differ from those of its last dev run in `results/`: change a prompt
+   and the dev run comes with it. `python -m lex.eval regress` (spends dev's quota) runs the
+   demo's system on dev again and fails if it answers correctly fewer questions than the
+   committed run by more than the noise measured (ADR 0018), or wrongly refuses more.
+   *Exit:* CI fails on a changed prompt with no new dev run (tested); `regress` passes on main.
+   **Done 2026-10-07:** answers runs record `prompts`; `check-results` (CI) holds the demo's dev
+   run to the prompts and query format of today's code; `regress` on main: 50 -> 50 correct, 0 ->
+   0 answerable refused (from the cache, no quota).
+2. **Usage, quota and latency, from the demo itself.** Each answer writes one JSON line to the
+   platform's log (outcome, seconds, calls, tokens, cost at paid prices); `/api/usage` gives the
+   counts of the instance answering since it started: answers made and served from the cache,
+   visitors turned away by the limits, quota and overload failures, latency p50 and p95, tokens
+   and cost. Vercel runs several instances and keeps no state, so the endpoint says it is one
+   instance's view. *Exit:* tested on a scripted system, served on the live demo.
+   **Done 2026-10-07, live:** `/api/usage` and a JSON line per answer, with
+   outcomes `answered`, `cached`, `limited` and `failed_<kind>` (quota per day or minute,
+   overloaded, timeout, other); tested with a scripted model reporting tokens.
+3. **An outside probe that alerts.** A scheduled GitHub workflow runs `python -m lex.probe URL`
+   every six hours: health, an article on a date, a word search and a cached example answer
+   (no quota), each timed, plus the instance's usage. It fails on an error or a request slower
+   than its bar, and a failed workflow is GitHub's email to the owner. *Exit:* the workflow green
+   against the live demo, and red against a wrong URL.
+   **Done 2026-10-07:** `src/lex/probe.py` (standard library only) and `.github/workflows/probe.yml`;
+   against the live demo before this deploy, 5 of 6 checks pass (`/api/usage` is not deployed yet:
+   the probe is right to fail it); after the deploy, 6 of 6, and the workflow's first run on
+   GitHub is green; against a wrong URL, 5 of 6 fail. Bars: 20 s for the first
+   request, which may wake a cold function, 5 s for the rest.
+4. **Cost per day.** At the agent's measured cost on test v3 ($0.00106 a question at paid
+   prices), the gate's daily cap bounds what the demo would cost; `/api/usage` gives an
+   instance's actual figure. *Exit:* the bound in the README, computed from `results/`.
+   **Done 2026-10-07:** $0.001058 a question (`results/test/2026-10-07T1749-…+agent.json`, every
+   call's thinking recorded) times the 400 a day of `LEX_ANSWERS_PER_DAY`: at most $0.4232 a day
+   at paid prices.
+5. **What changed between two dates.** A page and `/api/changes`: choose a diploma and two
+   dates, and get every article whose text changed in between, grouped by the amending law, each
+   opening its comparison. No model, no quota. *Exit:* checked in `web/e2e.py` on Lei n.º
+   13/2019's changes to the Código Civil.
+   **Done 2026-10-07:** `/alteracoes` and `/api/changes` (`Corpus.changes`): each version that
+   came into force in the period, marked changed, added, revoked or original, grouped by the law
+   and the day; an article opens on its changes from the previous version. In 2019 the Código
+   Civil has one group, Lei n.º 13/2019 from 13/02/2019, 15 articles (13 changed, 2 added); art.
+   1041.º opens with "50%" struck and "20 %" added. Checked in `web/e2e.py`, axe included.
 
 ## Open decisions
 

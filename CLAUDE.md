@@ -111,6 +111,8 @@ python -m lex.eval judge SYSTEM     # judge dev answers, measure agreement with 
 python -m lex.eval judge-check      # or measure the judge on known-answer dev cases
 python -m lex.eval check-results    # results/ adds up and test runs share a split (CI runs it)
 python -m lex.eval latency URL      # time the deployed demo; spends its quota
+python -m lex.eval regress          # the demo's system on dev against its committed run
+python -m lex.probe URL             # the deployed demo from outside; no quota (CI, every 6 h)
 python -m lex.mcp_server            # the code as MCP tools, over stdio
 python web/e2e.py                   # the page in Chromium, scripted answers, no quota
 python vercel/assemble.py && cd build/vercel && npx vercel deploy --prod   # deploy the demo

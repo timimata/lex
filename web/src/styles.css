@@ -1326,6 +1326,37 @@ summary {
   }
 }
 
+/* ---------- what changed: the laws in a period and their articles ---------- */
+
+.change-group + .change-group {
+  margin-top: 32px;
+}
+
+.change-law {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.change-law .muted {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* What the version did, as a remark in words: no chips (web/ROADMAP.md, stage 2). */
+.change-kind {
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.change-kind::before {
+  content: "(";
+}
+
+.change-kind::after {
+  content: ")";
+}
+
 /* ---------- print: an answer or an article as the document it is ---------- */
 
 @media print {

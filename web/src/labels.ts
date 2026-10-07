@@ -70,8 +70,20 @@ const PARTS: Record<string, string> = {
   "gemma-4-26b-a4b-it": "Gemma 4 26B A4B",
 };
 const PARTS_BY_LANG: Record<Lang, Record<string, string>> = {
-  pt: { refs: "referências explícitas", xrefs: "referências cruzadas", claims: "citação por frase" },
-  en: { refs: "explicit references", xrefs: "cross-references", claims: "a citation per sentence" },
+  pt: {
+    refs: "referências explícitas",
+    xrefs: "referências cruzadas",
+    claims: "citação por frase",
+    "claims-cover": "citação por frase, com verificação de cobertura",
+    agent: "agente (citação por frase, pode pedir mais artigos)",
+  },
+  en: {
+    refs: "explicit references",
+    xrefs: "cross-references",
+    claims: "a citation per sentence",
+    "claims-cover": "a citation per sentence, coverage checked",
+    agent: "agent (a citation per sentence, may ask for more articles)",
+  },
 };
 
 /** dense-bge-m3+rerank+refs+gemini-3.1-flash-lite -> Dense (BGE-M3) + reranker + ... */

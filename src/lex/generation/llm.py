@@ -33,6 +33,22 @@ class Completion:
     thinking_tokens: int | None = None
 
 
+# USD per million tokens on the paid tier, input and output (thinking is billed as output), from
+# ai.google.dev/gemini-api/docs/pricing, read 2026-10-06. The demo runs on the free tier, so
+# this is what its answers would cost, not what they cost.
+PRICES = {"gemini-3.1-flash-lite": (0.25, 1.50)}
+
+
+def usd(tokens: dict[str, int], model: str) -> float | None:
+    """What some tokens cost at the paid prices, thinking counted as output; None for a model
+    with no price (a local one)."""
+    if model not in PRICES:
+        return None
+    per_input, per_output = PRICES[model]
+    output = tokens.get("completion_tokens", 0) + tokens.get("thinking_tokens", 0)
+    return (tokens.get("prompt_tokens", 0) * per_input + output * per_output) / 1_000_000
+
+
 def spent(completions: list[Completion]) -> dict[str, int]:
     """What some calls cost in tokens; "thinking_unrecorded" counts calls whose thinking is not
     known, so a cost from them is a lower bound."""

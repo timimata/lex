@@ -43,24 +43,31 @@ def limits() -> Limits:
     )
 
 
-def demo_system(corpus: Corpus, vectors: Path) -> ReferenceSystem | AgentSystem:
+def demo_system(
+    corpus: Corpus, vectors: Path, patient: bool = False
+) -> ReferenceSystem | AgentSystem:
     """The demo's system (ADR 0014). It never waits on a rate limit or a slow request: past the
     quota, or after the timeouts below (which fit Vercel's 30 s), the page says to try later. An
     overloaded model, which answers at once that it is, is asked twice more within 3 s.
     It answers as the agent (ADR 0018), its prompt as measured (three requests), but no request
     followed after 9 s, so that one more call (18 s at most) still fits; LEX_ANSWER_FORMAT=claims
-    brings back the per-sentence answer."""
+    brings back the per-sentence answer. `patient` is for answering the examples at deploy, with
+    no visitor waiting: the same answers, but slow or overloaded calls are waited out."""
     key = os.environ.get("EMBEDDING_API_KEY") or os.environ.get("LLM_API_KEY", "")
     embedder = ApiEmbedder(api_key=key, waits=(), timeout=8, max_retries=0)
     retriever = WithReferences(
         DenseInMemory(corpus, embedder, Vectors.load(vectors)), corpus.article_at
     )
-    model = llm.from_env(
-        waits=(),
-        timeout=18,
-        max_retries=0,
-        overload_waits=(1, 2),
-        quick_failure=llm.QUICK_FAILURE,
+    model = (
+        llm.from_env(timeout=120, overload_waits=llm.OVERLOAD_WAITS)
+        if patient
+        else llm.from_env(
+            waits=(),
+            timeout=18,
+            max_retries=0,
+            overload_waits=(1, 2),
+            quick_failure=llm.QUICK_FAILURE,
+        )
     )
     format = os.environ.get("LEX_ANSWER_FORMAT", "agent")  # ADR 0018, amended 2026-10-07
 
@@ -68,7 +75,8 @@ def demo_system(corpus: Corpus, vectors: Path) -> ReferenceSystem | AgentSystem:
         return corpus.article_at(c.diploma, c.article, day)
 
     if format == "agent":
-        return AgentSystem(retriever, article_at, model, budget=9.0)  # the prompt measured
+        budget = None if patient else 9.0
+        return AgentSystem(retriever, article_at, model, budget=budget)  # the prompt measured
     return ReferenceSystem(retriever, article_at, model, format=format)
 
 
@@ -96,6 +104,7 @@ def demo_app(
         demo_system(corpus, vectors),
         library=corpus.versions_of,
         find=corpus.search_words,
+        changes=corpus.changes,
         leaderboard=leaderboard(results),
         limits=limits(),
         static=static,

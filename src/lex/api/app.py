@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from lex.domain import Answer, System
+from lex.generation import llm
 from lex.store.memory import excerpt
 
 DISCLAIMER = (
@@ -48,7 +49,7 @@ OVERLOADED = (
 TOO_SLOW = "O modelo demorou demasiado a responder. Tente outra vez."
 # The page's own paths besides /, which it routes on the client (web/src/App.tsx): each is served
 # the page itself, so a link to the results or to an article opens on that view.
-PAGES = ("/artigos", "/resultados", "/sobre")
+PAGES = ("/artigos", "/alteracoes", "/resultados", "/sobre")
 
 
 def unavailable(error: Exception) -> str:
@@ -62,6 +63,64 @@ def unavailable(error: Exception) -> str:
     if "Timeout" in type(error).__name__:
         return TOO_SLOW
     return UNAVAILABLE
+
+
+def failure(error: Exception) -> str:
+    """The kind of a failed answer, for the usage counts: the same reading as `unavailable`."""
+    status = getattr(error, "status_code", None)
+    if status == 429:
+        return "quota_day" if "PerDay" in str(error) else "quota_minute"
+    if isinstance(status, int) and status >= 500:
+        return "overloaded"
+    return "timeout" if "Timeout" in type(error).__name__ else "other"
+
+
+def percentile(values: Sequence[float], share: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    return ordered[min(len(ordered) - 1, round(share * (len(ordered) - 1)))]
+
+
+class Usage:
+    """What one instance of the API has answered since it started (Phase 8): counts by outcome,
+    the latency of the answers it made, and their tokens and cost at paid prices. Vercel runs
+    several instances and keeps none for long, so this is one instance's view, and says so."""
+
+    def __init__(self, model: str, clock: Callable[[], dt.datetime]) -> None:
+        self.model = model
+        self.started = clock()
+        self.counts: dict[str, int] = defaultdict(int)
+        self.seconds: deque[float] = deque(maxlen=500)
+        self.tokens: dict[str, int] = defaultdict(int)
+
+    def record(self, outcome: str, seconds: float = 0.0, tokens: Mapping[str, int] = {}) -> None:
+        self.counts[outcome] += 1
+        if outcome == "answered":
+            self.seconds.append(seconds)
+        for name, value in tokens.items():
+            self.tokens[name] += value
+        cost = llm.usd(dict(tokens), self.model) if tokens else None
+        line = {"event": "answer", "outcome": outcome, "seconds": seconds, **tokens}
+        if cost is not None:
+            line["usd"] = round(cost, 6)
+        print(json.dumps(line), flush=True)  # one line per answer in the platform's log
+
+    def report(self) -> dict[str, Any]:
+        cost = llm.usd(dict(self.tokens), self.model)
+        return {
+            "scope": "this instance of the API, since it started; others count their own",
+            "since": self.started.isoformat(timespec="seconds"),
+            "counts": dict(self.counts),
+            "latency_seconds": {
+                "answers": len(self.seconds),
+                "p50": percentile(self.seconds, 0.5),
+                "p95": percentile(self.seconds, 0.95),
+            },
+            "tokens": dict(self.tokens),
+            "usd_at_paid_prices": None if cost is None else round(cost, 6),
+            "model": self.model,
+        }
 
 
 def lisbon_today(now: dt.datetime | None = None) -> dt.date:
@@ -116,10 +175,39 @@ class Found(Protocol):
     def heading(self) -> str: ...
     @property
     def text(self) -> str: ...
+    @property
+    def introduced_by(self) -> str: ...
+    @property
+    def valid_from(self) -> dt.date: ...
 
 
 # Articles in force on a date whose words match a query, best first; no model involved.
 Find = Callable[[str, dt.date, int], Sequence[Found]]
+
+
+# A diploma's article versions that came into force in a period, with what each did.
+Changes = Callable[[str, dt.date, dt.date], Sequence[tuple[Found, str]]]
+
+
+class ChangedArticle(BaseModel):
+    article: str
+    heading: str
+    kind: str  # "changed", "added", "revoked" or "original"
+
+
+class ChangeGroup(BaseModel):
+    """What one diploma changed on one day."""
+
+    introduced_by: str
+    valid_from: dt.date
+    articles: list[ChangedArticle]
+
+
+class ChangesView(BaseModel):
+    diploma: str
+    since: dt.date
+    until: dt.date
+    groups: list[ChangeGroup]
 
 
 class Hit(BaseModel):
@@ -246,6 +334,7 @@ def create_app(
     limits: Limits | None = None,
     static: Path | None = None,
     preload: Mapping[tuple[str, dt.date], Answer] | None = None,
+    changes: Changes | None = None,
     today: Callable[[], dt.date] = lambda: lisbon_today(),
     clock: Callable[[], float] = time.monotonic,
     serial: bool = True,
@@ -258,6 +347,8 @@ def create_app(
     state = threading.Lock()  # the gate and the answer cache
     one_at_a_time = threading.Lock()
     gate = Gate(limits, clock, today)
+    priced = next((m for m in llm.PRICES if m in system.name), "")
+    usage = Usage(priced, lambda: dt.datetime.now(dt.UTC))
     answers: OrderedDict[tuple[str, dt.date], Answer] = OrderedDict(
         (cache_key(q, day), a) for (q, day), a in (preload or {}).items()
     )
@@ -289,6 +380,7 @@ def create_app(
             result = answers.get(key)
             if result is not None:
                 answers.move_to_end(key)
+                usage.record("cached")
                 return Reply(
                     question=question.question,
                     as_of=as_of,
@@ -299,12 +391,14 @@ def create_app(
                 )
             refusal = gate.admit(who)
         if refusal:
+            usage.record("limited")
             raise HTTPException(429, refusal)
         started = time.perf_counter()
         try:
             result = run(question.question, as_of)
         except Exception as error:  # the model's quota or service; the visitor sees why
             print(f"answer failed: {type(error).__name__}: {error}", flush=True)
+            usage.record(f"failed_{failure(error)}")
             with state:
                 gate.refund(who)
             raise HTTPException(503, unavailable(error)) from error
@@ -313,7 +407,7 @@ def create_app(
             if len(answers) > limits.cached_answers:
                 answers.popitem(last=False)
         seconds = round(time.perf_counter() - started, 2)
-        print(f"answered in {seconds} s", flush=True)  # in the platform's logs, for latency
+        usage.record("answered", seconds, result.tokens)
         return Reply(
             question=question.question,
             as_of=as_of,
@@ -321,6 +415,12 @@ def create_app(
             answer=result,
             seconds=seconds,
         )
+
+    @app.get("/api/usage")
+    def used() -> dict[str, Any]:
+        """What this instance has answered since it started: outcomes, latency, tokens, cost."""
+        with state:
+            return usage.report()
 
     @app.get("/api/articles/{diploma}/{article}")
     def article(diploma: str, article: str, as_of: dt.date | None = None) -> ArticleView:
@@ -375,6 +475,31 @@ def create_app(
                 )
             )
         return hits
+
+    @app.get("/api/changes")
+    def changed(diploma: str, since: dt.date, until: dt.date | None = None) -> ChangesView:
+        """What changed in a diploma after `since` and by `until` (today if left out), grouped
+        by the diploma that changed it and the day it took effect; no model, no quota."""
+        if changes is None:
+            raise HTTPException(404, "Alterações indisponíveis.")
+        end = until or today()
+        if not since < end:
+            raise HTTPException(422, "A data inicial tem de ser anterior à final.")
+        groups: dict[tuple[str, dt.date], list[ChangedArticle]] = {}
+        for version, kind in changes(diploma, since, end):
+            key = (version.introduced_by, version.valid_from)
+            groups.setdefault(key, []).append(
+                ChangedArticle(article=version.article, heading=version.heading, kind=kind)
+            )
+        return ChangesView(
+            diploma=diploma,
+            since=since,
+            until=end,
+            groups=[
+                ChangeGroup(introduced_by=by, valid_from=day, articles=arts)
+                for (by, day), arts in groups.items()
+            ],
+        )
 
     @app.get("/api/leaderboard")
     def board() -> list[dict[str, Any]]:
