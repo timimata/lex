@@ -1,0 +1,57 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 109,
+    "sha": "7d5960a801ab"
+  },
+  "system": "dense-bge-m3",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "ks": [
+      1,
+      3,
+      5,
+      10
+    ]
+  },
+  "commit": "ec312f4bf9ed0dab3a289ec6aa129085bb4a18a6",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-06T18:07:26+01:00",
+  "summary": {
+    "all": {
+      "items": 89,
+      "recall@1": 0.5752808988764045,
+      "recall@3": 0.7344569288389512,
+      "recall@5": 0.7872659176029962,
+      "recall@10": 0.8142322097378277
+    },
+    "composite": {
+      "items": 17,
+      "recall@1": 0.29411764705882354,
+      "recall@3": 0.6274509803921569,
+      "recall@5": 0.7156862745098039,
+      "recall@10": 0.8333333333333333
+    },
+    "explicit_reference": {
+      "items": 9,
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "recall@10": 0.0
+    },
+    "simple": {
+      "items": 46,
+      "recall@1": 0.7608695652173914,
+      "recall@3": 0.8913043478260869,
+      "recall@5": 0.9347826086956522,
+      "recall@10": 0.9347826086956522
+    },
+    "temporal": {
+      "items": 17,
+      "recall@1": 0.6588235294117647,
+      "recall@3": 0.8058823529411764,
+      "recall@5": 0.8764705882352941,
+      "recall@10": 0.9
+    }
+  }
+}

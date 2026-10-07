@@ -5,9 +5,10 @@ import psycopg
 import pytest
 
 from lex.domain import Citation
+from lex.retrieval.dense import GEMINI_DOCUMENT, ApiEmbedder, document, retriever_name
 from lex.retrieval.memory import DenseInMemory, Vectors, embed_corpus
 from lex.store import db
-from lex.store.memory import Corpus
+from lex.store.memory import Corpus, excerpt
 from lex.store.models import ArticleVersion
 
 TODAY = dt.date(2026, 9, 30)
@@ -55,6 +56,7 @@ class Words:
 
     name = "words@4"
     query_format = "{}"
+    document_format = "{heading}\n{text}"
     WORDS = ("férias", "majoração", "faltas", "falta")
 
     def __init__(self) -> None:
@@ -141,3 +143,27 @@ def test_word_search_ignores_accents_and_weighs_headings() -> None:
     assert found == ["238", "92"]  # the heading's match first
     assert corpus.search_words("endometriose", dt.date(2024, 1, 1)) == []  # not yet law
     assert corpus.search_words("de da do", TODAY) == []  # nothing to go by
+
+
+def test_documents_in_the_titled_format_have_vectors_and_a_name_of_their_own() -> None:
+    plain = ApiEmbedder()
+    titled = ApiEmbedder(document_format=GEMINI_DOCUMENT)
+
+    assert (plain.name, titled.name) == ("gemini-embedding-2@768", "gemini-embedding-2@768+titled")
+    assert retriever_name(plain) == "dense-gemini-embedding-2"
+    assert retriever_name(titled) == "dense-gemini-embedding-2-titled"
+    assert document("Forma", "Por escrito.") == "Forma\nPor escrito."
+    assert document("Forma", "{x}", GEMINI_DOCUMENT) == "title: Forma | text: {x}"
+
+
+def test_an_excerpt_is_the_line_with_most_of_the_words_cut_around_them() -> None:
+    text = "1 - Nada aqui.\n2 - A caução vai até duas rendas.\n3 - Outra caução."
+    cut, marks = excerpt(text, "caucao rendas")
+    assert cut == "2 - A caução vai até duas rendas."
+    assert [cut[a:b] for a, b in marks] == ["caução", "rendas"]
+
+    long = "Palavra " * 60 + "caução no fim da linha, " + "depois " * 40
+    cut, marks = excerpt(long, "caução", width=80)
+    assert cut.startswith("…") and cut.endswith("…") and len(cut) <= 82
+    assert [cut[a:b] for a, b in marks] == ["caução"]
+    assert excerpt("Sem nada.", "caução") == ("", [])

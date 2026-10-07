@@ -1,0 +1,141 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 109,
+    "sha": "7d5960a801ab"
+  },
+  "system": "dense-bge-m3+rerank+refs+gemini-3.1-flash-lite",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "reranker": "BAAI/bge-reranker-v2-m3@953dc6f",
+    "rerank_depth": 20,
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "format": "answer",
+    "repeat": 0,
+    "usage": {
+      "calls": 109,
+      "prompt_tokens": 244941,
+      "completion_tokens": 10425,
+      "thinking_tokens": 1802,
+      "thinking_unrecorded": 97,
+      "cached": 97
+    },
+    "cost": {
+      "usd_per_million": {
+        "input": 0.25,
+        "output": 1.5
+      },
+      "usd": 0.079576,
+      "usd_per_question": 0.00073,
+      "lower_bound": true
+    },
+    "counts": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0,
+      "dropped_sentences": 0
+    },
+    "judge": {
+      "model": "gemma-4-26b-a4b-it",
+      "prompt": "a4aecc7ccf8a",
+      "measured_on_dev": {
+        "known_answer_checks": {
+          "reference": {
+            "as_expected": 66,
+            "cases": 66
+          },
+          "altered": {
+            "as_expected": 48,
+            "cases": 48
+          }
+        }
+      },
+      "unparsed": 0
+    }
+  },
+  "commit": "186a6fd48380e21eb424871f075e22f18d45bb29",
+  "uncommitted_changes": false,
+  "run_at": "2026-10-07T18:16:18+01:00",
+  "summary": {
+    "answerable": {
+      "items": 89,
+      "refused": 0.033707865168539325,
+      "cited": 86,
+      "citation_precision": 0.9013565891472868,
+      "citation_recall": 0.8868913857677903
+    },
+    "composite": {
+      "items": 17,
+      "refused": 0.0,
+      "cited": 17,
+      "citation_precision": 0.8235294117647058,
+      "citation_recall": 0.6960784313725491
+    },
+    "explicit_reference": {
+      "items": 9,
+      "refused": 0.0,
+      "cited": 9,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    "simple": {
+      "items": 46,
+      "refused": 0.043478260869565216,
+      "cited": 44,
+      "citation_precision": 0.9037878787878788,
+      "citation_recall": 0.9347826086956522
+    },
+    "temporal": {
+      "items": 17,
+      "refused": 0.058823529411764705,
+      "cited": 16,
+      "citation_precision": 0.921875,
+      "citation_recall": 0.888235294117647
+    },
+    "unanswerable": {
+      "items": 20,
+      "refused": 0.8,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    "correctness": {
+      "answerable": {
+        "items": 89,
+        "correta": 0.7303370786516854,
+        "parcial": 0.19101123595505617,
+        "errada": 0.07865168539325842
+      },
+      "composite": {
+        "items": 17,
+        "correta": 0.5294117647058824,
+        "parcial": 0.4117647058823529,
+        "errada": 0.058823529411764705
+      },
+      "explicit_reference": {
+        "items": 9,
+        "correta": 1.0,
+        "parcial": 0.0,
+        "errada": 0.0
+      },
+      "simple": {
+        "items": 46,
+        "correta": 0.7391304347826086,
+        "parcial": 0.17391304347826086,
+        "errada": 0.08695652173913043
+      },
+      "temporal": {
+        "items": 17,
+        "correta": 0.7647058823529411,
+        "parcial": 0.11764705882352941,
+        "errada": 0.11764705882352941
+      }
+    }
+  }
+}

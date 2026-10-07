@@ -69,6 +69,7 @@ class AnswerResult:
     allowed: list[str]  # may_cite
     text: str
     requests: list[str] = field(default_factory=list)  # what the system asked for first
+    tokens: dict[str, int] = field(default_factory=dict)  # calls and tokens the answer took
 
 
 def _ids(citations: list[Citation]) -> list[str]:
@@ -95,6 +96,7 @@ def run_answers(items: list[Item], system: System) -> list[AnswerResult]:
                 allowed=_ids(item.may_cite),
                 text=answer.text,
                 requests=answer.requests,
+                tokens=answer.tokens,
             )
         )
     return results

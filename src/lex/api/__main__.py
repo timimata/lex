@@ -19,8 +19,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from lex.api.app import Limits, create_app, leaderboard
-from lex.domain import Answer
+from lex.domain import Answer, Citation
 from lex.generation import llm
+from lex.generation.agent import AgentSystem
 from lex.generation.answer import ReferenceSystem
 from lex.retrieval.dense import ApiEmbedder, BgeM3, Dense, embed_missing
 from lex.retrieval.memory import DenseInMemory, Vectors
@@ -28,6 +29,7 @@ from lex.retrieval.references import WithReferences
 from lex.retrieval.rerank import BgeReranker, Reranked
 from lex.store import db
 from lex.store.memory import Corpus, corpus_files
+from lex.store.models import ArticleVersion
 
 ROOT = Path(__file__).resolve().parents[3]
 PROCESSED = ROOT / "data" / "processed"  # one folder per diploma, vectors beside
@@ -41,24 +43,33 @@ def limits() -> Limits:
     )
 
 
-def demo_system(corpus: Corpus, vectors: Path) -> ReferenceSystem:
+def demo_system(corpus: Corpus, vectors: Path) -> ReferenceSystem | AgentSystem:
     """The demo's system (ADR 0014). It never waits on a rate limit or a slow request: past the
     quota, or after the timeouts below (which fit Vercel's 30 s), the page says to try later. An
-    overloaded model, which answers at once that it is, is asked twice more within 3 s."""
+    overloaded model, which answers at once that it is, is asked twice more within 3 s.
+    It answers as the agent (ADR 0018), its prompt as measured (three requests), but no request
+    followed after 9 s, so that one more call (18 s at most) still fits; LEX_ANSWER_FORMAT=claims
+    brings back the per-sentence answer."""
     key = os.environ.get("EMBEDDING_API_KEY") or os.environ.get("LLM_API_KEY", "")
     embedder = ApiEmbedder(api_key=key, waits=(), timeout=8, max_retries=0)
-    return ReferenceSystem(
-        WithReferences(DenseInMemory(corpus, embedder, Vectors.load(vectors)), corpus.article_at),
-        lambda c, day: corpus.article_at(c.diploma, c.article, day),
-        llm.from_env(
-            waits=(),
-            timeout=18,
-            max_retries=0,
-            overload_waits=(1, 2),
-            quick_failure=llm.QUICK_FAILURE,
-        ),
-        format=os.environ.get("LEX_ANSWER_FORMAT", "claims"),  # ADR 0014, 2026-10-01
+    retriever = WithReferences(
+        DenseInMemory(corpus, embedder, Vectors.load(vectors)), corpus.article_at
     )
+    model = llm.from_env(
+        waits=(),
+        timeout=18,
+        max_retries=0,
+        overload_waits=(1, 2),
+        quick_failure=llm.QUICK_FAILURE,
+    )
+    format = os.environ.get("LEX_ANSWER_FORMAT", "agent")  # ADR 0018, amended 2026-10-07
+
+    def article_at(c: Citation, day: dt.date) -> ArticleVersion | None:
+        return corpus.article_at(c.diploma, c.article, day)
+
+    if format == "agent":
+        return AgentSystem(retriever, article_at, model, budget=9.0)  # the prompt measured
+    return ReferenceSystem(retriever, article_at, model, format=format)
 
 
 def load_answers(path: Path | None) -> dict[tuple[str, dt.date], Answer]:

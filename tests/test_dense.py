@@ -18,6 +18,7 @@ class Toy:
 
     name = "toy@1"
     query_format = "{}"
+    document_format = "{heading}\n{text}"
 
     def __init__(self) -> None:
         self.calls = 0

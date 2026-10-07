@@ -1,4 +1,4 @@
-# The page's Lighthouse run, 2026-10-02
+# The page's Lighthouse runs
 
 Lighthouse 13.5.0, mobile form factor with its simulated throttling (562.5 ms round trip,
 1 474 kbps down), headless Chromium 1194, run against the built page (`web/dist`) served by the
@@ -27,3 +27,20 @@ lists nothing else. Bringing it down would mean a smaller framework or server-re
 which is not planned (web/ROADMAP.md).
 
 The colour contrast of every pair the page draws is in [web-contrast.md](web-contrast.md).
+
+## 2026-10-06: Preact instead of React (web/ROADMAP.md, stage 7)
+
+The same Lighthouse 13.5.0 and command, run on this machine (Chromium 1243 from Playwright) against
+the page served by `web/e2e.py`'s server: the real corpus and a scripted answer. The "before" rows
+are today's build, measured again here, and match 2026-10-02's within 0.1 s.
+
+| Page | Main script | Performance | Accessibility | Best practices | SEO | FCP | LCP | TBT | CLS | Speed index |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `/` before | 268.7 kB, 85.2 kB gzipped | 95 | 100 | 100 | 100 | 2.3 s | 2.5 s | 0 ms | 0 | 2.3 s |
+| `/resultados` before | | 94 | 100 | 100 | 100 | 2.4 s | 2.6 s | 0 ms | 0 | 2.4 s |
+| `/` after | 67.6 kB, 24.7 kB gzipped | 100 | 100 | 100 | 100 | 1.4 s | 1.5 s | 0 ms | 0 | 1.4 s |
+| `/resultados` after | | 99 | 100 | 100 | 100 | 1.5 s | 1.7 s | 0 ms | 0 | 1.5 s |
+
+The components are unchanged and still type-checked against React's types; Vite aliases React
+to `preact/compat` (10.29.8) when it bundles. Stage 6's bar of 1.5 s to first paint is met on the
+home page and reached on the results page.

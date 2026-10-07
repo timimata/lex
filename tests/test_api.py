@@ -83,6 +83,7 @@ def test_an_answer_comes_dated_cited_and_with_the_disclaimer() -> None:
             "refused": False,
             "timings": {},
             "requests": [],
+            "tokens": {},
         },
         "seconds": response.json()["seconds"],
         "cached": False,
@@ -251,6 +252,7 @@ class Found:
     diploma: str
     article: str
     heading: str
+    text: str = ""
 
 
 def test_articles_can_be_searched_by_word_without_a_model() -> None:
@@ -258,13 +260,24 @@ def test_articles_can_be_searched_by_word_without_a_model() -> None:
 
     def find(q: str, day: dt.date, k: int) -> list[Found]:
         asked.append((q, day, k))
-        return [Found("lei-7-2009", "238", "Férias")]
+        return [
+            Found("lei-7-2009", "238", "Férias", "1 - O período anual de férias tem 22 dias."),
+            Found("dl-47344-1966", "1076", "Antecipação de rendas", "Não fala disso."),
+        ]
 
     api = TestClient(create_app(Echo(), find=find, today=lambda: TODAY))
     hits = api.get("/api/search", params={"q": "férias", "k": 999}).json()
 
-    assert hits == [{"diploma": "lei-7-2009", "article": "238", "heading": "Férias"}]
-    assert asked == [("férias", TODAY, 50)]
+    assert hits[0] == {
+        "diploma": "lei-7-2009",
+        "article": "238",
+        "heading": "Férias",
+        "excerpt": "1 - O período anual de férias tem 22 dias.",
+        "marks": [[23, 29]],  # "férias", for the page to mark
+    }
+    assert asked == [("férias", TODAY, 200)]  # filtered and cut to k after
+    only = api.get("/api/search", params={"q": "férias", "diploma": "dl-47344-1966"}).json()
+    assert [h["article"] for h in only] == ["1076"]
     assert TestClient(create_app(Echo())).get("/api/search", params={"q": "x"}).status_code == 404
 
 
@@ -332,5 +345,8 @@ def test_the_pages_own_paths_are_served_the_page(tmp_path: Path) -> None:
             response = c.get(path)
             assert response.status_code == 200 and "<title>Lex</title>" in response.text, path
         assert c.get("/app.js").text == "// built"
-        assert c.get("/nada").status_code == 404
+        missing = c.get("/nada")  # the page, which says it is not found, with a 404
+        assert missing.status_code == 404 and "<title>Lex</title>" in missing.text
         assert c.get("/api/health").json()["status"] == "ok"
+        api_missing = c.get("/api/articles/lei-7-2009/999999")  # the API's errors stay JSON
+        assert api_missing.status_code == 404 and "detail" in api_missing.json()

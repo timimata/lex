@@ -39,18 +39,17 @@ República and the PGDL.
 
 ## This dataset: the dev split
 
-84 items of benchmark v2 (2026-10-02), 14 of them on tenancy. The test split, 97 items, stays
-private so that its scores
-keep their meaning; results on it are published on the leaderboard and in the code repository
+92 items of benchmark v3 (2026-10-06), 22 of them on tenancy. The test split, 109 items, stays
+private so that its scores keep their meaning; results on it are published on the leaderboard and in the code repository
 (`results/test/`). To have a system scored on test, open an issue on the code repository.
 
 | Type | What it tests | Dev items |
 |---|---|---|
-| `simple` | One fact, one or two articles | 29 |
-| `composite` | Several articles combined | 19 |
+| `simple` | One fact, one or two articles | 30 |
+| `composite` | Several articles combined | 20 |
 | `temporal` | `as_of` in the past; the answer depends on the law in force that day | 10 |
 | `explicit_reference` | The question names its article | 8 |
-| `unanswerable` | Outside the corpus; the right response is to say so | 18 |
+| `unanswerable` | Outside the corpus; the right response is to say so | 24 |
 
 ## Fields
 
@@ -88,11 +87,11 @@ refusals (of unanswerable questions, and wrongly of answerable ones), and on cor
 by an LLM against the reference answer. The judge is checked on known-answer cases rather than
 hand labels: on dev it accepted 66 of 66 reference answers and caught 48 of 48 altered ones.
 
-On test (80 answerable, 17 unanswerable), the demo's system (Gemini Embedding 2 retrieval with
-an explicit-reference parser, Gemini 3.1 Flash-Lite answering with a citation per sentence):
-0.71 judged correct (0.26 partial, 0.03 wrong), citation recall 0.92, precision 0.92, 0 of 80
-answerable questions wrongly refused, 15 of 17 unanswerable ones refused. Composite questions are
-the hardest: 0.41 correct.
+On test of benchmark v3 (89 answerable, 20 unanswerable), the demo's system (Gemini Embedding 2
+retrieval with an explicit-reference parser, Gemini 3.1 Flash-Lite answering a citation per
+sentence with the agent's prompt): 0.76 judged correct (0.20 partial, 0.03 wrong), citation
+recall 0.94, precision 0.92, 0 of 89 answerable questions wrongly refused, 18 of 20 unanswerable
+ones refused. Composite questions are the hardest: 0.47 correct.
 The full leaderboard is on the demo's Results page.
 
 ## Licence and attribution

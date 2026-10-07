@@ -26,7 +26,7 @@ answer must cite, plus a reference system whose every number comes from running 
   refusal.
 - **What changed.** Any cited article opens on its version for the date, with its timeline and the
   changes from the previous version marked paragraph by paragraph.
-- **Measured, not claimed.** A 181-question benchmark with a held-out test split, and every number
+- **Measured, not claimed.** A 201-question benchmark with a held-out test split, and every number
   below comes from `results/`.
 
 ![Article 238.º as changed by Lei n.º 23/2012](docs/img/changes-238.png)
@@ -35,37 +35,44 @@ answer must cite, plus a reference system whose every number comes from running 
 
 ## Results
 
-On the held-out test split of benchmark v2 (97 questions never used to tune anything, 80
-answerable and 17 not, 9 of them on tenancy; `results/test/`):
+On the held-out test split of benchmark v3 (109 questions never used to tune anything, 89
+answerable and 20 not, 21 of them on tenancy; `results/test/`):
 
 | Retrieval | recall@1 | recall@10 | questions naming their article |
 |---|---|---|---|
-| BM25 | 0.48 | 0.74 | 0 of 9 |
-| Dense (BGE-M3) | 0.59 | 0.82 | 0 of 9 |
-| Dense + reranker + reference parser (reference system) | 0.76 | 0.95 | 9 of 9 |
-| Gemini Embedding 2 + reference parser (the demo) | 0.79 | 0.99 | 9 of 9 |
+| BM25 | 0.49 | 0.74 | 0 of 9 |
+| Dense (BGE-M3) | 0.58 | 0.81 | 0 of 9 |
+| Dense + reranker + reference parser (reference system) | 0.76 | 0.94 | 9 of 9 |
+| Gemini Embedding 2 + reference parser (the demo) | 0.81 | 0.99 | 9 of 9 |
 
 | Answers (top 5 articles, Gemini 3.1 Flash-Lite) | Correct (LLM judge) | Citation recall | Citation precision | Answerable wrongly refused | Unanswerable refused |
 |---|---|---|---|---|---|
-| The demo: Gemini Embedding 2, a citation per sentence | 0.71 | 0.92 | 0.92 | 0 of 80 | 15 of 17 |
-| Reference retrieval (BGE-M3 and reranker) | 0.72 | 0.90 | 0.89 | 1 of 80 | 14 of 17 |
+| **The demo: Gemini Embedding 2, the agent's prompt** ([ADR 0018](docs/decisions/0018-agent.md)) | 0.76 | 0.94 | 0.92 | 0 of 89 | 18 of 20 |
+| Gemini Embedding 2, a citation per sentence | 0.73 | 0.93 | 0.92 | 0 of 89 | 18 of 20 |
+| Reference retrieval (BGE-M3 and reranker) | 0.73 | 0.89 | 0.90 | 3 of 89 | 16 of 20 |
 
 **Answer correctness** comes from an LLM judge (Gemma 4 26B A4B) that compares each answer with
 the question's reference answer; a refusal counts as wrong. The judge is not measured against
 hand labels but on known-answer cases ([ADR 0015](docs/decisions/0015-answer-judge.md)): on dev
 it accepted 66 of 66 reference answers and caught 48 of 48 altered ones, a number changed or a
 yes turned into a no. That shows it catches clear errors; how it judges ambiguous answers is not
-measured. On v2 the two systems are level on correctness (0.71 and 0.72): the demo cites more
-precisely, the reference system answers composite questions better (0.53 correct against 0.41).
-They differ in two ways (embeddings and answer format), so this does not say which change does
-what.
+measured.
+
+**The agent** answers as the demo did, a citation per sentence, but its prompt tells the model it
+may ask for more articles. On dev it led the per-sentence prompt in all three runs (0.74 against
+0.68 to 0.70), and test agrees (0.76 against 0.73). Yet it never asked for anything: 0 requests
+in 109 test answers. The gain is the prompt's, so the demo answers with one call a question,
+$0.00106 at paid prices with the model's thinking counted (the demo runs on the free tier). Two
+runs of the same system on dev differ by about one answer in 66 (`--repeat`), the noise every
+comparison here stands on.
 
 The weak spot is composite questions: on the 17 composite test questions the demo's citation
-recall is 0.67, and 0.41 are judged correct, 0.53 partial. Its retrieval puts 0.81 of their
-articles in the 5 the model reads (0.97 in the top 10), so the answer, not only retrieval, leaves
-parts out. Earlier runs are kept apart: on benchmark v0 (54 test questions, with a local Gemma 4
-E2B small enough for a Raspberry Pi) in `results/test/v0/`, on the intermediate 132-item
-benchmark in `results/test/v1-132/`, and on v1 (158 items, labour only) in `results/test/v1/`. Details, dev numbers and every step tried and dropped are in the
+recall is 0.73, and 0.47 are judged correct. Its retrieval puts 0.81 of their articles in the 5
+the model reads (0.97 in the top 10), so the answer, not only retrieval, leaves parts out; the
+reference system, with a reranker, gets 0.53 of them right. Earlier runs are kept apart, each
+on the benchmark it ran on: v0 (54 test questions, with a local Gemma 4 E2B small enough for a
+Raspberry Pi), the intermediate 132-item state, v1 (158 items, labour only) and v2 (181 items),
+in `results/test/v0/`, `v1-132/`, `v1/` and `v2/`. Details, dev numbers and every step tried and dropped are in the
 [roadmap](docs/ROADMAP.md).
 
 ## How it works

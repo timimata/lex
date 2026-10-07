@@ -17,6 +17,7 @@ BGE_M3_REVISION = "5617a9f61b028005a4858fdac845db406aefb181"
 class Embedder(Protocol):
     name: str  # stored with each embedding; different models or revisions never mix
     query_format: str  # how a question is written before it is embedded; "{}" as it is
+    document_format: str  # how an article version is written: PLAIN_DOCUMENT or GEMINI_DOCUMENT
 
     def encode(self, texts: list[str]) -> list[list[float]]:
         """One normalised vector per text."""
@@ -26,6 +27,7 @@ class Embedder(Protocol):
 class BgeM3:
     name = f"{BGE_M3}@{BGE_M3_REVISION[:7]}"
     query_format = "{}"  # BGE-M3's dense vectors take no instruction
+    document_format = "{heading}\n{text}"
 
     def __init__(self) -> None:
         from sentence_transformers import SentenceTransformer  # the optional `dense` extra
@@ -45,6 +47,11 @@ RATE_LIMIT_WAITS = (30, 60, 120)  # seconds; free tiers limit requests per minut
 # (ROADMAP, Phase 6). The stored vectors still embed documents as `document` writes them:
 # embedding the corpus again takes more texts (1,213) than the free tier allows in a day (1,000).
 GEMINI_QUERY = "task: question answering | query: {}"
+# How an article version is embedded: its heading and text, or, as the same guide writes a
+# document, "title: ... | text: ...". A format other than the plain one names its own vectors
+# ("+titled"), so the two are never mixed.
+PLAIN_DOCUMENT = "{heading}\n{text}"
+GEMINI_DOCUMENT = "title: {heading} | text: {text}"
 
 
 class ApiEmbedder:
@@ -63,14 +70,17 @@ class ApiEmbedder:
         timeout: float = 120,  # seconds per request
         max_retries: int = 2,  # the client's own quick retries of transient errors
         query_format: str = GEMINI_QUERY,
+        document_format: str = PLAIN_DOCUMENT,
     ) -> None:
         from openai import OpenAI  # the optional `llm` extra
 
         self.waits = waits
         self.query_format = query_format
+        self.document_format = document_format
         self.model = model
         self.dimensions = dimensions
-        self.name = f"{model}@{dimensions}"
+        titled = document_format == GEMINI_DOCUMENT
+        self.name = f"{model}@{dimensions}" + ("+titled" if titled else "")
         self.client = OpenAI(
             base_url=base_url, api_key=api_key or "none", timeout=timeout, max_retries=max_retries
         )
@@ -100,9 +110,16 @@ class ApiEmbedder:
         return vectors
 
 
-def document(heading: str, text: str) -> str:
+def document(heading: str, text: str, format: str = PLAIN_DOCUMENT) -> str:
     """What gets embedded for an article version."""
-    return f"{heading}\n{text}"
+    return format.format(heading=heading, text=text)
+
+
+def retriever_name(embedder: Embedder) -> str:
+    """'dense-bge-m3', 'dense-gemini-embedding-2', 'dense-gemini-embedding-2-titled'."""
+    model, _, rest = embedder.name.split("/")[-1].partition("@")
+    variant = rest.partition("+")[2]
+    return f"dense-{model}" + (f"-{variant}" if variant else "")
 
 
 def _vector(values: list[float]) -> str:
@@ -124,7 +141,7 @@ def embed_missing(conn: psycopg.Connection, embedder: Embedder, batch: int = 32)
     ).fetchall()
     todo = []
     for diploma, article, valid_from, heading, text, stored_sha in rows:
-        doc = document(heading, text)
+        doc = document(heading, text, embedder.document_format)
         sha = hashlib.sha256(doc.encode()).hexdigest()
         if sha != stored_sha:
             todo.append((diploma, article, valid_from, doc, sha))
@@ -156,7 +173,7 @@ class Dense:
     def __init__(self, conn: psycopg.Connection, embedder: Embedder) -> None:
         self.conn = conn
         self.embedder = embedder
-        self.name = f"dense-{embedder.name.split('/')[-1].split('@')[0]}"
+        self.name = retriever_name(embedder)
 
     def search(self, question: str, as_of: dt.date, k: int) -> list[Citation]:
         query = _vector(self.embedder.encode([self.embedder.query_format.format(question)])[0])

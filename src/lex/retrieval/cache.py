@@ -36,10 +36,13 @@ class CachedEmbedder:
     text embedded counts against a daily quota (1000 a day for Gemini Embedding 2), so a re-run
     must not embed the same question twice. Keeps hashes and vectors only, never text."""
 
+    chunk = 50  # texts embedded, then written, at a time
+
     def __init__(self, base: Embedder, directory: Path) -> None:
         self.base = base
         self.name = base.name
         self.query_format = base.query_format
+        self.document_format = base.document_format
         self.directory = directory
 
     def _path(self, text: str) -> Path:
@@ -48,8 +51,10 @@ class CachedEmbedder:
 
     def encode(self, texts: list[str]) -> list[list[float]]:
         missing = [t for t in dict.fromkeys(texts) if not self._path(t).exists()]
-        if missing:
-            for text, vector in zip(missing, self.base.encode(missing), strict=True):
+        # Kept a chunk at a time: past the day's quota, what was embedded stays embedded.
+        for start in range(0, len(missing), self.chunk):
+            chunk = missing[start : start + self.chunk]
+            for text, vector in zip(chunk, self.base.encode(chunk), strict=True):
                 path = self._path(text)
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(json.dumps(vector), encoding="utf-8")

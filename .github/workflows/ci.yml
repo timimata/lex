@@ -34,6 +34,7 @@ jobs:
       - run: mypy
       - run: pytest
       - run: python -m lex.bench validate
+      - run: python -m lex.eval check-results # every reported number adds up; no model
 
   web: # the demo's page: types and a production build
     runs-on: ubuntu-latest

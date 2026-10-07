@@ -232,10 +232,86 @@ same scroll and client width at 1024 px); every number traces to a file in `resu
   shift of 0.235 (the leaderboard arriving after its fetch moved the footer) is 0 now that the
   main area fills the first screen.
 
-Exit: first contentful paint under 1.5 s on a throttled 4G profile. **Not met**: 2.3 s on
+Exit: first contentful paint under 1.5 s on a throttled 4G profile. **Not met then; met in stage
+7**: 2.3 s on
 Lighthouse's simulated mobile profile, all of it the 84 kB (gzipped) script, most of which is
 React. Meeting it would mean a smaller framework or server-rendered HTML, which this roadmap
 does not plan; the number is written down and the bar stays open.
+
+### Stage 7: a lighter page (done 2026-10-06)
+
+Stage 6 left its bar open: 2.3 s to first paint on Lighthouse's mobile profile, all of it the
+84 kB (gzipped) script, most of it React. Preact through `preact/compat` runs the same
+components (hooks, `lazy`, `Suspense`) at a fraction of the size, with no rewrite.
+
+Exit: the same `web/e2e.py` green; the script's size and Lighthouse's first contentful paint on
+the home page measured before and after in `docs/checks/web-lighthouse.md`; the 1.5 s bar met or
+the gap written down.
+
+Done: Vite aliases React to `preact/compat` 10.29.8; the main script went from 85.2 to 24.7 kB
+gzipped, first paint from 2.3 to 1.4 s on the home page and from 2.4 to 1.5 s on the results,
+Lighthouse performance 95 to 100 and 94 to 99 ([docs/checks/web-lighthouse.md](../docs/checks/web-lighthouse.md)).
+
+### Stage 8: what an answer took (done 2026-10-06)
+
+The API now returns each answer's calls and tokens (`tokens`) and, for the agent (ADR 0018), the
+requests it made before answering (`requests`). The details line under an answer says them
+("1 chamada ao modelo, 2 340 tokens"), and an agent's requests are listed under the legal basis
+("O modelo pediu: pesquisar «…»: NRAU 15-A"), so a visitor sees how the answer was made. Nothing
+is shown when the API has no figure.
+
+Exit: `web/e2e.py` checks the line on a scripted answer with tokens and requests.
+
+Done: the details line reads "respondida em 0,2 s · 2 chamadas ao modelo, 2340 tokens" (thinking
+included), and the requests list sits under the legal basis; both are checked in `web/e2e.py`.
+
+### Stage 9: a word search that shows why (done 2026-10-06)
+
+A word search lists headings only, so a hit whose heading does not hold the words looks
+arbitrary. Each hit shows the sentence of the text that holds them, the words marked; the
+diploma list filters the search, with an "all diplomas" choice, the default for words (a number
+still needs a diploma, and keeps the one chosen).
+
+Exit: a search for «renda antecipado» in the Código Civil shows art. 1076.º with the line that
+holds the words, marked; choosing the NRAU hides it.
+
+Done: `/api/search` returns each hit's line and where the words are (`excerpt`, `marks`) and
+takes `diploma`; the page marks the words, offers "Todos os diplomas" (the default), and looks a
+bare number up in every diploma, opening it where only one has it and listing them otherwise
+("9": art. 9.º do CT and of the NRAU). Checked in `web/e2e.py`.
+
+### Stage 10: sharing and printing (done 2026-10-06)
+
+- An Open Graph image (1200 × 630, a real answer with its article), so a shared link unfurls
+  with a picture on LinkedIn or a chat.
+- A print stylesheet: an answer or an article prints as the document it is, with its date and
+  the disclaimer, without the header, the nav, the form or the footer's links.
+- "Copiar ligação" on the reader too: an article on a date is worth sharing.
+
+Exit: the image is served and named in the page's head; a print preview (Playwright's PDF)
+holds the article and the disclaimer and not the nav.
+
+Done: `web/public/og.png`, taken from the live demo (the 2011 example, answered at deploy), with
+`summary_large_image` and the head's title and description now naming tenancy too; a print
+stylesheet that keeps the brand, the notice, the article or answer, the history's dates and the
+full disclaimer; "Copiar ligação" in the reader, which copies `/artigos?art=…&dip=…&d=…`. All
+three are checked in `web/e2e.py`, which writes the print to a PDF with `--shots`.
+
+### Stage 11: accessibility checked by a tool (done 2026-10-06)
+
+Lighthouse's accessibility score is a sample. axe-core runs inside `web/e2e.py` on every page,
+in both schemes, and the run fails on any violation; an unknown path gets a page that says so
+(404), not the home page.
+
+Exit: axe reports no violations on home, an answer, Articles, Results and About, light and dark;
+`/nada` answers 404 with a page.
+
+Done: `web/e2e.py` runs axe-core 4.14.0 (pinned, a dev dependency of `web/`) against WCAG 2.2 A
+and AA on nine states: home (desktop and phone), an answer with its article's changes open, a
+word search, Results, About in English, and, dark, an answer with its article, Results and the
+not-found page. None has a violation. Checked that it would see one: an image without text and
+a button without a name, put on the page on purpose, are both reported. A path that is no page
+gets the page with a 404 and "Página não encontrada"; the API's own 404s stay JSON.
 
 ## What is not planned
 

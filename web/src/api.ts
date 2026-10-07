@@ -9,7 +9,15 @@ export interface Reply {
   question: string;
   as_of: string;
   system: string;
-  answer: { text: string; citations: Citation[]; refused: boolean; timings?: Record<string, number> };
+  answer: {
+    text: string;
+    citations: Citation[];
+    refused: boolean;
+    timings?: Record<string, number>;
+    // What the agent asked for before answering (ADR 0018), and the calls and tokens the answer took.
+    requests?: string[];
+    tokens?: Record<string, number>;
+  };
   seconds: number; // measured on the server; 0 when cached
   cached: boolean;
   disclaimer: string;
@@ -88,7 +96,13 @@ export interface Hit {
   diploma: string;
   article: string;
   heading: string;
+  excerpt?: string; // the line of the text that holds the words
+  marks?: [number, number][]; // where they are in it
 }
 
-export const search = (q: string, asOf: string) =>
-  call<Hit[]>(`/api/search?q=${encodeURIComponent(q)}&as_of=${asOf}`);
+// `diploma` "" searches them all.
+export const search = (q: string, asOf: string, diploma = "") =>
+  call<Hit[]>(
+    `/api/search?q=${encodeURIComponent(q)}&as_of=${asOf}` +
+      (diploma ? `&diploma=${encodeURIComponent(diploma)}` : ""),
+  );

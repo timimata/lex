@@ -13,7 +13,7 @@ from collections.abc import Callable
 from typing import Protocol
 
 from lex.domain import DIPLOMAS, Answer, Citation, Retriever
-from lex.generation.llm import DEFAULT_PARAMS, Llm
+from lex.generation.llm import DEFAULT_PARAMS, Completion, Llm, spent
 from lex.retrieval.references import Reference, find_references, normalise_article
 
 K = 5  # article versions given to the model; a usual size, not tuned on dev
@@ -272,8 +272,14 @@ class ReferenceSystem:
             "dropped_sentences": 0,
         }
 
+    def _complete(self, system: str, user: str) -> str:
+        completion = self.llm.complete(system, user)
+        self._calls.append(completion)
+        return completion.text
+
     def answer(self, question: str, as_of: dt.date) -> Answer:
-        """The answer, with the seconds spent retrieving and generating it."""
+        """The answer, with the seconds spent retrieving and generating it, and its tokens."""
+        self._calls: list[Completion] = []
         started = time.perf_counter()
         given = []
         for citation in self.retriever.search(question, as_of, self.k):
@@ -286,14 +292,14 @@ class ReferenceSystem:
             "retrieval": round(retrieved - started, 3),
             "generation": round(time.perf_counter() - retrieved, 3),
         }
-        return answer.model_copy(update={"timings": timings})
+        return answer.model_copy(update={"timings": timings, "tokens": spent(self._calls)})
 
     def _from_model(
         self, question: str, as_of: dt.date, given: list[tuple[Citation, Version]]
     ) -> Answer:
         if self.format != "answer":
             return self._from_claims(question, as_of, given)
-        parsed = parse(self.llm.complete(SYSTEM, prompt(question, as_of, given)).text)
+        parsed = parse(self._complete(SYSTEM, prompt(question, as_of, given)))
         if parsed is None:
             self.counts["malformed"] += 1
             return refusal(as_of)
@@ -315,7 +321,7 @@ class ReferenceSystem:
         self, question: str, as_of: dt.date, given: list[tuple[Citation, Version]]
     ) -> Answer:
         system = COVER_SYSTEM if self.format == "claims-cover" else CLAIMS_SYSTEM
-        reply = self.llm.complete(system, prompt(question, as_of, given)).text
+        reply = self._complete(system, prompt(question, as_of, given))
         return claims_answer(reply, as_of, given, self.counts)
 
 

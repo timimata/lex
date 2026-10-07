@@ -2,6 +2,7 @@ import datetime as dt
 from pathlib import Path
 
 import psycopg
+import pytest
 
 from lex.domain import Citation
 from lex.retrieval.cache import Cached, CachedEmbedder, version
@@ -82,6 +83,7 @@ def test_the_version_follows_the_store_contents_and_the_config(conn: psycopg.Con
 class Toy:
     name = "toy@2"
     query_format = "{}"
+    document_format = "{heading}\n{text}"
 
     def __init__(self) -> None:
         self.seen: list[str] = []
@@ -102,3 +104,29 @@ def test_a_text_is_embedded_once_and_never_written(tmp_path: Path) -> None:
     assert base.seen == ["férias", "faltas", "outra"]
     assert embedder.name == "toy@2"
     assert not any("férias" in p.read_text(encoding="utf-8") for p in tmp_path.rglob("*.json"))
+
+
+class Limited(Toy):
+    """Embeds `left` texts, then fails as a spent daily quota does."""
+
+    def __init__(self, left: int) -> None:
+        super().__init__()
+        self.left = left
+
+    def encode(self, texts: list[str]) -> list[list[float]]:
+        if len(texts) > self.left:
+            raise RuntimeError("quota")
+        self.left -= len(texts)
+        return super().encode(texts)
+
+
+def test_a_spent_quota_keeps_the_chunks_already_embedded(tmp_path: Path) -> None:
+    texts = [f"artigo {i}" for i in range(5)]
+    embedder = CachedEmbedder(Limited(left=4), tmp_path)
+    embedder.chunk = 2
+    with pytest.raises(RuntimeError):
+        embedder.encode(texts)
+
+    tomorrow = Limited(left=10)
+    CachedEmbedder(tomorrow, tmp_path).encode(texts)
+    assert tomorrow.seen == ["artigo 4"]  # the first four were kept

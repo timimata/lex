@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from lex.domain import Citation
-from lex.generation.agent import AGENT_SYSTEM, AgentSystem
+from lex.generation.agent import AGENT_SYSTEM, TOO_LATE, AgentSystem
 from lex.generation.answer import CLAIMS_SYSTEM
 from lex.generation.llm import Completion
 
@@ -155,3 +155,13 @@ def test_a_reply_that_is_neither_request_nor_answer_is_a_refusal() -> None:
     system = AgentSystem(Ranked(), articles, model)
     assert system.answer(QUESTION, TODAY).refused
     assert system.counts["malformed"] == 1
+
+
+def test_past_its_budget_a_request_is_not_followed_and_the_visitor_is_told() -> None:
+    model = Scripted(json.dumps({"acao": "pesquisar", "consulta": "falecimento"}))
+    system = AgentSystem(Ranked(), articles, model, steps=1, budget=0.0)
+
+    answer = system.answer(QUESTION, TODAY)
+
+    assert answer.refused and TOO_LATE in answer.text
+    assert len(model.asked) == 1 and system.counts["over_budget"] == 1

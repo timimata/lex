@@ -18,11 +18,14 @@ from typing import Any, Protocol
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse
+from fastapi.exception_handlers import http_exception_handler
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from lex.domain import Answer, System
+from lex.store.memory import excerpt
 
 DISCLAIMER = (
     "Os textos consolidados não têm valor legal: só faz fé a publicação no Diário da República. "
@@ -111,6 +114,8 @@ class Found(Protocol):
     def article(self) -> str: ...
     @property
     def heading(self) -> str: ...
+    @property
+    def text(self) -> str: ...
 
 
 # Articles in force on a date whose words match a query, best first; no model involved.
@@ -121,6 +126,9 @@ class Hit(BaseModel):
     diploma: str
     article: str
     heading: str
+    # The line of the text that holds the words, and where they are in it, as [start, end).
+    excerpt: str = ""
+    marks: list[tuple[int, int]] = []
 
 
 class Period(BaseModel):
@@ -344,12 +352,29 @@ def create_app(
         )
 
     @app.get("/api/search")
-    def search(q: str, as_of: dt.date | None = None, k: int = 20) -> list[Hit]:
-        """Browse the corpus by words, with no model and no quota."""
+    def search(
+        q: str, as_of: dt.date | None = None, k: int = 20, diploma: str | None = None
+    ) -> list[Hit]:
+        """Browse the corpus by words, with no model and no quota; `diploma` keeps one."""
         if find is None:
             raise HTTPException(404, "Pesquisa indisponível.")
-        found = find(q[:200], as_of or today(), max(1, min(k, 50)))
-        return [Hit(diploma=f.diploma, article=f.article, heading=f.heading) for f in found]
+        k = max(1, min(k, 50))
+        found = [
+            f for f in find(q[:200], as_of or today(), 200) if diploma in (None, "", f.diploma)
+        ][:k]
+        hits = []
+        for f in found:
+            text, marks = excerpt(f.text, q[:200])
+            hits.append(
+                Hit(
+                    diploma=f.diploma,
+                    article=f.article,
+                    heading=f.heading,
+                    excerpt=text,
+                    marks=marks,
+                )
+            )
+        return hits
 
     @app.get("/api/leaderboard")
     def board() -> list[dict[str, Any]]:
@@ -363,5 +388,14 @@ def create_app(
 
         for path in PAGES:
             app.get(path, include_in_schema=False)(page)
+
+        @app.exception_handler(StarletteHTTPException)
+        async def not_found(request: Request, error: StarletteHTTPException) -> Response:
+            """A path that is no page gets the page, which says so, with a 404; the API keeps
+            its own errors."""
+            if error.status_code == 404 and not request.url.path.startswith("/api/"):
+                return FileResponse(index, status_code=404, media_type="text/html")
+            return await http_exception_handler(request, error)
+
         app.mount("/", StaticFiles(directory=static, html=True), name="page")
     return app

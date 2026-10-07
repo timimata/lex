@@ -49,6 +49,8 @@ class Answer(BaseModel):
     # What the system asked for before answering, in order, with what each request added: the
     # agent's searches and reads (Phase 7). Empty for a system that does not ask.
     requests: list[str] = Field(default_factory=list)
+    # What the answer cost the model in calls and tokens (lex.generation.llm.spent), where known.
+    tokens: dict[str, int] = Field(default_factory=dict)
 
 
 class System(Protocol):

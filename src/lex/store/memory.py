@@ -55,6 +55,39 @@ _STOPWORDS = frozenset(
 )
 
 
+def _plain(word: str) -> str:
+    plain = unicodedata.normalize("NFD", word.lower())
+    return "".join(c for c in plain if not unicodedata.combining(c))
+
+
+def excerpt(text: str, query: str, width: int = 220) -> tuple[str, list[tuple[int, int]]]:
+    """The line of `text` that holds most of the query's words, cut to about `width` characters
+    around the first, and where in it each of those words is: what a word search shows under a
+    hit, so the visitor sees why it matched."""
+    wanted = {w for w in _words(query) if len(w) > 2 and w not in _STOPWORDS}
+    best: tuple[int, str, list[tuple[int, int]]] = (0, "", [])
+    for line in text.splitlines():
+        spans = [
+            (m.start(), m.end()) for m in re.finditer(r"\w+", line) if _plain(m.group()) in wanted
+        ]
+        found = len({_plain(line[a:b]) for a, b in spans})
+        if found > best[0]:
+            best = (found, line, spans)
+    found, line, spans = best
+    if not found:
+        return "", []
+    start = 0 if len(line) <= width else max(0, spans[0][0] - width // 4)
+    if start:
+        start = line.rfind(" ", 0, start) + 1
+    end = min(len(line), start + width)
+    if end < len(line):
+        end = line.rfind(" ", start, end) if " " in line[start:end] else end
+    cut = ("…" if start else "") + line[start:end].strip() + ("…" if end < len(line) else "")
+    shift = (1 if start else 0) - start - (len(line[start:end]) - len(line[start:end].lstrip()))
+    marks = [(a + shift, b + shift) for a, b in spans if a >= start and b <= end]
+    return cut, marks
+
+
 def _words(text: str) -> list[str]:
     """Lower-case words without accents: 'Férias' and 'ferias' are the same word."""
     plain = unicodedata.normalize("NFD", text.lower())

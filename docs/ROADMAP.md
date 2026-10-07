@@ -372,6 +372,16 @@ README and the leaderboard report v1; v0's test runs are kept in `results/test/v
   against 0.71) and ahead on composite questions (0.53 against 0.41).
   A fault found on the way: the reference system's BGE-M3 embeddings were never committed to
   the store, so each run embedded tenancy again (results unaffected; fixed).
+
+  **Benchmark v3, 201 items** (2026-10-06): twenty more tenancy items from the Lexionário (batch
+  12): 11 answerable, four of them temporal (rules changed between 2018 and 2023), and 9
+  unanswerable, rules outside the corpus a tenancy question can be mistaken for. Dev 92, test 109;
+  43 tenancy items. v2's test runs are in `results/test/v2/`. On test v3 (89 answerable, 20
+  unanswerable): retrieval recall@1 / @10 BM25 0.49 / 0.74, BGE-M3 0.58 / 0.81, reference
+  0.76 / 0.94, the demo 0.81 / 0.99; answers judged correct: the agent 0.76, the per-sentence
+  prompt 0.73, the reference 0.73 (citation recall 0.94, 0.93, 0.89). `python -m lex.eval
+  check-results`, now in CI, keeps every number in `results/` adding up and the leaderboard on one
+  test split.
 - Legal review by a law student or lecturer (Faculdade de Direito, Universidade Lusófona).
 - ~~Licences for the code and the data, with a decision on whether test stays hidden.~~ Done
   ([ADR 0016](decisions/0016-licences-and-hidden-test.md)): MIT for the code, CC BY 4.0 for the
@@ -398,7 +408,10 @@ Chosen by what the numbers and job ads say:
   two runs of the same system differ by about one item (`--repeat`). The coverage instruction
   alone (`--format claims-cover`) scored 0.65, no gain; the rest of the agent's prompt, that the
   model may ask and should answer when the articles suffice, is what helped (ADR 0018, amended).
-  Next: the agent as the demo's system, within a time budget, then a test run;
+  On v3 the agent leads again on dev (0.74 against 0.68) and on test (0.76 against 0.73), still
+  with 0 requests, and since 2026-10-07 it is the demo's system, with a 9 s budget on any request
+  (ADR 0018, amended). The documents' own format for Gemini Embedding 2 changed nothing in the
+  top 5 the model reads (ADR 0014, amended 2026-10-07);
 - tracing (Langfuse), model routing, cost per question;
 - a local model for the answers on a Raspberry Pi (ADR 0012 has the quality; speed not measured);
 - a hand-scored comparison with Lia and TogaAI on a small dev subset, after checking their terms.

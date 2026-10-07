@@ -9,6 +9,7 @@ import pytest
 from lex.bench.schema import Item
 from lex.domain import Answer, Citation
 from lex.eval import results
+from lex.eval.__main__ import cost
 from lex.eval.harness import run_answers, run_retrieval, summarise, summarise_answers
 from lex.eval.metrics import citation_precision, citation_recall, recall_at_k
 from lex.retrieval.bm25 import Bm25
@@ -211,3 +212,19 @@ def test_percentiles_are_nearest_rank() -> None:
     values = [float(v) for v in range(1, 11)]
     assert (percentile(values, 0.5), percentile(values, 0.95)) == (5.0, 10.0)
     assert percentile([3.0], 0.95) == 3.0
+
+
+def test_cost_is_at_the_paid_prices_with_thinking_as_output() -> None:
+    usage = {
+        "prompt_tokens": 2_000_000,
+        "completion_tokens": 100_000,
+        "thinking_tokens": 300_000,
+        "thinking_unrecorded": 0,
+    }
+    found = cost(usage, "gemini-3.1-flash-lite", 4)
+    assert found is not None
+    assert found["usd"] == 2 * 0.25 + 0.4 * 1.50  # 1.1
+    assert found["usd_per_question"] == 0.275 and not found["lower_bound"]
+    partial = cost({**usage, "thinking_unrecorded": 1}, "gemini-3.1-flash-lite", 4)
+    assert partial is not None and partial["lower_bound"]
+    assert cost(usage, "a-local-model", 4) is None

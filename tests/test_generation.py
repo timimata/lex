@@ -240,6 +240,8 @@ def test_the_cache_answers_a_repeated_prompt_from_disk(tmp_path: Path) -> None:
         "cached": 1,
         "prompt_tokens": 300,
         "completion_tokens": 60,
+        "thinking_tokens": 0,
+        "thinking_unrecorded": 3,  # a scripted model reports no thinking
     }
     # A new process reads the same file.
     assert Cached(Scripted("outra"), tmp_path).complete("sistema", "pergunta") == first
@@ -274,7 +276,7 @@ REPLY = {
     "choices": [
         {"index": 0, "finish_reason": "stop", "message": {"role": "assistant", "content": "{}"}}
     ],
-    "usage": {"prompt_tokens": 12, "completion_tokens": 3, "total_tokens": 15},
+    "usage": {"prompt_tokens": 12, "completion_tokens": 3, "total_tokens": 140},
 }
 
 
@@ -292,7 +294,7 @@ def test_the_client_sends_the_model_prompt_and_params_and_reads_usage() -> None:
         http_client=httpx.Client(transport=httpx.MockTransport(endpoint))
     )
 
-    assert llm.complete("sistema", "pergunta") == Completion("{}", 12, 3)
+    assert llm.complete("sistema", "pergunta") == Completion("{}", 12, 3, thinking_tokens=125)
     assert sent == [
         {
             "model": "gemini-3.1-flash-lite",
@@ -346,7 +348,8 @@ def test_an_overloaded_model_is_asked_again_and_a_rate_limit_is_not() -> None:
         return httpx.Response(200, json=REPLY)
 
     replies[:] = [busy, answered]
-    assert model(overload_waits=(0,)).complete("s", "p") == Completion("{}", 12, 3)
+    answer = Completion("{}", 12, 3, thinking_tokens=125)
+    assert model(overload_waits=(0,)).complete("s", "p") == answer
     replies[:] = [busy, busy]
     with pytest.raises(openai.InternalServerError):  # asked once more, then it gives up
         model(overload_waits=(0,)).complete("s", "p")

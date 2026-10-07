@@ -43,6 +43,13 @@ function viewFromLocation(): View {
   return VIEWS.find((v) => PATHS[v] === path) ?? "ask";
 }
 
+/** Whether the address names no page (the server answers such a path with a 404). */
+function pathMissing(): boolean {
+  if (linkedArticle()) return false;
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  return !VIEWS.some((v) => PATHS[v] === path);
+}
+
 /** A question and date from the link (?q=...&d=...), so an answer can be shared. */
 function linkedQuestion(): { question: string; asOf?: string } | null {
   const params = new URLSearchParams(window.location.search);
@@ -196,6 +203,7 @@ function Mark() {
 export default function App() {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [view, setView] = useState<View>(viewFromLocation);
+  const [missing, setMissing] = useState(pathMissing);
   const [demoSystem, setDemoSystem] = useState<string>("");
   const [runs, setRuns] = useState<Run[] | null>(null);
   const [runsError, setRunsError] = useState("");
@@ -212,15 +220,18 @@ export default function App() {
       () => setDemoSystem(""),
     );
     api.leaderboard().then(setRuns, (e: Error) => setRunsError(e.message));
-    const back = () => setView(viewFromLocation());
+    const back = () => {
+      setView(viewFromLocation());
+      setMissing(pathMissing());
+    };
     window.addEventListener("popstate", back);
     return () => window.removeEventListener("popstate", back);
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang === "pt" ? "pt-PT" : "en";
-    document.title = t.titles[view];
-  }, [lang, view, t]);
+    document.title = missing ? t.notFoundTitle : t.titles[view];
+  }, [lang, view, missing, t]);
 
   function choose(next: Lang) {
     setLang(next);
@@ -237,6 +248,7 @@ export default function App() {
       if (next !== "ask" && next !== "articles") url.searchParams.delete("d");
       window.history.pushState(null, "", url.toString());
     }
+    setMissing(false);
     setView(next);
     window.scrollTo({ top: 0 });
   }
@@ -292,16 +304,28 @@ export default function App() {
       </p>
 
       <main id="content" className="wrap main">
+        {missing && (
+          <header className="page-head">
+            <h1>{t.notFound}</h1>
+            <p className="lead">
+              {t.notFoundLead}{" "}
+              <a href={PATHS.ask} onClick={(e) => (e.preventDefault(), go("ask"))}>
+                {t.notFoundHome}
+              </a>
+              .
+            </p>
+          </header>
+        )}
         {/* Kept mounted across views, so a question and its answer survive a look elsewhere. */}
-        <div hidden={view !== "ask"}>
+        <div hidden={missing || view !== "ask"}>
           <Ask latest={serverToday} demoRun={demoRun} onResults={() => go("results")} />
         </div>
-        <div hidden={view !== "articles"}>
+        <div hidden={missing || view !== "articles"}>
           <Browse latest={serverToday} />
         </div>
         <Suspense fallback={<p className="muted">{t.loading}…</p>}>
-          {view === "results" && <Results runs={runs} error={runsError} demoSystem={demoSystem} />}
-          {view === "about" && <About demoSystem={demoSystem} />}
+          {!missing && view === "results" && <Results runs={runs} error={runsError} demoSystem={demoSystem} />}
+          {!missing && view === "about" && <About demoSystem={demoSystem} />}
         </Suspense>
       </main>
 
@@ -462,6 +486,17 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
           ? ` (${t.retrievalShort} ${fmt(stages.retrieval)} s, ${t.modelShort} ${fmt(stages.generation)} s)`
           : "")
       : "";
+  const used = reply?.answer.tokens;
+  const spent =
+    used?.calls
+      ? `${t.modelCalls(used.calls)}, ${(
+          (used.prompt_tokens ?? 0) +
+          (used.completion_tokens ?? 0) +
+          (used.thinking_tokens ?? 0)
+        ).toLocaleString(lang === "pt" ? "pt-PT" : "en")} tokens`
+      : "";
+  const details = [timing, spent].filter(Boolean).join(" · ");
+  const requests = reply?.answer.requests ?? [];
   const { body, sources } = reply ? splitSources(reply.answer.text) : { body: "", sources: [] };
   const toggle = (c: Citation) => setOpen(same(open, c) ? null : c);
   const idle = !reply && !busy;
@@ -604,7 +639,17 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
                 </ol>
               </section>
             )}
-            {timing && <p className="answer-details">{timing}</p>}
+            {requests.length > 0 && (
+              <section className="requests">
+                <h3 className="section-label">{t.requestsTitle}</h3>
+                <ol lang="pt-PT">
+                  {requests.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ol>
+              </section>
+            )}
+            {details && <p className="answer-details">{details}</p>}
           </article>
           {open && <Reader citation={open} asOf={reply.as_of} backTo="#answer" onClose={() => setOpen(null)} />}
         </div>
@@ -618,7 +663,8 @@ function Browse({ latest }: { latest: string }) {
   const { lang, t } = useWords();
   const linked = useRef(linkedArticle());
   const [query, setQuery] = useState(linked.current?.citation.article ?? "");
-  const [diploma, setDiploma] = useState(linked.current?.citation.diploma ?? CT);
+  // "" is every diploma: the default for words; a bare number is then looked up in each.
+  const [diploma, setDiploma] = useState(linked.current?.citation.diploma ?? "");
   const [asOf, setAsOf] = useState(linked.current?.asOf ?? latest);
   const [picked, setPicked] = useState(Boolean(linked.current?.asOf));
   useEffect(() => {
@@ -634,16 +680,34 @@ function Browse({ latest }: { latest: string }) {
     setError("");
     setHits(null);
     const found = articleRef(query);
-    if (found) {
-      const citation = { diploma: found.diploma ?? diploma, article: found.article };
-      if (found.diploma) setDiploma(found.diploma);
+    const openAt = (citation: Citation) => {
       setOpen({ citation, asOf });
       setLink("articles", { art: citation.article, dip: DIPLOMAS[citation.diploma].short, d: asOf, lang });
+    };
+    if (found && (found.diploma || diploma)) {
+      if (found.diploma) setDiploma(found.diploma);
+      openAt({ diploma: found.diploma ?? diploma, article: found.article });
       return;
     }
     setOpen(null);
     try {
-      setHits(await api.search(query, asOf));
+      if (found) {
+        // A bare number with every diploma: the diplomas that have the article.
+        const views = await Promise.allSettled(
+          Object.keys(DIPLOMAS).map((d) => api.article({ diploma: d, article: found.article }, asOf)),
+        );
+        const have = Object.keys(DIPLOMAS).flatMap((d, i) => {
+          const v = views[i];
+          return v.status === "fulfilled" && v.value.versions.length
+            ? [{ diploma: d, article: found.article, heading: v.value.heading ?? "" }]
+            : [];
+        });
+        if (have.length === 1) openAt(have[0]);
+        else if (have.length === 0) openAt({ diploma: CT, article: found.article });
+        else setHits(have);
+        return;
+      }
+      setHits(await api.search(query, asOf, diploma));
     } catch (e) {
       setError(e instanceof Error ? e.message : t.unexpected);
     }
@@ -676,6 +740,7 @@ function Browse({ latest }: { latest: string }) {
           <label className="select-field">
             <span className="field-label">{t.diploma}</span>
             <select value={diploma} onChange={(e) => setDiploma(e.target.value)}>
+              <option value="">{t.allDiplomas}</option>
               {Object.entries(DIPLOMAS).map(([id, d]) => (
                 <option key={id} value={id}>
                   {d.short === "NRAU" ? t.nrau : d.name}
@@ -719,6 +784,7 @@ function Browse({ latest }: { latest: string }) {
                       {articleLabel(h)}
                     </button>
                     <span className="hit-heading">{h.heading}</span>
+                    {h.excerpt && <Marked text={h.excerpt} marks={h.marks ?? []} />}
                   </li>
                 ))}
               </ol>
@@ -728,6 +794,46 @@ function Browse({ latest }: { latest: string }) {
         {open && <Reader citation={open.citation} asOf={open.asOf} backTo={hits?.length ? "#hits" : null} />}
       </div>
     </section>
+  );
+}
+
+/** Copies a link that opens this article as in force on this date, from any page. */
+function CopyArticleLink({ citation, asOf }: { citation: Citation; asOf: string }) {
+  const { lang, t } = useWords();
+  const [copied, setCopied] = useState(false);
+  useEffect(() => setCopied(false), [citation, asOf]);
+  async function copy() {
+    const url = new URL(PATHS.articles, window.location.origin);
+    const dip = DIPLOMAS[citation.diploma]?.short ?? "CT";
+    url.search = new URLSearchParams({ art: citation.article, dip, d: asOf, lang }).toString();
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+  return (
+    <button type="button" className="text-button" onClick={copy}>
+      {copied ? t.copied : t.copyLink}
+    </button>
+  );
+}
+
+/** A hit's excerpt, the searched words marked. */
+function Marked({ text, marks }: { text: string; marks: [number, number][] }) {
+  const parts: ReactNode[] = [];
+  let at = 0;
+  for (const [start, end] of marks) {
+    if (start < at || end > text.length) continue;
+    parts.push(text.slice(at, start), <mark key={start}>{text.slice(start, end)}</mark>);
+    at = end;
+  }
+  parts.push(text.slice(at));
+  return (
+    <span className="hit-excerpt" lang="pt-PT">
+      {parts}
+    </span>
   );
 }
 
@@ -855,6 +961,7 @@ function Reader({
                 {t.source}
               </a>
             )}
+            <CopyArticleLink citation={citation} asOf={view.as_of} />
           </div>
           {view.text ? (
             comparing && previous ? (

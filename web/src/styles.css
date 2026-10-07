@@ -582,6 +582,11 @@ input[type="date"]:focus,
   margin-top: 0;
 }
 
+/* With the diploma list beside it, a narrower start keeps the button on the fields' line. */
+.browse .text-field {
+  flex-basis: 180px;
+}
+
 /* A flat button with a 2 px base, the one cue that it presses. */
 .button {
   border: 0;
@@ -793,6 +798,22 @@ input[type="date"]:focus,
   font-size: 13px;
 }
 
+/* What the agent asked for before answering: a quiet list, the requests as the model wrote them. */
+.requests {
+  margin-top: 16px;
+}
+
+.requests ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.requests li + li {
+  margin-top: 4px;
+}
+
 .answer-details {
   margin: 16px 0 0;
   color: var(--muted);
@@ -803,6 +824,19 @@ input[type="date"]:focus,
   color: var(--ink-2);
   font-size: 18px;
   font-style: italic;
+}
+
+/* Under the heading, the line that holds the words, the words marked as a reader underlines. */
+.hit-excerpt {
+  flex-basis: 100%;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.hit-excerpt mark {
+  background: var(--cobalt-wash);
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* ---------- reader: an article set as in the Diário da República ---------- */
@@ -1289,5 +1323,70 @@ summary {
 
   .date-field input[type="date"] {
     width: 100%;
+  }
+}
+
+/* ---------- print: an answer or an article as the document it is ---------- */
+
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+
+  /* Ink on paper whatever the screen's scheme; changes keep their strike and underline. */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* The controls go; the brand, the dated notice, the content and the full disclaimer stay. */
+  .skip,
+  .nav,
+  .lang-switch,
+  .ask form,
+  .browse form,
+  .examples,
+  .measured,
+  .how,
+  .button,
+  .text-button,
+  .reader-back,
+  .reader-actions,
+  .footer-grid {
+    display: none !important;
+  }
+
+  .workspace,
+  .workspace.split {
+    display: block;
+  }
+
+  .workspace.split .reader,
+  .reader {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    border: 0;
+    padding: 0;
+    margin-top: 24px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .page-head {
+    display: none !important;
+  }
+
+  /* The history's dates are buttons on screen and the record of versions on paper. */
+  .timeline .text-button {
+    display: inline !important;
+  }
+
+  .legal-text p,
+  .basis li {
+    break-inside: avoid;
   }
 }

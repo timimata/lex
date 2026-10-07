@@ -109,6 +109,7 @@ python -m lex.api --demo            # the deployed demo's system (ADR 0014), no 
 python -m lex.eval label SYSTEM     # hand-label a system's dev answers (a person, never a model)
 python -m lex.eval judge SYSTEM     # judge dev answers, measure agreement with the labels
 python -m lex.eval judge-check      # or measure the judge on known-answer dev cases
+python -m lex.eval check-results    # results/ adds up and test runs share a split (CI runs it)
 python -m lex.eval latency URL      # time the deployed demo; spends its quota
 python -m lex.mcp_server            # the code as MCP tools, over stdio
 python web/e2e.py                   # the page in Chromium, scripted answers, no quota

@@ -2,8 +2,8 @@
 
 Date: 2026-09-30
 Status: accepted; supersedes the hosting and the demo's system in ADR 0013; amended
-2026-10-01 (answers a citation per sentence) and 2026-10-02 (questions in the model's query
-format)
+2026-10-01 (answers a citation per sentence), 2026-10-02 (questions in the model's query
+format) and 2026-10-07 (documents stay as they are)
 
 ## Context
 
@@ -94,3 +94,20 @@ Documents stay embedded as they were: their format means embedding all 1,213 ver
 more than the 1,000 texts a day the free tier allows, and the demo's visitors spend from the same
 quota. The query format lives with the embedder (`ApiEmbedder.query_format`), so the eval, the
 demo and the MCP server embed questions the same way, and the eval's ranking cache keys on it.
+
+## Amendment, 2026-10-07: documents stay as they are
+
+The guide's document format, `title: {heading} | text: {text}`, was measured once the corpus
+was embedded in it over two days of free quota (`dense-gemini-titled+refs`, vectors of their own).
+On dev v3 (68 answerable items), against the plain heading and text, both with questions in the
+query format:
+
+| Documents embedded | recall@1 | recall@3 | recall@5 | recall@10 |
+|---|---|---|---|---|
+| heading and text (deployed) | 0.73 | 0.87 | 0.89 | 0.94 |
+| `title: ... \| text: ...` | 0.78 | 0.87 | 0.89 | 0.95 |
+
+The model reads the top 5, where nothing changes (0.890 against 0.887: one composite question
+loses one of its three articles), so the deployed vectors stay; the gain at 1 would show only in
+the order of what the model already reads. `results/dev/dense-gemini-embedding-2-titled+refs.json`
+keeps the run.

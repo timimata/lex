@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 from lex.bench.splits import load
 from lex.domain import Citation, Retriever
 from lex.eval import judge, results
+from lex.eval.check import check_results
 from lex.eval.harness import KS, run_answers, run_retrieval, summarise, summarise_answers
 from lex.generation import llm
 from lex.generation.agent import AgentSystem
@@ -34,7 +35,14 @@ from lex.retrieval import cache
 from lex.retrieval.bm25 import Bm25
 from lex.retrieval.crossrefs import PER_ARTICLE, TOP, WithCrossReferences
 from lex.retrieval.decompose import Decomposed
-from lex.retrieval.dense import ApiEmbedder, BgeM3, Dense, embed_missing
+from lex.retrieval.dense import (
+    GEMINI_DOCUMENT,
+    PLAIN_DOCUMENT,
+    ApiEmbedder,
+    BgeM3,
+    Dense,
+    embed_missing,
+)
 from lex.retrieval.hybrid import Hybrid
 from lex.retrieval.memory import DenseInMemory, embed_corpus
 from lex.retrieval.references import WithReferences
@@ -97,20 +105,31 @@ def dense(stores: Stores) -> Built:
     return on_postgres(stores, Dense(stores.conn, embedder), {"model": embedder.name})
 
 
-def dense_api(stores: Stores) -> Built:
+def dense_api(stores: Stores, document_format: str = PLAIN_DOCUMENT) -> Built:
     """Gemini Embedding 2 over the corpus in memory: the serverless demo's retriever."""
     corpus = stores.corpus
     key = os.environ.get("EMBEDDING_API_KEY") or os.environ.get("LLM_API_KEY", "")
     embedder = cache.CachedEmbedder(
-        ApiEmbedder(api_key=key), results.ROOT / ".cache" / "embeddings"
+        ApiEmbedder(api_key=key, document_format=document_format),
+        results.ROOT / ".cache" / "embeddings",
     )
     path = PROCESSED / f"vectors-{embedder.name.replace('@', '-')}.npz"
     vectors, embedded = embed_corpus(corpus, embedder, path)
     print(f"embedded {embedded} article versions that had no up-to-date vector")
-    config = {"model": embedder.name, "store": "memory", "query": embedder.query_format}
+    config = {
+        "model": embedder.name,
+        "store": "memory",
+        "query": embedder.query_format,
+        "document": embedder.document_format,
+    }
     return Built(
         DenseInMemory(corpus, embedder, vectors), config, corpus.article_at, corpus.fingerprint()
     )
+
+
+def dense_api_titled(stores: Stores) -> Built:
+    """The same, documents written as Google's guide writes them (ADR 0014, 2026-10-06)."""
+    return dense_api(stores, GEMINI_DOCUMENT)
 
 
 def with_references(base: Callable[[Stores], Built]) -> Callable[[Stores], Built]:
@@ -168,10 +187,33 @@ RETRIEVERS: dict[str, Callable[[Stores], Built]] = {
     "dense+rerank+refs": with_references(dense_reranked),
     "dense-gemini": dense_api,
     "dense-gemini+refs": with_references(dense_api),
+    "dense-gemini-titled+refs": with_references(dense_api_titled),
     "dense-gemini+xrefs+refs": with_references(with_cross_references(dense_api)),
     "dense-gemini+decomp+refs": with_references(with_decomposition(dense_api)),
     "dense+rerank+xrefs+refs": with_references(with_cross_references(dense_reranked)),
 }
+
+
+# USD per million tokens on the paid tier, input and output (thinking is billed as output), from
+# ai.google.dev/gemini-api/docs/pricing, read 2026-10-06. The demo runs on the free tier, so
+# this is what its answers would cost, not what they cost.
+PRICES = {"gemini-3.1-flash-lite": (0.25, 1.50)}
+
+
+def cost(usage: dict[str, int], model: str, questions: int) -> dict[str, Any] | None:
+    """The run's cost at the paid prices, total and per question; a lower bound while some
+    calls' thinking was not recorded (cached before it was)."""
+    if model not in PRICES or not questions:
+        return None
+    per_input, per_output = PRICES[model]
+    output = usage["completion_tokens"] + usage["thinking_tokens"]
+    usd = (usage["prompt_tokens"] * per_input + output * per_output) / 1_000_000
+    return {
+        "usd_per_million": {"input": per_input, "output": per_output},
+        "usd": round(usd, 6),
+        "usd_per_question": round(usd / questions, 6),
+        "lower_bound": usage["thinking_unrecorded"] > 0,
+    }
 
 
 def table(summary: dict[str, dict[str, Any]], columns: list[str]) -> None:
@@ -476,6 +518,7 @@ def main(argv: list[str] | None = None) -> int:
     judging.add_argument("system", help="a results/dev/<system>.json answers run")
     judging.add_argument("--minimum", type=int, default=20, help="hand labels needed")
     commands.add_parser("judge-check", help="measure the judge on known-answer dev cases")
+    commands.add_parser("check-results", help="check results/ against itself; no model, for CI")
     timing = commands.add_parser("latency", help="time the deployed demo on dev questions")
     timing.add_argument("url", help="e.g. https://lex-beryl.vercel.app")
     timing.add_argument("--n", type=int, default=15, help="questions (and quota) to spend")
@@ -488,6 +531,10 @@ def main(argv: list[str] | None = None) -> int:
         return judge_dev(args.system, args.minimum)
     if args.command == "judge-check":
         return judge_check()
+    if args.command == "check-results":
+        problems = check_results(results.RESULTS, results.BENCH)
+        print("\n".join(problems) or "results/ adds up, and its test runs share one split")
+        return 1 if problems else 0
     if args.command == "latency":
         return latency(args.url, args.n)
 
@@ -537,6 +584,7 @@ def main(argv: list[str] | None = None) -> int:
                 "format": args.format,
                 "repeat": args.repeat,
                 "usage": model.usage(),
+                "cost": cost(model.usage(), model.name, len(items)),
                 "counts": system.counts,  # what turned answers into refusals; the agent's asks
             }
             if measured is not None:
@@ -565,6 +613,7 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"correctness, judged by {judge.JUDGE_MODEL}, measured on dev by {measured}:")
                 table(summary["correctness"], ["items", *judge.VERDICTS])
             print(f"llm usage: {model.usage()}; {system.counts}")
+            print(f"cost at paid prices: {config['cost']}")
     finally:
         stores.close()
     print(f"retrieval cache: {retriever.hits} hits, {retriever.misses} misses")

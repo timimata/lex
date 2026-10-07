@@ -78,12 +78,13 @@ Civil is `dl-47344-1966`, and the NRAU `lei-6-2006`. Article numbers are written
 | `explicit_reference` | Names an article: "o que diz o artigo 238.º do Código do Trabalho?" |
 | `unanswerable` | Outside the corpus, or not answerable from the law. The right response is to say so |
 
-Benchmark v2 (2026-10-02) has 181 items: 70 `simple`, 36 `composite`, 23 `temporal`, 17
-`explicit_reference` and 35 `unanswerable`; 84 in dev and 97 in test. Of these, 23 are on
-tenancy (`ar-`), 14 in dev and 9 in test; the rest are the 158 items of v1 (2026-10-01), on the
-Código do Trabalho. Every run records which version of its split it used (`bench` in
-`results/`); v0's test runs are in `results/test/v0/`, those on the intermediate 132-item state
-in `results/test/v1-132/`, and v1's in `results/test/v1/`.
+Benchmark v3 (2026-10-06) has 201 items: 76 `simple`, 37 `composite`, 27 `temporal`, 17
+`explicit_reference` and 44 `unanswerable`; 92 in dev and 109 in test. Of these, 43 are on
+tenancy (`ar-`), 22 in dev and 21 in test; the rest are the 158 items of v1 (2026-10-01), on the
+Código do Trabalho. v2 (2026-10-02) had the first 23 tenancy items, 181 in all. Every run records
+which version of its split it used (`bench` in `results/`); v0's test runs are in
+`results/test/v0/`, those on the intermediate 132-item state in `results/test/v1-132/`, v1's in
+`results/test/v1/` and v2's in `results/test/v2/`.
 
 Targets for v0 (100 items): at least 15 `temporal`, 15 `explicit_reference` and 15 `composite`,
 about 10 `unanswerable`, the rest `simple`. For non-temporal items, `as_of` is the date the item

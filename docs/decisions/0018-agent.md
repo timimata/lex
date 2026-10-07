@@ -1,7 +1,8 @@
-# 0018. The agent is not kept; what helped was its prompt
+# 0018. The agent: what helped was its prompt, and it answers on the demo
 
 Date: 2026-10-06
-Status: accepted; amended 2026-10-06 (the coverage instruction alone)
+Status: accepted; amended 2026-10-06 (the coverage instruction alone) and 2026-10-07 (the agent
+becomes the demo's system)
 
 ## Context
 
@@ -63,3 +64,23 @@ Next: the agent itself as the demo's system, since it is the measured configurat
 and costs one call per question while the model asks for nothing. Before that, a time budget for
 the demo (a request adds a search and a call, within Vercel's 30 s) and a test run at that
 milestone. Not done today: the day's free quota is spent.
+
+## Amendment, 2026-10-07: the agent becomes the demo's system
+
+On benchmark v3 (dev 92 items, 68 answerable; test 109, 89 answerable), the agent against the
+per-sentence prompt, with the same retrieval and model (`results/`):
+
+| | Correct | Citation recall / precision | Answerable refused | Unanswerable refused | Composite correct |
+|---|---|---|---|---|---|
+| dev, per-sentence | 0.68 | 0.83 / 0.90 | 4 of 68 | 23 of 24 | 0.45 |
+| dev, agent | 0.74 | 0.86 / 0.89 | 0 of 68 | 23 of 24 | 0.55 |
+| test, per-sentence | 0.73 | 0.93 / 0.92 | 0 of 89 | 18 of 20 | 0.41 |
+| test, agent | 0.76 | 0.94 / 0.92 | 0 of 89 | 18 of 20 | 0.47 |
+
+The decision rests on dev, where the agent led in all three of its runs (0.74, 0.74, 0.74 against
+0.68, 0.70, 0.68); the test run, taken after, agrees. The model still asks for nothing (0
+requests in 109 test answers), so on the demo it costs one call per question, $0.00106 at paid
+prices with its thinking (23,823 thinking tokens over the 109 calls). It is now the demo's
+default (`LEX_ANSWER_FORMAT`, `claims` for the per-sentence answer), with the 9 s budget of
+2026-10-06 bounding a request should the model make one. The loop is kept for that case; that
+it helps by being offered rather than used is what the numbers say, not why.

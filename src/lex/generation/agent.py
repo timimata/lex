@@ -26,11 +26,12 @@ from lex.generation.answer import (
     prompt,
     refusal,
 )
-from lex.generation.llm import Llm
+from lex.generation.llm import Completion, Llm, spent
 from lex.retrieval.references import diplomas_for
 
 STEPS = 3  # requests the model may make before it must answer; set, not tuned
 PER_SEARCH = 3  # new articles a search adds, at most
+TOO_LATE = "A pesquisa de mais artigos demoraria demasiado; tente de novo."
 
 AGENT_SYSTEM = CLAIMS_SYSTEM.replace(
     "\n\nRegras:\n",
@@ -89,12 +90,14 @@ class AgentSystem:
         llm: Llm,
         k: int = K,
         steps: int = STEPS,
+        budget: float | None = None,  # seconds after which a request is not followed
     ) -> None:
         self.retriever = retriever
         self.articles = articles
         self.llm = llm
         self.k = k
         self.steps = steps
+        self.budget = budget
         self.name = f"{retriever.name}+{llm.name}+agent"
         self.counts = {
             "malformed": 0,
@@ -104,14 +107,16 @@ class AgentSystem:
             "searches": 0,
             "reads": 0,
             "added": 0,  # articles the requests added to what the model reads
+            "over_budget": 0,  # requests not followed: the answer would come too late
         }
 
     def answer(self, question: str, as_of: dt.date) -> Answer:
         """The answer, with the seconds spent retrieving (searches included) and generating."""
-        spent = {"retrieval": 0.0, "generation": 0.0}
+        seconds = {"retrieval": 0.0, "generation": 0.0}
+        calls: list[Completion] = []
 
         def timed(stage: str, started: float) -> None:
-            spent[stage] += time.perf_counter() - started
+            seconds[stage] += time.perf_counter() - started
 
         started = time.perf_counter()
         given = self._in_force(self.retriever.search(question, as_of, self.k), as_of, [])
@@ -124,11 +129,18 @@ class AgentSystem:
             left = self.steps - step
             system = AGENT_SYSTEM.replace("{pedidos}", str(left)) if left else CLAIMS_SYSTEM
             started = time.perf_counter()
-            reply = self.llm.complete(system, agent_prompt(question, as_of, given, asked)).text
+            completion = self.llm.complete(system, agent_prompt(question, as_of, given, asked))
+            calls.append(completion)
+            reply = completion.text
             timed("generation", started)
             action = _action(reply) if left else None
             if action is None:
                 answer = claims_answer(reply, as_of, given, self.counts)
+                break
+            if self.budget is not None and sum(seconds.values()) > self.budget:
+                # Another call could outlast the caller's time (the demo's 30 s): say so now.
+                self.counts["over_budget"] += 1
+                answer = refusal(as_of, TOO_LATE)
                 break
             started = time.perf_counter()
             kind, values = action
@@ -145,8 +157,9 @@ class AgentSystem:
             given = given + new
             timed("retrieval", started)
         assert answer is not None  # the last step always answers
-        timings = {stage: round(seconds, 3) for stage, seconds in spent.items()}
-        return answer.model_copy(update={"timings": timings, "requests": asked})
+        timings = {stage: round(s, 3) for stage, s in seconds.items()}
+        update = {"timings": timings, "requests": asked, "tokens": spent(calls)}
+        return answer.model_copy(update=update)
 
     def _in_force(
         self, citations: list[Citation], as_of: dt.date, given: list[tuple[Citation, Version]]

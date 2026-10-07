@@ -28,6 +28,21 @@ class Completion:
     text: str
     prompt_tokens: int
     completion_tokens: int
+    # Gemini's `completion_tokens` leaves out the model's thinking, which is billed as output;
+    # it is the rest of `total_tokens`. None: not recorded (cached before 2026-10-06).
+    thinking_tokens: int | None = None
+
+
+def spent(completions: list[Completion]) -> dict[str, int]:
+    """What some calls cost in tokens; "thinking_unrecorded" counts calls whose thinking is not
+    known, so a cost from them is a lower bound."""
+    return {
+        "calls": len(completions),
+        "prompt_tokens": sum(c.prompt_tokens for c in completions),
+        "completion_tokens": sum(c.completion_tokens for c in completions),
+        "thinking_tokens": sum(c.thinking_tokens or 0 for c in completions),
+        "thinking_unrecorded": sum(c.thinking_tokens is None for c in completions),
+    }
 
 
 class Llm(Protocol):
@@ -94,10 +109,13 @@ class OpenAiCompatible:
                     raise
             time.sleep(wait)
         usage = response.usage
+        prompt, completion = (usage.prompt_tokens, usage.completion_tokens) if usage else (0, 0)
+        total = usage.total_tokens if usage else 0
         return Completion(
             text=response.choices[0].message.content or "",
-            prompt_tokens=usage.prompt_tokens if usage else 0,
-            completion_tokens=usage.completion_tokens if usage else 0,
+            prompt_tokens=prompt,
+            completion_tokens=completion,
+            thinking_tokens=max(0, total - prompt - completion),
         )
 
 
@@ -138,8 +156,7 @@ class Cached:
         self.directory = directory
         self.calls = 0
         self.cached = 0
-        self.prompt_tokens = 0
-        self.completion_tokens = 0
+        self.completions: list[Completion] = []
 
     def key(self, system: str, user: str) -> str:
         request: dict[str, object] = {
@@ -172,14 +189,8 @@ class Cached:
             }
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")
-        self.prompt_tokens += completion.prompt_tokens
-        self.completion_tokens += completion.completion_tokens
+        self.completions.append(completion)
         return completion
 
     def usage(self) -> dict[str, int]:
-        return {
-            "calls": self.calls,
-            "cached": self.cached,
-            "prompt_tokens": self.prompt_tokens,
-            "completion_tokens": self.completion_tokens,
-        }
+        return {**spent(self.completions), "cached": self.cached}
