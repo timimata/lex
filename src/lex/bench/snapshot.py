@@ -18,6 +18,10 @@ from lex.bench.splits import DATA_DIR, _normalise, _parse
 from lex.domain import DIPLOMAS
 
 TEST = "bench/data/test.jsonl"
+# Tracked files the mirror leaves out: the test split, and Dependabot's settings, which would
+# open pull requests on a copy the next snapshot overwrites (updates land in the private
+# repository, with a dev run where they can move a number).
+PRIVATE_ONLY = frozenset({TEST, ".github/dependabot.yml"})
 # Google (AIza..., AQ....), Hugging Face, OpenAI-style and GitHub tokens.
 KEY = re.compile(
     r"AIza[0-9A-Za-z_-]{30,}|AQ\.[0-9A-Za-z_-]{20,}|hf_[0-9A-Za-z]{20,}|sk-[0-9A-Za-z]{20,}"
@@ -124,7 +128,7 @@ def tracked(root: Path) -> list[str]:
     out = subprocess.run(
         ["git", "ls-files"], cwd=root, capture_output=True, text=True, check=True
     ).stdout
-    return [line for line in out.splitlines() if line and line != TEST]
+    return [line for line in out.splitlines() if line and line not in PRIVATE_ONLY]
 
 
 def snapshot(root: Path, out: Path, data_dir: Path = DATA_DIR) -> list[str]:

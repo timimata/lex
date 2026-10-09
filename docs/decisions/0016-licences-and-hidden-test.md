@@ -66,7 +66,7 @@ What each part of Lex sends, and where:
 | `+decomp` (dropped, ADR 0014) | the question | the answer model |
 | `eval latency URL` | dev questions | the deployed demo, and through it Google |
 | the demo | a visitor's question, its date, the retrieved articles | Google's API, on the free tier |
-| `bench snapshot`, then a push; `hf upload` | every tracked file but test; the card, dev, the licence | GitHub and Hugging Face, publicly |
+| `bench snapshot`, then a push; `hf upload` | every tracked file but test and Dependabot's settings; the card, dev, the licence | GitHub and Hugging Face, publicly |
 | BM25, BGE-M3, the reranker, a model on llama.cpp | nothing | this machine |
 
 ### Decision

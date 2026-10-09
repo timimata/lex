@@ -478,3 +478,11 @@ def test_the_cards_faq_line_is_left_out_where_the_faq_is_not(tmp_path: Path) -> 
     card.refresh(card_path, tmp_path, faq)
     assert card.VERBATIM in card_path.read_text(encoding="utf-8")
     assert card.is_current(card_path, tmp_path, tmp_path / "absent.jsonl")  # CI
+
+
+def test_the_mirror_leaves_out_the_test_split_and_dependabot() -> None:
+    from lex.bench.snapshot import tracked
+
+    files = tracked(Path(__file__).resolve().parents[1])
+    assert "bench/data/dev.jsonl" in files
+    assert "bench/data/test.jsonl" not in files and ".github/dependabot.yml" not in files

@@ -1030,6 +1030,8 @@ how others can take part. The phase ends with a technical report.
    **Done 2026-10-08:** `.github/dependabot.yml` (uv, npm, actions; weekly, grouped), `SECURITY.md`
    (private reports through GitHub, which the repository's settings must enable), every action
    pinned by commit with its version beside it, and `amendments.yml` limited to `timimata/lex-pt`.
+   **2026-10-10:** the first published snapshot carried `dependabot.yml`, and Dependabot opened
+   six pull requests on the mirror; the snapshot now leaves it out (tested), and they were closed.
 8. **A technical report, with related work.** Nothing in the repository cites another benchmark.
    Write the related work first: LegalBench and LexGLUE; BSARD and LLeQA, the closest designs
    (citizens' questions answered with statutory articles); COLIEE's statute law retrieval;
