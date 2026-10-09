@@ -126,6 +126,6 @@ python -m lex.probe URL             # the deployed demo from outside; no quota (
 python -m lex.probe URL --live --record probe.jsonl   # one real answer; keeps the timings
 python -m lex.mcp_server            # the code as MCP tools, over stdio
 python web/e2e.py                   # the page in Chromium, scripted answers, no quota
-python vercel/assemble.py && cd build/vercel && npx vercel deploy --prod   # deploy the demo
+python vercel/assemble.py --warm && cd build/vercel && npx vercel deploy --prod   # deploy; 4 calls
 ```
 On Windows, connect to 127.0.0.1, not localhost (see `src/lex/store/db.py`).

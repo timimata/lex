@@ -14,6 +14,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -78,6 +79,16 @@ def demo_system(
         budget = None if patient else 9.0
         return AgentSystem(retriever, article_at, model, budget=budget)  # the prompt measured
     return ReferenceSystem(retriever, article_at, model, format=format)
+
+
+def answer_row(question: str, as_of: dt.date, answer: Answer) -> dict[str, Any]:
+    """An answer made at deploy, as `load_answers` reads it back: JSON, dates as text, and no
+    refusal's own reason, which a visitor never sees (ROADMAP 11.7)."""
+    return {
+        "question": question,
+        "as_of": as_of.isoformat(),
+        "answer": answer.model_copy(update={"reason": ""}).model_dump(mode="json"),
+    }
 
 
 def load_answers(path: Path | None) -> dict[tuple[str, dt.date], Answer]:

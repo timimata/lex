@@ -781,7 +781,7 @@ keeps its verdicts; `check-results` recomputes them, and the README's tables are
 them (12.1). The code is 0.4.0 (ADR 0021). v3's runs are in `results/test/v3/` and
 `results/dev/archive/v3/`.
 
-## Phase 11: The corpus and the demo (done 2026-10-08 but the deploy)
+## Phase 11: The corpus and the demo (done; deployed 2026-10-09)
 
 The corpus parses more than it keeps, the demo can cache what it should not, and several paths
 have no test. The items are independent. One that changes answers (1, 5, 7) comes with a dev run,
@@ -875,7 +875,9 @@ and the phase ends with a test run only if `compare` (10.2) finds that dev moved
    assembly answers each for its own; the probe asks every example and fails on one not cached;
    `--live` asks a question about the day, from no cache, and fails on anything but an answer
    (tested on a 503, as a revoked key gives); the workflow adds it to the run of 06:41 UTC. Green
-   on the demo once it is deployed.
+   on the demo once it is deployed. **Deployed 2026-10-09:** the first deploy found the examples
+   uncached (`assemble.py --warm` failed writing dates; fixed, tested); after it, the probe passes
+   with all four examples from the cache and `--live` answers in 4.15 s.
 9. **The demo says what it runs, and the probe keeps what it measures.** `/api/health` gives the
    system's name and the day, not the commit or the corpus; the probe prints its timings and keeps
    none; the cold start on Vercel is still "not measured yet". `vercel/assemble.py` writes the

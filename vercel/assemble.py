@@ -93,7 +93,7 @@ def warm(out: Path) -> None:
     sys.path.insert(0, str(ROOT / "src"))
     from dotenv import load_dotenv
 
-    from lex.api.__main__ import demo_system
+    from lex.api.__main__ import answer_row, demo_system
     from lex.store.memory import Corpus, corpus_files
 
     load_dotenv(ROOT / ".env")
@@ -102,13 +102,7 @@ def warm(out: Path) -> None:
     for example in json.loads((ROOT / "web" / "src" / "examples.json").read_text(encoding="utf-8")):
         as_of = dt.date.fromisoformat(example["asOf"])  # each has its date (Phase 11)
         answer = system.answer(example["question"], as_of)
-        rows.append(
-            {
-                "question": example["question"],
-                "as_of": as_of.isoformat(),
-                "answer": answer.model_dump(),
-            }
-        )
+        rows.append(answer_row(example["question"], as_of, answer))
         print(
             f"  {as_of} {example['question'][:50]}: {'refused' if answer.refused else 'answered'}"
         )

@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from lex.domain import Answer, Citation
+from lex.domain import Version as CitedVersion
 
 pytest.importorskip("fastapi")
 from fastapi.testclient import TestClient
@@ -308,16 +309,20 @@ def test_articles_can_be_searched_by_word_without_a_model() -> None:
 
 
 def test_answers_made_at_deploy_are_served_without_asking_the_system(tmp_path: Path) -> None:
-    from lex.api.__main__ import load_answers
+    from lex.api.__main__ import answer_row, load_answers
 
     path = tmp_path / "answers.json"
+    cited = CitedVersion(diploma="lei-7-2009", article="238", valid_from=dt.date(2009, 2, 17))
     made = Answer(
-        text="Feita no deploy.", citations=[Citation(diploma="lei-7-2009", article="238")]
+        text="Feita no deploy.",
+        citations=[Citation(diploma="lei-7-2009", article="238")],
+        cited_versions=[cited],  # dates, which JSON has no type for
+        reason="a model's own words",
     )
-    rows = [
-        {"question": "Quantos dias de férias?", "as_of": "2011-06-01", "answer": made.model_dump()}
-    ]
+    rows = [answer_row("Quantos dias de férias?", dt.date(2011, 6, 1), made)]
     path.write_text(json.dumps(rows), encoding="utf-8")
+    loaded = load_answers(path)[("Quantos dias de férias?", dt.date(2011, 6, 1))]
+    assert loaded.cited_versions == [cited] and loaded.reason == ""
     system = Echo()
     api = TestClient(create_app(system, preload=load_answers(path), today=lambda: TODAY))
 
