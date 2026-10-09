@@ -11,27 +11,27 @@ requires-python = ">=3.12"
 dependencies = [
     "pydantic==2.13.5",  # bench items and every type that crosses a module boundary
     "psycopg[binary]==3.3.6",  # the Postgres store (ADR 0006)
-    "python-dotenv==1.2.3",  # reads .env (DATABASE_URL, the LLM settings) in the entry points
+    "python-dotenv==1.2.4",  # reads .env (DATABASE_URL, the LLM settings) in the entry points
     "numpy==2.5.3",  # the corpus's vectors in memory, for the serverless demo (ADR 0014)
-    "tzdata==2026.4",  # Lisbon's date where the system has no time zone database
+    "tzdata==2026.5",  # Lisbon's date where the system has no time zone database
 ]
 
 [project.optional-dependencies]
 # Only for fetching: renders the DR's consolidated page, a single-page app (ADR 0005).
 ingest = ["playwright==1.63.0"]
 # Only for the dense retriever's real model (ADR 0007); tests use a toy embedder instead.
-dense = ["sentence-transformers==6.1.0", "torch==2.14.0"]
+dense = ["sentence-transformers==6.1.0", "torch==2.14.1"]
 # The answer model's client: any OpenAI-compatible endpoint, Gemini by default (ADR 0011).
-llm = ["openai==3.22.1"]
+llm = ["openai==3.26.0"]
 # The HTTP service in front of the reference system.
-api = ["fastapi==0.142.1", "uvicorn==0.54.0"]
+api = ["fastapi==0.142.2", "uvicorn==0.54.0"]
 # Lex's article store as tools for an agent: python -m lex.mcp_server.
-mcp = ["mcp==2.2.0"]
+mcp = ["mcp==2.3.0"]
 dev = [
     "httpx==0.28.1",  # FastAPI's TestClient
-    "mypy==2.3.1",
+    "mypy==2.4.0",
     "pytest==9.1.1",
-    "ruff==0.16.9",
+    "ruff==0.16.10",
     "uv==0.12.23",  # locks every dependency in uv.lock and installs from it (ADR 0019)
 ]
 
