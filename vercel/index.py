@@ -19,4 +19,5 @@ app = demo_app(
     results=ROOT / "results",
     static=ROOT / "web",  # the built page; Vercel serves its files from the CDN
     answers=ROOT / "data" / "answers.json",  # the examples, answered at deploy
+    build=ROOT / "data" / "build.json",  # the commit and corpus deployed
 )

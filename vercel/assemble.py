@@ -28,8 +28,18 @@ def assemble(out: Path) -> None:
     for old in out.iterdir():  # all but .vercel, which links the folder to its Vercel project
         if old.name != ".vercel":
             shutil.rmtree(old) if old.is_dir() else old.unlink()
-    for name in ["index.py", "vercel.json", "requirements.txt", ".vercelignore"]:
+    for name in ["index.py", "requirements.txt", ".vercelignore"]:
         shutil.copy(ROOT / "vercel" / name, out / name)
+    # The security headers the API sends, for the page's files too, which the CDN serves.
+    sys.path.insert(0, str(ROOT / "src"))
+    from lex.api.app import SECURITY_HEADERS
+
+    config = json.loads((ROOT / "vercel" / "vercel.json").read_text(encoding="utf-8"))
+    headers = [{"key": k, "value": v} for k, v in SECURITY_HEADERS.items()]
+    config["headers"] = [{"source": "/(.*)", "headers": headers}]
+    (out / "vercel.json").write_text(json.dumps(config, indent=2) + "\n", "utf-8", newline="\n")
+    # The Python CI tests, not Vercel's default (3.12): it reads .python-version (ADR 0019).
+    shutil.copy(ROOT / ".python-version", out / ".python-version")
     shutil.copytree(ROOT / "src" / "lex", out / "lex", ignore=SKIP)
     # The page is built here, a few seconds of Node, and shipped as static files.
     web = ROOT / "web"
@@ -39,13 +49,37 @@ def assemble(out: Path) -> None:
     shutil.copytree(web / "dist", out / "web")
     (out / "results").mkdir()
     for run in sorted((ROOT / "results" / "test").glob("*.json")):  # not superseded/
-        assert "items" not in json.loads(run.read_text(encoding="utf-8")), run
-        shutil.copy(run, out / "results" / run.name)
+        # The leaderboard reads summaries; the per-item scores (ids only) stay behind.
+        record = json.loads(run.read_text(encoding="utf-8"))
+        record.pop("items", None)
+        text = json.dumps(record, ensure_ascii=False, indent=2) + "\n"
+        (out / "results" / run.name).write_text(text, encoding="utf-8", newline="\n")
     (out / "data").mkdir()
     # Every diploma's versions in one file, in the order the vectors follow.
     files = sorted(PROCESSED.glob("*/versions.jsonl"))  # as lex.store.memory.corpus_files
     joined = "".join(f.read_text(encoding="utf-8") for f in files)
     (out / "data" / "versions.jsonl").write_text(joined, encoding="utf-8", newline="\n")
+    # The demo's only store is this file in memory: what Postgres would refuse is refused here,
+    # before a deploy rather than at a visitor's first request.
+    sys.path.insert(0, str(ROOT / "src"))
+    from lex.store.memory import Corpus
+
+    corpus = Corpus.load(out / "data" / "versions.jsonl")
+
+    # What runs, as /api/health says it: the commit, whether its tree was clean, the corpus.
+    def git(*args: str) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=ROOT, capture_output=True, text=True, check=True
+        ).stdout.strip()
+
+    build = {
+        "commit": git("rev-parse", "HEAD"),
+        "clean": not git("status", "--porcelain"),
+        "corpus": corpus.fingerprint(),
+        "versions": len(corpus.versions),
+        "assembled_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
+    }
+    (out / "data" / "build.json").write_text(json.dumps(build, indent=2) + "\n", "utf-8")
     if not VECTORS.exists():
         raise SystemExit(f"no {VECTORS.name}: run python -m lex.eval retrieval dense-gemini+refs")
     shutil.copy(VECTORS, out / "data" / "vectors.npz")
@@ -60,15 +94,13 @@ def warm(out: Path) -> None:
     from dotenv import load_dotenv
 
     from lex.api.__main__ import demo_system
-    from lex.api.app import lisbon_today
     from lex.store.memory import Corpus, corpus_files
 
     load_dotenv(ROOT / ".env")
     system = demo_system(Corpus.load(*corpus_files(PROCESSED)), VECTORS, patient=True)
-    today = lisbon_today()
     rows = []
     for example in json.loads((ROOT / "web" / "src" / "examples.json").read_text(encoding="utf-8")):
-        as_of = dt.date.fromisoformat(example["asOf"]) if example.get("asOf") else today
+        as_of = dt.date.fromisoformat(example["asOf"])  # each has its date (Phase 11)
         answer = system.answer(example["question"], as_of)
         rows.append(
             {

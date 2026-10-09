@@ -12,6 +12,7 @@ import time
 from collections.abc import Callable
 from typing import Protocol
 
+from lex import domain
 from lex.domain import DIPLOMAS, Answer, Citation, Retriever
 from lex.generation.llm import DEFAULT_PARAMS, Completion, Llm, spent
 from lex.retrieval.references import Reference, find_references, normalise_article
@@ -104,10 +105,18 @@ def article_id(citation: Citation) -> str:
     return f"{DIPLOMAS[citation.diploma].short} {citation.article}"
 
 
+def _notes(version: Version) -> str:
+    """The DR's notes on a version's effects (a deferral, a suspension, a Constitutional Court
+    ruling), each in its own element inside the article: the law as it applied, not only as
+    written (ROADMAP, Phase 11)."""
+    return "".join(f"\n<nota>{note}</nota>" for note in getattr(version, "notes", ()))
+
+
 def prompt(question: str, as_of: dt.date, given: list[tuple[Citation, Version]]) -> str:
     articles = "\n\n".join(
         f'<artigo id="{article_id(c)}" diploma="{DIPLOMAS[c.diploma].name}" '
-        f'epigrafe="{v.heading}" em_vigor_desde="{day(v.valid_from)}">\n{v.text}\n</artigo>'
+        f'epigrafe="{v.heading}" em_vigor_desde="{day(v.valid_from)}">\n{v.text}'
+        f"{_notes(v)}\n</artigo>"
         for c, v in given
     )
     return (
@@ -222,12 +231,22 @@ def marker(citations: list[Citation]) -> str:
     return f"({'; '.join(parts)})"
 
 
+def read(given: list[tuple[Citation, Version]]) -> list[domain.Version]:
+    """What the model was given, as the answer records it."""
+    return [
+        domain.Version(diploma=c.diploma, article=c.article, valid_from=v.valid_from)
+        for c, v in given
+    ]
+
+
 def refusal(as_of: dt.date, reason: str = "") -> Answer:
     text = (
         f"Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a "
         f"{day(as_of)}, base para responder a esta pergunta."
     )
-    return Answer(text=f"{text} {reason}" if reason else text, refused=True)
+    # The model's own reason cites nothing: kept for reading runs, never part of the answer a
+    # visitor is shown (no citation, no claim; ROADMAP, Phase 11).
+    return Answer(text=text, refused=True, reason=reason)
 
 
 def sources(as_of: dt.date, used: list[tuple[Citation, Version]]) -> str:
@@ -292,7 +311,8 @@ class ReferenceSystem:
             "retrieval": round(retrieved - started, 3),
             "generation": round(time.perf_counter() - retrieved, 3),
         }
-        return answer.model_copy(update={"timings": timings, "tokens": spent(self._calls)})
+        update = {"timings": timings, "tokens": spent(self._calls), "given": read(given)}
+        return answer.model_copy(update=update)
 
     def _from_model(
         self, question: str, as_of: dt.date, given: list[tuple[Citation, Version]]

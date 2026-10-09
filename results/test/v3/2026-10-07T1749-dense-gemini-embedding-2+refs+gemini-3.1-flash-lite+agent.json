@@ -2,9 +2,10 @@
   "split": "test",
   "bench": {
     "items": 109,
-    "sha": "7d5960a801ab"
+    "sha": "7d5960a801ab",
+    "scored": "c5bfe8bbb906"
   },
-  "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+claims",
+  "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+agent",
   "config": {
     "model": "gemini-embedding-2@768",
     "store": "memory",
@@ -17,30 +18,34 @@
       "reasoning_effort": "low"
     },
     "k": 5,
-    "format": "claims",
+    "format": "agent",
     "repeat": 0,
     "usage": {
       "calls": 109,
-      "prompt_tokens": 210990,
-      "completion_tokens": 16462,
-      "thinking_tokens": 2576,
-      "thinking_unrecorded": 97,
-      "cached": 108
+      "prompt_tokens": 224942,
+      "completion_tokens": 15594,
+      "thinking_tokens": 23823,
+      "thinking_unrecorded": 0,
+      "cached": 0
     },
     "cost": {
       "usd_per_million": {
         "input": 0.25,
         "output": 1.5
       },
-      "usd": 0.081305,
-      "usd_per_question": 0.000746,
-      "lower_bound": true
+      "usd": 0.115361,
+      "usd_per_question": 0.001058,
+      "lower_bound": false
     },
     "counts": {
       "malformed": 0,
       "uncited": 0,
       "dropped_citations": 0,
-      "dropped_sentences": 0
+      "dropped_sentences": 0,
+      "searches": 0,
+      "reads": 0,
+      "added": 0,
+      "over_budget": 0
     },
     "judge": {
       "model": "gemma-4-26b-a4b-it",
@@ -60,23 +65,23 @@
       "unparsed": 0
     }
   },
-  "commit": "bff58484885374bcbf08542f8332ff78db69f791",
+  "commit": "186a6fd48380e21eb424871f075e22f18d45bb29",
   "uncommitted_changes": false,
-  "run_at": "2026-10-07T16:53:01+01:00",
+  "run_at": "2026-10-07T17:49:18+01:00",
   "summary": {
     "answerable": {
       "items": 89,
       "refused": 0.0,
       "cited": 89,
-      "citation_precision": 0.9249063670411984,
-      "citation_recall": 0.9318352059925094
+      "citation_precision": 0.9241573033707865,
+      "citation_recall": 0.9430711610486892
     },
     "composite": {
       "items": 17,
       "refused": 0.0,
       "cited": 17,
-      "citation_precision": 0.857843137254902,
-      "citation_recall": 0.6666666666666667
+      "citation_precision": 0.8676470588235294,
+      "citation_recall": 0.7254901960784315
     },
     "explicit_reference": {
       "items": 9,
@@ -89,14 +94,14 @@
       "items": 46,
       "refused": 0.0,
       "cited": 46,
-      "citation_precision": 0.9202898550724639,
+      "citation_precision": 0.9130434782608695,
       "citation_recall": 1.0
     },
     "temporal": {
       "items": 17,
       "refused": 0.0,
       "cited": 17,
-      "citation_precision": 0.9647058823529411,
+      "citation_precision": 0.9705882352941176,
       "citation_recall": 0.9764705882352942
     },
     "unanswerable": {
@@ -109,15 +114,15 @@
     "correctness": {
       "answerable": {
         "items": 89,
-        "correta": 0.7303370786516854,
-        "parcial": 0.24719101123595505,
-        "errada": 0.02247191011235955
+        "correta": 0.7640449438202247,
+        "parcial": 0.20224719101123595,
+        "errada": 0.033707865168539325
       },
       "composite": {
         "items": 17,
-        "correta": 0.4117647058823529,
-        "parcial": 0.5294117647058824,
-        "errada": 0.058823529411764705
+        "correta": 0.47058823529411764,
+        "parcial": 0.4117647058823529,
+        "errada": 0.11764705882352941
       },
       "explicit_reference": {
         "items": 9,
@@ -127,8 +132,8 @@
       },
       "simple": {
         "items": 46,
-        "correta": 0.782608695652174,
-        "parcial": 0.21739130434782608,
+        "correta": 0.8260869565217391,
+        "parcial": 0.17391304347826086,
         "errada": 0.0
       },
       "temporal": {

@@ -1,10 +1,12 @@
 import datetime as dt
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
 
 from lex.bench.schema import Item
+from lex.domain import Citation
 from lex.eval import judge
 
 
@@ -122,15 +124,38 @@ def test_only_a_first_yes_or_no_is_turned_over() -> None:
 
 def test_known_cases_expect_the_reference_right_and_its_alterations_not() -> None:
     yes = item().model_copy(update={"id": "ct-0002", "answer": "Sim, desde 2009."})
-    cases = judge.known_cases([item(), yes])
+    elsewhere = item().model_copy(
+        update={
+            "id": "ct-0003",
+            "answer": "Não há prazo.",
+            "must_cite": [Citation(diploma="lei-7-2009", article="99")],
+        }
+    )
+    cases = judge.known_cases([item(), yes, elsewhere])
 
     assert [(c.id, c.kind, c.expected) for c in cases] == [
         ("ct-0001", "reference", ("correta",)),
         ("ct-0001", "number", ("parcial", "errada")),
+        ("ct-0001", "contradicted", ("parcial", "errada")),
+        ("ct-0001", "other", ("errada",)),
         ("ct-0002", "reference", ("correta",)),
         ("ct-0002", "yes-no", ("parcial", "errada")),
+        ("ct-0002", "contradicted", ("parcial", "errada")),
+        ("ct-0002", "other", ("errada",)),
+        ("ct-0003", "reference", ("correta",)),
+        ("ct-0003", "yes-no", ("parcial", "errada")),
+        ("ct-0003", "contradicted", ("parcial", "errada")),
+        ("ct-0003", "other", ("errada",)),
     ]
-    assert cases[1].answer.endswith("33 dias úteis.") and cases[3].answer == "Não, desde 2009."
+    by = {(c.id, c.kind): c.answer for c in cases}
+    assert by[("ct-0001", "number")].endswith("33 dias úteis.")
+    assert by[("ct-0002", "yes-no")] == "Não, desde 2009."
+    # The right answer is all there, then contradicted.
+    assert by[("ct-0002", "contradicted")] == "Sim, desde 2009. Contudo, não, desde 2009."
+    assert by[("ct-0001", "contradicted")].startswith(item().answer + " Contudo, o ")
+    # Another question's answer: never one about the same article.
+    assert by[("ct-0001", "other")] == "Não há prazo."
+    assert by[("ct-0003", "other")] in (item().answer, "Sim, desde 2009.")
 
 
 def test_the_judge_passes_its_check_only_if_each_group_reaches_the_bar() -> None:
@@ -164,3 +189,91 @@ def test_a_draft_verdict_in_the_judges_reasoning_is_not_its_verdict() -> None:
     )
     assert judge.parse(reply) == "errada"
     assert judge.parse('<thought>{"veredicto": "correta"}</thought>sem veredicto') is None
+
+
+def test_the_judge_keeps_its_reason_and_says_why_when_it_was_not_asked() -> None:
+    model = Scripted('{"veredicto": "parcial", "razao": "Falta o mínimo."}')
+    j = judge.Judge(model)
+
+    assert j.judged(item(), "São 22 dias.", refused=False) == judge.Judged(
+        "parcial", "Falta o mínimo."
+    )
+    assert j.judged(item(), "Não sei.", refused=True) == judge.Judged("errada", judge.REFUSED)
+    assert judge.Judge(Scripted("sem JSON")).judged(item(), "R.", refused=False).reason == (
+        judge.UNPARSED
+    )
+
+
+def test_a_lenient_judge_fails_its_check() -> None:
+    def checked(kind: str, right: int, wrong: int) -> list[judge.Checked]:
+        good, bad = ("correta", "parcial") if kind == "reference" else ("errada", "correta")
+        return [judge.Checked("ct-0001", kind, "", good, True)] * right + [
+            judge.Checked("ct-0001", kind, "", bad, False)
+        ] * wrong
+
+    strict = checked("reference", 10, 0) + checked("number", 10, 0)
+    assert judge.check_summary(strict + checked("other", 9, 1))["passed"]
+    lenient = judge.check_summary(strict + checked("contradicted", 4, 6) + checked("other", 9, 1))
+    assert lenient["lenient"]["as_expected"] == 13 and not lenient["passed"]
+
+
+def test_correctness_is_refused_when_the_judge_was_measured_on_another_dev(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from lex.eval import gates, results
+
+    check = {
+        "bench": {"items": 2, "sha": "s", "scored": "dev-v2"},
+        "config": {
+            "judge": judge.JUDGE_MODEL,
+            "judge_prompt": gates.prompt_version(),
+            "judge_params": gates.JUDGE_PARAMS,
+        },
+        "summary": {
+            "passed": True,
+            "reference": {"as_expected": 2, "cases": 2},
+            "altered": {"as_expected": 1, "cases": 1},
+        },
+    }
+    (tmp_path / "dev").mkdir()
+    (tmp_path / "dev" / "judge-check.json").write_text(json.dumps(check), encoding="utf-8")
+    monkeypatch.setattr(results, "RESULTS", tmp_path)
+    monkeypatch.setattr(results, "bench_version", lambda split: {"scored": "dev-v3"})
+    with pytest.raises(SystemExit, match="another version of dev"):
+        gates.measured_judge("x")
+
+    monkeypatch.setattr(results, "bench_version", lambda split: {"scored": "dev-v2"})
+    assert gates.measured_judge("x") == {
+        "known_answer_checks": {
+            "reference": {"as_expected": 2, "cases": 2},
+            "altered": {"as_expected": 1, "cases": 1},
+        }
+    }
+
+
+def said(verdict: str) -> Scripted:
+    return Scripted(json.dumps({"veredicto": verdict, "razao": f"Por isso, {verdict}."}))
+
+
+def test_several_samples_give_their_median_and_count_when_they_differ() -> None:
+    assert judge.median(["correta", "errada", "correta"]) == "correta"
+    assert judge.median(["correta", "parcial", "errada"]) == "parcial"
+    assert judge.median(["correta", "errada"]) == "errada"  # two that differ: the stricter
+
+    j = judge.Judge(said("correta"), [said("parcial"), said("correta")])
+    found = j.judged(item(), "São 22 dias.", refused=False)
+    assert found == judge.Judged("correta", "Por isso, correta.", ("correta", "parcial", "correta"))
+    assert j.disagreed == 1
+    assert judge.Judge(said("errada")).judged(item(), "R.", False).verdicts == ()
+
+
+def test_a_reply_without_a_verdict_is_asked_again_and_its_id_kept() -> None:
+    retry = said("parcial")
+    j = judge.Judge(Scripted("sem JSON"), retry=retry)
+    assert j.judged(item(), "R.", refused=False).verdict == "parcial"
+    assert len(retry.prompts) == 1 and j.retried_ids == ["ct-0001"]
+    assert j.unparsed_ids == [] and j.unparsed == 0
+
+    lost = judge.Judge(Scripted("sem JSON"), retry=Scripted("nada"))
+    assert lost.judged(item(), "R.", refused=False).reason == judge.UNPARSED
+    assert lost.unparsed == 1 and lost.unparsed_ids == ["ct-0001"]

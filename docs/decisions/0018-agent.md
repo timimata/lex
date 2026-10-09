@@ -1,8 +1,8 @@
 # 0018. The agent: what helped was its prompt, and it answers on the demo
 
 Date: 2026-10-06
-Status: accepted; amended 2026-10-06 (the coverage instruction alone) and 2026-10-07 (the agent
-becomes the demo's system)
+Status: accepted; amended 2026-10-06 (the coverage instruction alone), 2026-10-07 (the agent
+becomes the demo's system) and 2026-10-08 (the noise, item by item)
 
 ## Context
 
@@ -84,3 +84,14 @@ prices with its thinking (23,823 thinking tokens over the 109 calls). It is now 
 default (`LEX_ANSWER_FORMAT`, `claims` for the per-sentence answer), with the 9 s budget of
 2026-10-06 bounding a request should the model make one. The loop is kept for that case; that
 it helps by being offered rather than used is what the numbers say, not why.
+
+## Amendment, 2026-10-08: the noise, item by item
+
+The noise floor above was read from totals: two runs differed by about one correct answer in
+66. Runs now keep each verdict by item, and `python -m lex.eval compare` pairs them. The agent on
+v3's dev, run and repeated (`--repeat 1`; 84 of the 92 repeated answers from v2's cache): 50 of 68
+judged correct both times, but 8 items change verdict, 4 each way (ct-0022, ct-0086, ct-0145 and
+ar-0002 right only in the first; ct-0006, ct-0056, ct-0099 and ar-0001 only in the second), a
+sign test p of 1.00. A total can hide that much movement: a comparison between two systems is
+read on the items they disagree on, and `regress` calls a regression only what a sign test puts
+beyond chance (ROADMAP, Phase 10).

@@ -1,7 +1,7 @@
 # 0002. Article versions are the unit of storage and retrieval
 
 Date: 2026-09-29
-Status: accepted
+Status: accepted; amended 2026-10-08 (notes on versions)
 
 ## Context
 
@@ -45,3 +45,16 @@ can represent (bench/README.md, rule 6), so the limitation shows up as measured 
 than being hidden. Modelling it (an effects date per
 version, or transitional provisions as retrievable text of their own) is a decision for when
 the first such items are written.
+
+## Amendment, 2026-10-08: notes on a version's effects
+
+A version's dates say when its text entered into force, not always when it took effect: another
+diploma may defer or suspend its effects, or the Constitutional Court rule on it. The DR notes
+these beside the article, and since 2026-10-08 the store keeps each note, verbatim, with the
+version it concerns (`ArticleVersion.notes`): a ruling with the version in force the day it was
+published, another diploma's word with the version that diploma introduced. 17 versions carry one
+(the Código do Trabalho's art. 368.º with Acórdão n.º 602/2013, articles changed by Lei n.º
+90/2019 whose effects waited for a State budget, the NRAU's articles changed by Lei n.º 56/2023).
+The model reads them inside the article it is given, the page shows them above the text, the
+MCP server returns them. Versions are not split by them: a note says how the text applied, and a
+temporal item that turns on one still says so in its notes (bench/README.md, rule 6).

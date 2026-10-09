@@ -1,8 +1,11 @@
 # Spot check of the Código Civil: 12 earlier article versions
 
-Produced by `python -m lex.ingest spot-check 12 --seed 2026 --code cc`: 12
-versions drawn at random from the 53 earlier (no longer in force) versions in the store, each
-checked against the DR's *Versão à data de* view on its first and its last day in force.
+Produced by `python -m lex.ingest spot-check 12 --seed 2026 --code cc`:
+every one of the 1 versions the build dated by a rule rather than the DR's note
+(a correction, a date read from the diploma, a rectification's, a date the DR gives on
+every other article), the riskiest, and 12 versions drawn at random from the
+53 other earlier (no longer in force) versions in the store, each checked
+against the DR's *Versão à data de* view on its first and, if it has one, its last day in force.
 How the check works, and what it shares with the build, is in
 `src/lex/ingest/spot_check.py`. It is automated rather than done by hand.
 
@@ -15,7 +18,7 @@ text) are listed apart. *Next version* means the DR showed, on a version's last 
 the next one, published but not yet in force, without stating its period; it was then
 compared with the store's next version.
 
-**Result: punctuation only 2, same 22** (24 checks).
+**Result: dates differ, corrected in codes.py 1, punctuation only 2, same 22** (25 checks).
 
 | Article | DR as of | DR states in force | Store version | Result |
 |---|---|---|---|---|
@@ -23,6 +26,7 @@ compared with the store's next version.
 | 1052 | 1978-03-31 | 1978-04-01 to in force | 1978-04-01 to in force | same |
 | 1048 | 2006-06-27 | not stated | 2006-06-27 to 2012-11-12 | same |
 | 1048 | 2012-11-11 | 2012-11-12 to in force | 2012-11-12 to in force | same |
+| 1073 | 2006-06-27 | 2007-06-27 to in force | 2006-06-27 to in force | dates differ, corrected in codes.py |
 | 1083 | 2006-06-27 | not stated | 2006-06-27 to 2012-11-12 | same |
 | 1083 | 2012-11-11 | 2012-11-12 to 2017-06-14 | 2012-11-12 to 2017-06-15 | punctuation only |
 | 1087 | 2006-06-27 | not stated | 2006-06-27 to 2012-11-12 | same |

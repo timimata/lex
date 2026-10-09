@@ -1,8 +1,9 @@
 {
   "split": "dev",
   "bench": {
-    "items": 92,
-    "sha": "7fbb529e5bb3"
+    "items": 105,
+    "sha": "03105a887554",
+    "scored": "8031d645e931"
   },
   "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+claims",
   "config": {
@@ -18,124 +19,231 @@
     },
     "k": 5,
     "format": "claims",
+    "prompts": "7f85e275d51c",
+    "corpus": {
+      "fingerprint": "70cec90cf104d3fc1e3c2a9f21aa8d2760ef0d83058a3001a21938e8faa49cc6",
+      "versions": {
+        "dl-47344-1966": 147,
+        "lei-6-2006": 177,
+        "lei-7-2009": 889
+      }
+    },
+    "endpoints": {
+      "embeddings": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemini-embedding-2"
+      },
+      "answers": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemini-3.1-flash-lite"
+      },
+      "judge": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemma-4-26b-a4b-it"
+      }
+    },
+    "justified_by": null,
     "repeat": 0,
     "usage": {
-      "calls": 92,
-      "prompt_tokens": 177155,
-      "completion_tokens": 14206,
-      "thinking_tokens": 943,
-      "thinking_unrecorded": 84,
-      "cached": 84
+      "calls": 105,
+      "prompt_tokens": 206657,
+      "completion_tokens": 16281,
+      "thinking_tokens": 8108,
+      "thinking_unrecorded": 78,
+      "cached": 105
     },
     "cost": {
       "usd_per_million": {
         "input": 0.25,
         "output": 1.5
       },
-      "usd": 0.067012,
-      "usd_per_question": 0.000728,
+      "usd": 0.088248,
+      "usd_per_question": 0.00084,
       "lower_bound": true
     },
     "counts": {
       "malformed": 0,
       "uncited": 2,
       "dropped_citations": 0,
-      "dropped_sentences": 7
+      "dropped_sentences": 8
+    },
+    "cache": {
+      "answers": {
+        "calls": 105,
+        "cached": 105,
+        "broken": 0,
+        "sample": null,
+        "made_from": "2026-10-01T22:45:20+01:00",
+        "made_until": "2026-10-09T13:47:50+01:00"
+      },
+      "judge": {
+        "calls": 76,
+        "cached": 3,
+        "broken": 0,
+        "sample": null,
+        "made_from": "2026-10-08T14:26:36+01:00",
+        "made_until": "2026-10-09T14:46:31+01:00"
+      }
+    },
+    "costs": {
+      "answers": {
+        "usd_per_million": {
+          "input": 0.25,
+          "output": 1.5
+        },
+        "usd": 0.088248,
+        "usd_per_question": 0.00084,
+        "lower_bound": true
+      },
+      "embeddings": {
+        "texts": 0,
+        "tokens": 0,
+        "usd": 0.0,
+        "usd_per_question": 0.0
+      },
+      "usd_per_question": 0.00084,
+      "judge": {
+        "usage": {
+          "calls": 76,
+          "prompt_tokens": 41548,
+          "completion_tokens": 3617,
+          "thinking_tokens": 68954
+        },
+        "usd": null,
+        "priced": false
+      }
     },
     "judge": {
       "model": "gemma-4-26b-a4b-it",
       "prompt": "a4aecc7ccf8a",
+      "params": {
+        "temperature": 0
+      },
       "measured_on_dev": {
         "known_answer_checks": {
           "reference": {
-            "as_expected": 66,
-            "cases": 66
+            "as_expected": 81,
+            "cases": 81
           },
           "altered": {
-            "as_expected": 48,
-            "cases": 48
+            "as_expected": 57,
+            "cases": 57
+          },
+          "lenient": {
+            "as_expected": 129,
+            "cases": 132
           }
         }
       },
-      "unparsed": 0
+      "samples": 1,
+      "disagreed": 0,
+      "unparsed": 0,
+      "unparsed_ids": [],
+      "retried_ids": []
     }
   },
-  "commit": "a073535cf56c360d409486eaf4a0b9bcd6d08301",
-  "uncommitted_changes": false,
-  "run_at": "2026-10-06T18:28:06+01:00",
+  "commit": "ed24c2f2a61f9ef1c693e8e560bd0bc8cdd13b61",
+  "uncommitted_changes": true,
+  "source": "23cad8b8cc53fce2",
+  "environment": {
+    "python": "3.14.4",
+    "lock": "98c0416a96d5d3a6"
+  },
+  "run_at": "2026-10-09T14:46:31+01:00",
   "summary": {
     "answerable": {
-      "items": 68,
-      "refused": 0.058823529411764705,
-      "cited": 64,
-      "citation_precision": 0.9,
-      "citation_recall": 0.8259803921568627
+      "items": 81,
+      "refused": 0.06172839506172839,
+      "cited": 76,
+      "citation_precision": 0.8960526315789473,
+      "citation_recall": 0.8209876543209876,
+      "given_recall": 0.8930041152263374,
+      "unsupported": 1,
+      "version_right": 1.0
     },
     "composite": {
-      "items": 20,
-      "refused": 0.05,
-      "cited": 19,
-      "citation_precision": 0.7552631578947369,
-      "citation_recall": 0.5583333333333333
+      "items": 24,
+      "refused": 0.08333333333333333,
+      "cited": 22,
+      "citation_precision": 0.765909090909091,
+      "citation_recall": 0.5625,
+      "given_recall": 0.7083333333333334,
+      "unsupported": 0,
+      "version_right": 1.0
     },
     "explicit_reference": {
-      "items": 8,
+      "items": 9,
       "refused": 0.0,
-      "cited": 8,
-      "citation_precision": 1.0,
-      "citation_recall": 1.0
-    },
-    "simple": {
-      "items": 30,
-      "refused": 0.06666666666666667,
-      "cited": 28,
-      "citation_precision": 0.9375,
-      "citation_recall": 0.9333333333333333
-    },
-    "temporal": {
-      "items": 10,
-      "refused": 0.1,
       "cited": 9,
       "citation_precision": 1.0,
-      "citation_recall": 0.9
+      "citation_recall": 1.0,
+      "given_recall": 1.0,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "simple": {
+      "items": 35,
+      "refused": 0.05714285714285714,
+      "cited": 33,
+      "citation_precision": 0.9166666666666666,
+      "citation_recall": 0.9142857142857143,
+      "given_recall": 0.9714285714285714,
+      "unsupported": 1,
+      "version_right": 1.0
+    },
+    "temporal": {
+      "items": 13,
+      "refused": 0.07692307692307693,
+      "cited": 12,
+      "citation_precision": 1.0,
+      "citation_recall": 0.9230769230769231,
+      "given_recall": 0.9487179487179488,
+      "unsupported": 0,
+      "version_right": 1.0
     },
     "unanswerable": {
       "items": 24,
-      "refused": 0.9583333333333334,
+      "refused": 0.9166666666666666,
       "cited": 0,
       "citation_precision": null,
-      "citation_recall": null
+      "citation_recall": null,
+      "given_recall": null,
+      "unsupported": 0,
+      "version_right": null
     },
     "correctness": {
       "answerable": {
-        "items": 68,
-        "correta": 0.6764705882352942,
-        "parcial": 0.25,
-        "errada": 0.07352941176470588
+        "items": 81,
+        "correta": 0.691358024691358,
+        "parcial": 0.19753086419753085,
+        "errada": 0.1111111111111111
       },
       "composite": {
-        "items": 20,
-        "correta": 0.45,
-        "parcial": 0.5,
-        "errada": 0.05
+        "items": 24,
+        "correta": 0.5,
+        "parcial": 0.375,
+        "errada": 0.125
       },
       "explicit_reference": {
-        "items": 8,
+        "items": 9,
         "correta": 1.0,
         "parcial": 0.0,
         "errada": 0.0
       },
       "simple": {
-        "items": 30,
-        "correta": 0.7,
-        "parcial": 0.23333333333333334,
-        "errada": 0.06666666666666667
+        "items": 35,
+        "correta": 0.6857142857142857,
+        "parcial": 0.2,
+        "errada": 0.11428571428571428
       },
       "temporal": {
-        "items": 10,
-        "correta": 0.8,
+        "items": 13,
+        "correta": 0.8461538461538461,
         "parcial": 0.0,
-        "errada": 0.2
+        "errada": 0.15384615384615385
       }
     }
   },
@@ -146,6 +254,8 @@
       "refused": true,
       "precision": null,
       "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
       "cited": [],
       "expected": [
         "lei-7-2009/244",
@@ -156,7 +266,7 @@
         "lei-7-2009/253",
         "lei-7-2009/254"
       ],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm informação sobre a suspensão de férias em caso de falecimento de familiares.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -164,7 +274,18 @@
         "completion_tokens": 141,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/243@2009-02-17",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/245@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm informação sobre a suspensão de férias em caso de falecimento de familiares."
     },
     {
       "id": "ct-0005",
@@ -172,6 +293,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/244"
       ],
@@ -187,7 +310,18 @@
         "completion_tokens": 143,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência (impedimento, suspensão/não início e dever de comunicação) sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/65@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0006",
@@ -195,6 +329,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/263"
       ],
@@ -210,7 +346,18 @@
         "completion_tokens": 50,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta responde diretamente à pergunta com o prazo correto indicado na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/263@2009-02-17",
+        "lei-7-2009/264@2012-08-01",
+        "lei-7-2009/306@2009-02-17",
+        "lei-7-2009/278@2023-05-01",
+        "lei-6-2006/46@2012-11-12"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0008",
@@ -218,6 +365,8 @@
       "refused": false,
       "precision": 0.5,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/214",
         "lei-7-2009/78"
@@ -234,7 +383,18 @@
         "completion_tokens": 210,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém a informação essencial da referência e detalha as exceções previstas na lei que a referência apenas menciona genericamente.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/214@2009-02-17",
+        "lei-7-2009/78@2009-02-17",
+        "lei-7-2009/213@2012-08-01",
+        "lei-7-2009/233@2009-02-17",
+        "lei-7-2009/232@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0009",
@@ -242,10 +402,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta. Os artigos fornecidos não indicam o valor do salário mínimo nacional para o ano de 2026.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -253,7 +415,18 @@
         "completion_tokens": 105,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/273@2009-02-17",
+        "lei-7-2009/274@2009-02-17",
+        "lei-7-2009/275@2009-02-17",
+        "lei-7-2009/271@2009-02-17",
+        "lei-7-2009/270@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não indicam o valor do salário mínimo nacional para o ano de 2026."
     },
     {
       "id": "ct-0010",
@@ -261,10 +434,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm disposições sobre a periodicidade de exames de saúde em função da idade do trabalhador.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -272,7 +447,18 @@
         "completion_tokens": 161,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/72@2009-02-17",
+        "lei-7-2009/222@2009-02-17",
+        "lei-7-2009/225@2009-02-17",
+        "lei-7-2009/19@2009-02-17",
+        "lei-7-2009/170-A@2022-01-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm disposições sobre a periodicidade de exames de saúde em função da idade do trabalhador."
     },
     {
       "id": "ct-0019",
@@ -280,10 +466,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos não mencionam condições de acesso a financiamento público.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -291,7 +479,18 @@
         "completion_tokens": 94,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/130@2009-02-17",
+        "lei-7-2009/131@2019-10-01",
+        "lei-7-2009/134@2009-02-17",
+        "lei-7-2009/132@2009-02-17",
+        "lei-7-2009/61@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos não mencionam condições de acesso a financiamento público."
     },
     {
       "id": "ct-0022",
@@ -299,6 +498,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/242"
       ],
@@ -314,7 +515,18 @@
         "completion_tokens": 246,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite a possibilidade de encerramento por períodos mais longos ou fora do período padrão mediante parecer favorável da comissão de trabalhadores.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/243@2009-02-17",
+        "lei-7-2009/311@2009-02-17",
+        "lei-7-2009/240@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0024",
@@ -322,6 +534,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/234"
       ],
@@ -337,7 +551,18 @@
         "completion_tokens": 216,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os feriados listados na referência e não apresenta informações que a contradigam.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/234@2016-04-02",
+        "lei-7-2009/235@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/269@2023-05-01",
+        "lei-7-2009/242@2012-08-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0027",
@@ -345,6 +570,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/112"
       ],
@@ -360,7 +587,18 @@
         "completion_tokens": 75,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente a informação essencial da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/113@2009-02-17",
+        "lei-7-2009/112@2023-05-01",
+        "lei-7-2009/111@2023-05-01",
+        "lei-7-2009/114@2023-05-01",
+        "lei-7-2009/162@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0029",
@@ -368,6 +606,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/350"
       ],
@@ -383,7 +623,18 @@
         "completion_tokens": 288,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência e não apresenta contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/350@2009-02-17",
+        "lei-7-2009/397@2009-02-17",
+        "lei-7-2009/349@2017-10-01",
+        "lei-7-2009/402@2009-02-17",
+        "dl-47344-1966/1082@2006-06-27"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0033",
@@ -391,6 +642,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/351"
       ],
@@ -408,7 +661,18 @@
         "completion_tokens": 111,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência, incluindo os prazos e as condições de prejuízo ou risco.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/351@2009-02-17",
+        "lei-7-2009/256@2012-08-01",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/403@2009-02-17",
+        "lei-7-2009/249@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0034",
@@ -416,6 +680,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/237",
         "lei-7-2009/238"
@@ -433,7 +699,18 @@
         "completion_tokens": 157,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico da referência, abordando a regra da irrenunciabilidade e a exceção relativa aos dias que excedem 20 dias úteis.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/245@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0035",
@@ -441,6 +718,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/165"
       ],
@@ -456,7 +735,18 @@
         "completion_tokens": 104,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema reproduz integralmente o conteúdo da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/165@2022-01-01",
+        "lei-7-2009/164@2012-08-01",
+        "lei-7-2009/168@2023-05-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/169@2022-01-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0036",
@@ -464,6 +754,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/342"
       ],
@@ -479,7 +771,18 @@
         "completion_tokens": 99,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e as mesmas condições da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/342@2009-02-17",
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/396@2018-03-20",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/360@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0038",
@@ -487,6 +790,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/115"
       ],
@@ -502,7 +807,18 @@
         "completion_tokens": 237,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência, respeitando os direitos, condições e exceções mencionados.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/115@2009-02-17",
+        "lei-7-2009/197@2009-02-17",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/132@2009-02-17",
+        "lei-7-2009/65@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0039",
@@ -510,10 +826,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não descrevem o procedimento para aceder ao Fundo de Garantia Salarial, apenas mencionam que este existe e remetem para legislação específica, tratando o artigo CT 191 de uma caução distinta para trabalho temporário.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -521,7 +839,18 @@
         "completion_tokens": 220,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/336@2009-02-17",
+        "lei-7-2009/191@2023-05-01",
+        "lei-7-2009/333@2009-02-17",
+        "lei-7-2009/280@2009-02-17",
+        "lei-7-2009/337@2023-05-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não descrevem o procedimento para aceder ao Fundo de Garantia Salarial, apenas mencionam que este existe e remetem para legislação específica, tratando o artigo CT 191 de uma caução distinta para trabalho temporário."
     },
     {
       "id": "ct-0043",
@@ -529,6 +858,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/234"
       ],
@@ -546,7 +877,18 @@
         "completion_tokens": 105,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta afirma corretamente que o dia 5 de outubro não era feriado obrigatório, listando os feriados que estavam em vigor na data solicitada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/234@2012-08-01",
+        "lei-7-2009/235@2009-02-17",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/269@2012-08-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0044",
@@ -554,6 +896,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/234"
       ],
@@ -571,7 +915,18 @@
         "completion_tokens": 79,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "errada",
+      "reason": "A resposta contradiz a referência ao afirmar que o dia não era feriado, ignorando que a alteração legislativa só produziria efeitos em 2013.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/234@2012-08-01",
+        "lei-7-2009/235@2009-02-17",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/269@2012-08-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0045",
@@ -579,6 +934,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/165"
       ],
@@ -594,7 +951,18 @@
         "completion_tokens": 91,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema reflete corretamente a definição de teletrabalho em vigor em 2021, confirmando que a prestação era habitualmente fora da empresa.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/165@2009-02-17",
+        "lei-7-2009/166@2015-09-06",
+        "lei-7-2009/167@2009-02-17",
+        "lei-7-2009/170@2009-02-17",
+        "lei-7-2009/169@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0050",
@@ -602,6 +970,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.5,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/166"
       ],
@@ -618,7 +988,18 @@
         "completion_tokens": 58,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente que a propriedade dos instrumentos de trabalho deve ser definida no acordo de teletrabalho, conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/168@2023-05-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/169-A@2022-01-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0053",
@@ -626,6 +1007,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/389",
         "lei-7-2009/390"
@@ -643,7 +1026,18 @@
         "completion_tokens": 207,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência (reintegração, indemnização e retribuições devidas) sem apresentar erros ou contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/389@2012-08-01",
+        "lei-7-2009/381@2009-02-17",
+        "lei-7-2009/399@2009-02-17",
+        "lei-7-2009/386@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0054",
@@ -651,6 +1045,8 @@
       "refused": false,
       "precision": 0.5,
       "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/394",
         "lei-7-2009/351"
@@ -668,7 +1064,18 @@
         "completion_tokens": 428,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência e não contradiz a informação fornecida, podendo acrescentar detalhes adicionais.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/394@2019-10-01",
+        "lei-7-2009/351@2009-02-17",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/340@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0055",
@@ -676,6 +1083,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/101-A"
       ],
@@ -691,7 +1100,18 @@
         "completion_tokens": 120,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e condições estabelecidas na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/101-A@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/40@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0056",
@@ -699,6 +1119,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/43"
       ],
@@ -714,7 +1136,18 @@
         "completion_tokens": 200,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta identifica corretamente o número de dias de licença obrigatória e as suas condições de gozo, respondendo precisamente ao que foi perguntado.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/43@2015-09-06",
+        "lei-7-2009/40@2015-09-06",
+        "lei-7-2009/39@2009-02-17",
+        "lei-7-2009/41@2009-02-17",
+        "lei-7-2009/51@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0057",
@@ -722,6 +1155,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/43"
       ],
@@ -729,15 +1164,26 @@
         "lei-7-2009/43"
       ],
       "allowed": [],
-      "text": "O pai tem direito ao gozo obrigatório de uma licença parental de 20 dias úteis nas seis semanas seguintes ao nascimento da criança. (art. 43.º do CT)\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 43.º (versão em vigor desde 01/04/2020)",
+      "text": "O pai tem direito ao gozo obrigatório de uma licença parental de 20 dias úteis nas seis semanas seguintes ao nascimento da criança, sendo cinco destes gozados de modo consecutivo imediatamente após o parto. (art. 43.º do CT) No caso de nascimentos múltiplos, a este período obrigatório acrescem dois dias por cada gémeo além do primeiro. (art. 43.º do CT)\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 43.º (versão em vigor desde 01/04/2020)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 2586,
-        "completion_tokens": 60,
-        "thinking_tokens": 0,
-        "thinking_unrecorded": 1
-      }
+        "prompt_tokens": 2802,
+        "completion_tokens": 158,
+        "thinking_tokens": 138,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta identifica corretamente os 20 dias de licença obrigatória solicitados na pergunta, distinguindo-os da parte facultativa.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/43@2020-04-01",
+        "lei-7-2009/40@2020-04-01",
+        "lei-7-2009/35@2020-04-01",
+        "lei-7-2009/42@2020-04-01",
+        "lei-7-2009/33@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0058",
@@ -745,6 +1191,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/268"
       ],
@@ -760,7 +1208,18 @@
         "completion_tokens": 98,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta corretamente os percentuais de acréscimo para o trabalho suplementar em dia útil conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/268@2009-02-17",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/229@2009-02-17",
+        "lei-7-2009/226@2009-02-17",
+        "lei-7-2009/231@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0059",
@@ -768,6 +1227,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/268"
       ],
@@ -783,7 +1244,18 @@
         "completion_tokens": 91,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente os acréscimos aplicáveis e afirma que estes não dependem do número de horas anuais, respondendo corretamente à pergunta.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/268@2019-10-01",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/231@2009-02-17",
+        "lei-7-2009/227@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0061",
@@ -791,6 +1263,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/112"
       ],
@@ -806,7 +1280,18 @@
         "completion_tokens": 74,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente o prazo de 90 dias aplicável à generalidade dos trabalhadores na data solicitada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/112@2009-02-17",
+        "lei-7-2009/113@2009-02-17",
+        "lei-7-2009/111@2009-02-17",
+        "lei-7-2009/114@2009-02-17",
+        "lei-7-2009/148@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0062",
@@ -814,6 +1299,8 @@
       "refused": false,
       "precision": 0.6666666666666666,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/97",
         "lei-7-2009/169-A",
@@ -832,7 +1319,18 @@
         "completion_tokens": 353,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e não apresenta contradições, acrescentando informações complementares que não invalidam o conteúdo.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/171@2022-01-01",
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/97@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0065",
@@ -840,6 +1338,8 @@
       "refused": false,
       "precision": 0.5,
       "recall": 0.5,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/387",
         "lei-7-2009/386"
@@ -857,7 +1357,18 @@
         "completion_tokens": 180,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite o prazo de seis meses para a impugnação em caso de despedimento coletivo mencionado na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/387@2009-02-17",
+        "lei-7-2009/386@2009-02-17",
+        "lei-7-2009/398@2009-02-17",
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/388@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0069",
@@ -865,6 +1376,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/142"
       ],
@@ -880,7 +1393,18 @@
         "completion_tokens": 359,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e não apresenta contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/142@2023-05-01",
+        "lei-7-2009/148@2019-10-01",
+        "lei-7-2009/175@2009-02-17",
+        "lei-7-2009/147@2009-02-17",
+        "lei-7-2009/345@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0070",
@@ -888,6 +1412,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/359"
       ],
@@ -903,7 +1429,18 @@
         "completion_tokens": 239,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo o prazo, o número de trabalhadores por dimensão de empresa e os fundamentos do despedimento.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/359@2009-02-17",
+        "lei-7-2009/358@2012-08-01",
+        "lei-7-2009/560@2012-08-01",
+        "lei-7-2009/357@2012-08-01",
+        "lei-7-2009/363@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0071",
@@ -911,10 +1448,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm informação sobre a existência de quotas ou percentagens obrigatórias de contratação de trabalhadores com deficiência.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -922,7 +1461,18 @@
         "completion_tokens": 151,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/85@2019-10-01",
+        "lei-7-2009/86@2019-10-01",
+        "lei-7-2009/84@2009-02-17",
+        "lei-7-2009/275@2009-02-17",
+        "lei-7-2009/87@2019-10-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm informação sobre a existência de quotas ou percentagens obrigatórias de contratação de trabalhadores com deficiência."
     },
     {
       "id": "ct-0073",
@@ -930,10 +1480,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não definem o que é uma agência privada de colocação.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -941,7 +1493,18 @@
         "completion_tokens": 43,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/288@2009-02-17",
+        "lei-7-2009/172@2009-02-17",
+        "lei-7-2009/188@2009-02-17",
+        "lei-7-2009/184@2009-02-17",
+        "lei-7-2009/366-A@2012-08-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não definem o que é uma agência privada de colocação."
     },
     {
       "id": "ct-0077",
@@ -949,6 +1512,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/268"
       ],
@@ -964,7 +1529,18 @@
         "completion_tokens": 132,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência, incluindo os acréscimos percentuais e as condições de aplicação.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/268@2023-05-01",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/231@2009-02-17",
+        "lei-7-2009/227@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0079",
@@ -972,6 +1548,8 @@
       "refused": false,
       "precision": 0.0,
       "recall": 0.0,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/237"
       ],
@@ -988,7 +1566,18 @@
         "completion_tokens": 52,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "errada",
+      "reason": "A resposta não aborda o mecanismo de desconto ou a possibilidade de substituição de faltas por dias de férias, falhando em responder diretamente ao que foi perguntado.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/237@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0081",
@@ -996,6 +1585,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/117"
       ],
@@ -1012,7 +1603,18 @@
         "completion_tokens": 88,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite o efeito de validade do contrato em relação ao tempo em que foi executado, mencionado na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/117@2009-02-17",
+        "lei-7-2009/93@2009-02-17",
+        "lei-7-2009/192@2023-05-01",
+        "lei-7-2009/134@2009-02-17",
+        "lei-7-2009/69@2012-09-03"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0082",
@@ -1020,6 +1622,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/169"
       ],
@@ -1035,7 +1639,18 @@
         "completion_tokens": 222,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta informações adicionais que não a contradizem.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/165@2022-01-01",
+        "lei-7-2009/164@2012-08-01",
+        "lei-7-2009/127@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0086",
@@ -1043,6 +1658,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/241"
       ],
@@ -1058,7 +1675,18 @@
         "completion_tokens": 147,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite a restrição do período de férias (entre 1 de maio e 31 de outubro) e as suas exceções, que constam na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/239@2009-02-17",
+        "lei-7-2009/237@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0088",
@@ -1066,6 +1694,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/212"
       ],
@@ -1081,7 +1711,18 @@
         "completion_tokens": 79,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta identifica corretamente o sujeito responsável e menciona o cumprimento dos limites legais, respondendo diretamente ao que foi perguntado.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/212@2009-02-17",
+        "lei-7-2009/200@2009-02-17",
+        "lei-7-2009/215@2009-02-17",
+        "lei-7-2009/216@2012-08-01",
+        "lei-7-2009/217@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0089",
@@ -1089,6 +1730,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/278"
       ],
@@ -1104,7 +1747,18 @@
         "completion_tokens": 138,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite a informação sobre o vencimento por períodos certos e iguais (semana, quinzena ou mês) contida na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/278@2023-05-01",
+        "lei-7-2009/276@2009-02-17",
+        "lei-7-2009/277@2023-05-01",
+        "lei-7-2009/258@2009-02-17",
+        "lei-7-2009/270@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0091",
@@ -1112,6 +1766,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/120"
       ],
@@ -1127,7 +1783,18 @@
         "completion_tokens": 166,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta detalhes complementares que não contradizem a lei.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/118@2009-02-17",
+        "lei-7-2009/120@2009-02-17",
+        "lei-7-2009/115@2009-02-17",
+        "lei-7-2009/326@2009-02-17",
+        "lei-7-2009/267@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0097",
@@ -1135,6 +1802,8 @@
       "refused": false,
       "precision": 0.5,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/343",
         "lei-7-2009/346"
@@ -1151,7 +1820,18 @@
         "completion_tokens": 242,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta informações complementares corretas sem contradizer o conteúdo original.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/344@2023-05-01",
+        "lei-7-2009/345@2023-05-01",
+        "lei-7-2009/346@2012-08-01",
+        "dl-47344-1966/1051@2006-06-27"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0099",
@@ -1159,6 +1839,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/364"
       ],
@@ -1174,7 +1856,18 @@
         "completion_tokens": 209,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência, incluindo prazos, condições e direitos.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/364@2009-02-17",
+        "lei-7-2009/408@2009-02-17",
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/360@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0100",
@@ -1182,6 +1875,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/355"
       ],
@@ -1197,7 +1892,18 @@
         "completion_tokens": 158,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência, incluindo o prazo, a forma e os direitos do trabalhador.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/355@2009-02-17",
+        "lei-7-2009/353@2009-02-17",
+        "lei-7-2009/354@2023-05-01",
+        "lei-7-2009/382@2009-02-17",
+        "lei-7-2009/386@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0101",
@@ -1205,10 +1911,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não mencionam as regras para a cessação do contrato por iniciativa do empregador devido a insuficiência económica.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1216,7 +1924,18 @@
         "completion_tokens": 113,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/400@2023-05-01",
+        "lei-7-2009/310@2009-02-17",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/401@2023-05-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não mencionam as regras para a cessação do contrato por iniciativa do empregador devido a insuficiência económica."
     },
     {
       "id": "ct-0103",
@@ -1224,10 +1943,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm informação sobre o dever de comunicação do acidente de trabalho pelo trabalhador ao empregador.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1235,7 +1956,18 @@
         "completion_tokens": 114,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/283@2017-10-01",
+        "lei-7-2009/297@2009-02-17",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/127@2023-05-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm informação sobre o dever de comunicação do acidente de trabalho pelo trabalhador ao empregador."
     },
     {
       "id": "ct-0104",
@@ -1243,10 +1975,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos facultados regulam o direito à reparação de danos por acidentes de trabalho, mas não indicam como essa indemnização é calculada.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1254,7 +1988,18 @@
         "completion_tokens": 111,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/262@2009-02-17",
+        "lei-7-2009/396@2018-03-20",
+        "lei-7-2009/391@2009-02-17",
+        "lei-7-2009/283@2017-10-01",
+        "lei-7-2009/28@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos facultados regulam o direito à reparação de danos por acidentes de trabalho, mas não indicam como essa indemnização é calculada."
     },
     {
       "id": "ct-0106",
@@ -1262,10 +2007,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos facultados mencionam apenas que o empregador deve assegurar serviços adequados de segurança e saúde no trabalho, internos ou externos, não definindo os critérios ou situações em que o serviço é obrigatoriamente interno.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1273,7 +2020,18 @@
         "completion_tokens": 71,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/281@2009-02-17",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/222@2009-02-17",
+        "lei-7-2009/186@2023-05-01",
+        "lei-7-2009/170-A@2022-01-01"
+      ],
+      "refusal_reason": "Os artigos facultados mencionam apenas que o empregador deve assegurar serviços adequados de segurança e saúde no trabalho, internos ou externos, não definindo os critérios ou situações em que o serviço é obrigatoriamente interno."
     },
     {
       "id": "ct-0110",
@@ -1281,10 +2039,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm qualquer informação relativa a valores limite de exposição (VLE) para o amianto.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1292,7 +2052,18 @@
         "completion_tokens": 49,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/202@2009-02-17",
+        "lei-7-2009/29@2017-10-01",
+        "lei-7-2009/171@2022-01-01",
+        "lei-7-2009/284@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm qualquer informação relativa a valores limite de exposição (VLE) para o amianto."
     },
     {
       "id": "ct-0111",
@@ -1300,10 +2071,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. A legislação fornecida não aborda o tema de autorizações para trabalhos de demolição ou remoção de amianto ou a Autoridade para as Condições do Trabalho (ACT).",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1311,7 +2084,18 @@
         "completion_tokens": 166,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/400@2023-05-01",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/57@2009-02-17",
+        "lei-7-2009/144@2023-05-01"
+      ],
+      "refusal_reason": "A legislação fornecida não aborda o tema de autorizações para trabalhos de demolição ou remoção de amianto ou a Autoridade para as Condições do Trabalho (ACT)."
     },
     {
       "id": "ct-0112",
@@ -1319,10 +2103,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. A informação sobre a existência de quotas de emprego obrigatórias não consta nos artigos fornecidos.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1330,7 +2116,18 @@
         "completion_tokens": 141,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/85@2019-10-01",
+        "lei-7-2009/84@2009-02-17",
+        "lei-7-2009/86@2019-10-01",
+        "lei-7-2009/88@2009-02-17",
+        "lei-7-2009/87@2019-10-01"
+      ],
+      "refusal_reason": "A informação sobre a existência de quotas de emprego obrigatórias não consta nos artigos fornecidos."
     },
     {
       "id": "ct-0113",
@@ -1338,10 +2135,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não indicam o procedimento para pedir a reforma por velhice.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1349,7 +2148,18 @@
         "completion_tokens": 43,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/348@2009-02-17",
+        "lei-7-2009/318@2009-02-17",
+        "lei-7-2009/319@2009-02-17",
+        "lei-7-2009/322@2009-02-17",
+        "lei-6-2006/46@2012-11-12"
+      ],
+      "refusal_reason": "Os artigos fornecidos não indicam o procedimento para pedir a reforma por velhice."
     },
     {
       "id": "ct-0115",
@@ -1357,10 +2167,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. Os artigos fornecidos não abordam a figura do coordenador de segurança em obra.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1368,7 +2180,18 @@
         "completion_tokens": 107,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/281@2009-02-17",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/551@2016-09-22",
+        "lei-7-2009/558@2009-02-17",
+        "lei-7-2009/101@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não abordam a figura do coordenador de segurança em obra."
     },
     {
       "id": "ct-0116",
@@ -1376,10 +2199,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta. A informação solicitada sobre a obrigação de entrega do relatório único não consta nos artigos fornecidos.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1387,7 +2212,18 @@
         "completion_tokens": 99,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/106@2023-05-01",
+        "lei-7-2009/107@2023-05-01",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/127@2023-05-01"
+      ],
+      "refusal_reason": "A informação solicitada sobre a obrigação de entrega do relatório único não consta nos artigos fornecidos."
     },
     {
       "id": "ct-0118",
@@ -1395,6 +2231,8 @@
       "refused": false,
       "precision": 0.25,
       "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/169-B",
         "lei-7-2009/170",
@@ -1416,7 +2254,18 @@
         "completion_tokens": 276,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contempla todos os deveres essenciais mencionados na referência e acrescenta informações complementares que não contradizem o conteúdo jurídico apresentado.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/169-B@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/169@2022-01-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0122",
@@ -1424,6 +2273,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.3333333333333333,
+      "given_recall": 0.3333333333333333,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/366"
       ],
@@ -1441,7 +2292,18 @@
         "completion_tokens": 207,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite a aplicação da compensação aos outros tipos de despedimento solicitados (extinção de posto e inadaptação) e não menciona os limites máximos do valor da compensação.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/396@2018-03-20",
+        "lei-7-2009/368@2014-06-01",
+        "lei-7-2009/391@2009-02-17",
+        "lei-7-2009/390@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0126",
@@ -1449,6 +2311,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.6666666666666666,
+      "given_recall": 0.6666666666666666,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/101-C",
         "lei-7-2009/101-D"
@@ -1469,7 +2333,18 @@
         "completion_tokens": 173,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite o direito a não prestar trabalho suplementar e a garantia de não penalização na avaliação e progressão na carreira.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/101-C@2023-05-01",
+        "lei-7-2009/101-B@2023-05-01",
+        "lei-7-2009/101-D@2023-05-01",
+        "lei-7-2009/101-E@2023-05-01",
+        "lei-7-2009/101-A@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0130",
@@ -1477,6 +2352,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/378"
       ],
@@ -1496,7 +2373,18 @@
         "completion_tokens": 190,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo os prazos, os requisitos da decisão e os períodos de aviso prévio conforme a antiguidade, sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/378@2012-08-01",
+        "lei-7-2009/373@2009-02-17",
+        "lei-7-2009/376@2012-08-01",
+        "lei-7-2009/375@2014-06-01",
+        "lei-7-2009/379@2012-08-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0135",
@@ -1504,6 +2392,8 @@
       "refused": true,
       "precision": null,
       "recall": 0.0,
+      "given_recall": 0.3333333333333333,
+      "version_right": null,
       "cited": [],
       "expected": [
         "lei-7-2009/366",
@@ -1511,7 +2401,7 @@
         "lei-7-2009/379"
       ],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/06/2015, base para responder a esta pergunta. Os artigos fornecidos não indicam o valor da compensação para o despedimento por extinção de posto de trabalho nem para o despedimento por inadaptação.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/06/2015, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -1519,7 +2409,18 @@
         "completion_tokens": 144,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/366@2013-10-01",
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/396@2009-02-17",
+        "lei-7-2009/392@2009-02-17",
+        "lei-7-2009/368@2014-06-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não indicam o valor da compensação para o despedimento por extinção de posto de trabalho nem para o despedimento por inadaptação."
     },
     {
       "id": "ct-0140",
@@ -1527,6 +2428,8 @@
       "refused": false,
       "precision": 0.3333333333333333,
       "recall": 0.3333333333333333,
+      "given_recall": 0.3333333333333333,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/35",
         "lei-7-2009/38-A",
@@ -1546,7 +2449,18 @@
         "completion_tokens": 171,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "Identifica todos os tipos de faltas, mas omite os prazos e as condições essenciais para a assistência a filho e a neto.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/39@2009-02-17",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/35@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0141",
@@ -1554,6 +2468,8 @@
       "refused": false,
       "precision": 0.6,
       "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/56",
         "lei-7-2009/55",
@@ -1578,7 +2494,18 @@
         "completion_tokens": 361,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite direitos importantes mencionados na referência, como a redução de cinco horas semanais, a dispensa de trabalho suplementar e a dispensa de trabalho noturno.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/57@2009-02-17",
+        "lei-7-2009/56@2015-09-06",
+        "lei-7-2009/51@2023-05-01",
+        "lei-7-2009/58@2009-02-17",
+        "lei-7-2009/55@2015-09-06"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0142",
@@ -1586,6 +2513,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/29",
         "lei-7-2009/331"
@@ -1603,7 +2532,18 @@
         "completion_tokens": 302,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo prazos, condições e a proteção contra sanções, sem contradizer o conteúdo.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/29@2017-10-01",
+        "lei-7-2009/331@2019-10-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-6-2006/13-A@2019-02-13",
+        "lei-7-2009/410@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0145",
@@ -1611,6 +2551,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/219",
         "lei-7-2009/265"
@@ -1630,7 +2572,18 @@
         "completion_tokens": 156,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite o efeito principal de deixar de estar sujeito aos limites máximos do período normal de trabalho e a exceção ao descanso diário para cargos de direção.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/219@2009-02-17",
+        "lei-7-2009/265@2009-02-17",
+        "lei-7-2009/218@2012-08-01",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/87@2019-10-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0146",
@@ -1638,6 +2591,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/211"
       ],
@@ -1654,7 +2609,18 @@
         "completion_tokens": 108,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta corretamente o limite de 48 horas e os respetivos períodos de referência (12, 4 ou 6 meses) mencionados na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/211@2023-05-01",
+        "lei-7-2009/203@2009-02-17",
+        "lei-7-2009/73@2009-02-17",
+        "lei-7-2009/204@2009-02-17",
+        "lei-7-2009/205@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0147",
@@ -1662,6 +2628,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/246"
       ],
@@ -1677,7 +2645,18 @@
         "completion_tokens": 128,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência (valor da compensação e prazo) e não apresenta contradições jurídicas.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/264@2012-08-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0154",
@@ -1685,6 +2664,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/256"
       ],
@@ -1702,7 +2683,18 @@
         "completion_tokens": 233,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite as consequências relativas aos atrasos injustificados descritas na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/256@2012-08-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/255@2023-05-01",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/248@2009-02-17"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0155",
@@ -1710,6 +2702,8 @@
       "refused": true,
       "precision": null,
       "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
       "cited": [],
       "expected": [
         "lei-7-2009/394"
@@ -1727,7 +2721,18 @@
         "completion_tokens": 291,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/29@2017-10-01",
+        "lei-7-2009/394@2019-10-01",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/401@2023-05-01",
+        "lei-7-2009/331@2019-10-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ct-0162",
@@ -1735,6 +2740,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-7-2009/252-B"
       ],
@@ -1752,7 +2759,18 @@
         "completion_tokens": 103,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém o número de dias, a condição e a periodicidade corretos conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/252-B@2025-04-26",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/254@2023-05-01",
+        "lei-7-2009/38@2009-02-17",
+        "lei-7-2009/249@2023-05-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0001",
@@ -1760,6 +2778,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-6-2006/15"
       ],
@@ -1767,48 +2787,74 @@
         "lei-6-2006/15"
       ],
       "allowed": [],
-      "text": "O procedimento especial de despejo é um meio processual que visa efetivar a cessação do arrendamento, independentemente do seu fim, quando o arrendatário não desocupe o locado na data prevista na lei ou fixada por convenção. (art. 15.º do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)",
+      "text": "O procedimento especial de despejo é um meio processual destinado a efetivar a cessação do arrendamento, independentemente da finalidade a que este se destina. (art. 15.º do NRAU) Este procedimento é utilizado quando o arrendatário não desocupa o locado na data prevista na lei ou na data fixada por convenção entre as partes. (art. 15.º do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 3171,
-        "completion_tokens": 84,
-        "thinking_tokens": 0,
-        "thinking_unrecorded": 1
-      }
+        "prompt_tokens": 3258,
+        "completion_tokens": 159,
+        "thinking_tokens": 833,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite a possibilidade de cumular o pedido de despejo com o pedido de pagamento de rendas ou encargos, conforme mencionado na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0002",
       "type": "simple",
-      "refused": true,
-      "precision": null,
+      "refused": false,
+      "precision": 0.0,
       "recall": 0.0,
-      "cited": [],
+      "given_recall": 0.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-6-2006/15"
+      ],
       "expected": [
         "lei-6-2006/15-A"
       ],
       "allowed": [
         "lei-6-2006/15-B"
       ],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/10/2026, base para responder a esta pergunta.",
+      "text": "Os autos do procedimento especial de despejo são distribuídos ao tribunal da situação do locado no primeiro momento processual em que se suscite uma questão sujeita a decisão judicial. (art. 15.º do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 3605,
-        "completion_tokens": 152,
-        "thinking_tokens": 0,
-        "thinking_unrecorded": 1
-      }
+        "prompt_tokens": 3799,
+        "completion_tokens": 68,
+        "thinking_tokens": 107,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "A resposta não identifica o Balcão do Arrendatário e do Senhorio (BAS) como o local onde o procedimento é tramitado e onde se apresenta o requerimento.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/15-S@2023-10-07"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0003",
       "type": "simple",
-      "refused": false,
-      "precision": 1.0,
-      "recall": 1.0,
-      "cited": [
-        "lei-6-2006/15"
-      ],
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
+      "cited": [],
       "expected": [
         "lei-6-2006/15"
       ],
@@ -1820,15 +2866,26 @@
         "dl-47344-1966/1101",
         "dl-47344-1966/1103"
       ],
-      "text": "O procedimento especial de despejo destina-se a efetivar a cessação do arrendamento quando o arrendatário não desocupe o locado na data prevista na lei ou fixada por convenção entre as partes. (art. 15.º do NRAU) Aplica-se em casos de revogação, caducidade pelo decurso do prazo, oposição à renovação, denúncia pelo senhorio ou pelo arrendatário, e resolução por comunicação. (art. 15.º do NRAU) É também admissível a sua utilização nas situações de resolução por comunicação em que a notificação ao arrendatário se tenha frustrado. (art. 15.º do NRAU) O procedimento só pode ser utilizado em contratos de arrendamento cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC. (art. 15.º do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 2894,
-        "completion_tokens": 309,
-        "thinking_tokens": 0,
-        "thinking_unrecorded": 1
-      }
+        "prompt_tokens": 3088,
+        "completion_tokens": 241,
+        "thinking_tokens": 934,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/14@2023-10-07"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0004",
@@ -1836,6 +2893,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-6-2006/15",
         "lei-6-2006/15-B",
@@ -1848,15 +2907,26 @@
       "allowed": [
         "lei-6-2006/15-B"
       ],
-      "text": "O procedimento especial de despejo destina-se a efetivar a cessação do arrendamento quando o arrendatário não desocupe o locado na data prevista na lei ou fixada por convenção. (art. 15.º do NRAU) Este procedimento só pode ser utilizado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC. (art. 15.º do NRAU) O requerimento deve ser apresentado em modelo próprio no BAS, estar assinado e acompanhado dos documentos previstos na lei, incluindo o comprovativo de liquidação fiscal das rendas dos últimos quatro anos. (arts. 15.º-B e 15.º-C do NRAU) O requerimento deve conter a identificação das partes, o fundamento do despejo, o valor da renda e o pagamento da taxa devida ou a prova de concessão de apoio judiciário. (arts. 15.º-B e 15.º-C do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)\n- NRAU, art. 15.º-B (versão em vigor desde 07/10/2023)\n- NRAU, art. 15.º-C (versão em vigor desde 07/10/2023)",
+      "text": "O procedimento especial de despejo destina-se a efetivar a cessação do arrendamento quando o arrendatário não desocupe o imóvel na data prevista na lei ou fixada por convenção. (art. 15.º do NRAU) Este procedimento apenas pode ser utilizado se o imposto do selo do contrato tiver sido liquidado ou as rendas tiverem sido declaradas para efeitos de IRS ou IRC. (art. 15.º do NRAU) O requerimento deve ser apresentado em modelo próprio no BAS, assinado, conter a identificação das partes e dos fundamentos, e ser acompanhado da documentação que comprove a base legal do pedido. (arts. 15.º-B e 15.º-C do NRAU) É obrigatória a indicação do valor da renda, do tribunal competente e o pagamento da taxa devida ou a junção de documento comprovativo de apoio judiciário. (arts. 15.º-B e 15.º-C do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)\n- NRAU, art. 15.º-B (versão em vigor desde 07/10/2023)\n- NRAU, art. 15.º-C (versão em vigor desde 07/10/2023)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 3579,
-        "completion_tokens": 262,
-        "thinking_tokens": 0,
-        "thinking_unrecorded": 1
-      }
+        "prompt_tokens": 3666,
+        "completion_tokens": 269,
+        "thinking_tokens": 126,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta todos os requisitos fundamentais exigidos pela referência, como a documentação, a prova de impostos/IRS, o valor da renda e o pagamento de taxas, sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-C@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07",
+        "lei-6-2006/14@2023-10-07"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0005",
@@ -1864,6 +2934,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "lei-6-2006/15-S"
       ],
@@ -1873,15 +2945,26 @@
       "allowed": [
         "lei-6-2006/15-F"
       ],
-      "text": "No procedimento especial de despejo, a constituição de advogado é obrigatória apenas para a dedução de oposição ao requerimento de despejo. (art. 15.º-S do NRAU) As partes também têm de se fazer representar por advogado nos atos processuais que ocorram após a distribuição do referido procedimento. (art. 15.º-S do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º-S (versão em vigor desde 07/10/2023)",
+      "text": "No procedimento especial de despejo, a constituição de advogado é obrigatória apenas para a dedução de oposição ao requerimento de despejo. (art. 15.º-S do NRAU) As partes têm também de se fazer representar por advogado em todos os atos processuais subsequentes à distribuição do procedimento. (art. 15.º-S do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º-S (versão em vigor desde 07/10/2023)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 3414,
-        "completion_tokens": 106,
-        "thinking_tokens": 0,
-        "thinking_unrecorded": 1
-      }
+        "prompt_tokens": 3608,
+        "completion_tokens": 105,
+        "thinking_tokens": 120,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0011",
@@ -1889,6 +2972,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1069"
       ],
@@ -1904,7 +2989,18 @@
         "completion_tokens": 46,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta é direta e contém a informação essencial solicitada pela pergunta, em conformidade com a referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1069@2019-02-13",
+        "dl-47344-1966/1070@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1066@2006-06-27",
+        "dl-47344-1966/1095@2024-01-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0012",
@@ -1912,6 +3008,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1069"
       ],
@@ -1927,7 +3025,18 @@
         "completion_tokens": 81,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e a mesma condição estabelecida na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1069@2006-06-27",
+        "dl-47344-1966/1070@2006-06-27",
+        "dl-47344-1966/1094@2006-06-27",
+        "dl-47344-1966/1066@2006-06-27",
+        "dl-47344-1966/1095@2006-06-27"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0014",
@@ -1935,6 +3044,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1083"
       ],
@@ -1952,7 +3063,18 @@
         "completion_tokens": 121,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "O sistema omite a condição de o senhorio ter avisado o arrendatário por carta registada após o terceiro atraso para que a mora de oito dias por quatro vezes permita a resolução.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1083@2019-02-13",
+        "dl-47344-1966/1101@2019-02-13",
+        "dl-47344-1966/1041@2019-02-13",
+        "dl-47344-1966/1098@2019-02-13",
+        "dl-47344-1966/1084@2017-06-15"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0015",
@@ -1960,6 +3082,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1066"
       ],
@@ -1975,7 +3099,18 @@
         "completion_tokens": 191,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência sem contradições.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1066@2006-06-27",
+        "lei-6-2006/55@2012-11-12",
+        "dl-47344-1966/1023@1967-06-01",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0019",
@@ -1983,6 +3118,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1105"
       ],
@@ -1998,7 +3135,18 @@
         "completion_tokens": 167,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente as mesmas informações, prazos e condições presentes na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1105@2006-06-27",
+        "lei-6-2006/12@2017-06-15",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1106@2019-02-13",
+        "lei-6-2006/57@2019-02-13"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0020",
@@ -2006,10 +3154,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta. Os artigos fornecidos tratam apenas de arrendamento urbano e misto, não contendo normas sobre a forma do contrato de arrendamento rural.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -2017,7 +3167,18 @@
         "completion_tokens": 54,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1069@2019-02-13",
+        "lei-6-2006/55@2012-11-12",
+        "dl-47344-1966/1066@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1070@2006-06-27"
+      ],
+      "refusal_reason": "Os artigos fornecidos tratam apenas de arrendamento urbano e misto, não contendo normas sobre a forma do contrato de arrendamento rural."
     },
     {
       "id": "ar-0021",
@@ -2025,10 +3186,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm a definição ou qualquer referência ao contrato de comodato.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -2036,7 +3199,18 @@
         "completion_tokens": 43,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1022@1967-06-01",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1023@1967-06-01",
+        "lei-7-2009/288@2009-02-17",
+        "dl-47344-1966/1060@1967-06-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm a definição ou qualquer referência ao contrato de comodato."
     },
     {
       "id": "ar-0022",
@@ -2044,6 +3218,8 @@
       "refused": false,
       "precision": 0.25,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1038",
         "dl-47344-1966/1043",
@@ -2064,7 +3240,18 @@
         "completion_tokens": 395,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite prazos e detalhes específicos presentes na referência, como o prazo de quinze dias para comunicar a cedência e a menção ao comodato.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1038@1967-06-01",
+        "dl-47344-1966/1031@1967-06-01",
+        "dl-47344-1966/1043@1967-06-01",
+        "dl-47344-1966/1078@2006-06-27",
+        "dl-47344-1966/1039@1967-06-01"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0023",
@@ -2072,6 +3259,8 @@
       "refused": false,
       "precision": 0.5,
       "recall": 0.5,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1047",
         "dl-47344-1966/1084"
@@ -2089,7 +3278,18 @@
         "completion_tokens": 191,
         "thinking_tokens": 0,
         "thinking_unrecorded": 1
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente que a resolução pode ser judicial ou extrajudicial, dependendo do fundamento, conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1084@2017-06-15",
+        "dl-47344-1966/1047@2006-06-27",
+        "dl-47344-1966/1083@2019-02-13",
+        "lei-6-2006/14@2023-10-07",
+        "dl-47344-1966/1101@2019-02-13"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0028",
@@ -2097,6 +3297,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
       "cited": [
         "dl-47344-1966/1075"
       ],
@@ -2112,7 +3314,18 @@
         "completion_tokens": 158,
         "thinking_tokens": 112,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo a condição dos meses gregorianos e os prazos de vencimento para a primeira e para as restantes rendas.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1039@1967-06-01",
+        "dl-47344-1966/1075@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1077@2006-06-27",
+        "dl-47344-1966/1069@2019-02-13"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0032",
@@ -2120,6 +3333,8 @@
       "refused": false,
       "precision": 1.0,
       "recall": 0.3333333333333333,
+      "given_recall": 0.3333333333333333,
+      "version_right": 1.0,
       "cited": [
         "lei-6-2006/14"
       ],
@@ -2129,15 +3344,26 @@
         "dl-47344-1966/1084"
       ],
       "allowed": [],
-      "text": "O recurso à ação de despejo é necessário sempre que a lei imponha a via judicial para promover a cessação do arrendamento. (art. 14.º do NRAU)\n\nFontes (lei em vigor a 06/10/2026):\n- NRAU, art. 14.º (versão em vigor desde 07/10/2023)",
+      "text": "A ação de despejo destina-se a fazer cessar a situação jurídica do arrendamento sempre que a lei imponha o recurso à via judicial para promover tal cessação. (art. 14.º do NRAU)\n\nFontes (lei em vigor a 06/10/2026):\n- NRAU, art. 14.º (versão em vigor desde 07/10/2023)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 2174,
-        "completion_tokens": 87,
-        "thinking_tokens": 129,
+        "prompt_tokens": 2261,
+        "completion_tokens": 141,
+        "thinking_tokens": 2017,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": "parcial",
+      "reason": "A resposta menciona a condição geral de recurso à via judicial, mas omite os casos específicos de incumprimento exemplificados na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/14@2023-10-07",
+        "dl-47344-1966/1101@2019-02-13",
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07",
+        "dl-47344-1966/1087@2012-11-12"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0035",
@@ -2145,10 +3371,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta. Os artigos fornecidos não contêm informação sobre se o tribunal pode conhecer oficiosamente da caducidade de um direito.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -2156,7 +3384,18 @@
         "completion_tokens": 42,
         "thinking_tokens": 143,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1051@2006-06-27",
+        "dl-47344-1966/1089@2006-06-27",
+        "dl-47344-1966/1085@2012-11-12",
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/387@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm informação sobre se o tribunal pode conhecer oficiosamente da caducidade de um direito."
     },
     {
       "id": "ar-0036",
@@ -2164,10 +3403,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta. Os artigos facultados não mencionam se o fiador tem o direito de exigir a execução prévia dos bens do devedor.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -2175,7 +3416,18 @@
         "completion_tokens": 127,
         "thinking_tokens": 108,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1063@1967-06-01",
+        "dl-47344-1966/1041@2019-02-13",
+        "lei-6-2006/15-LA@2023-10-07",
+        "dl-47344-1966/1042@2006-06-27",
+        "lei-6-2006/14-A@2019-02-13"
+      ],
+      "refusal_reason": "Os artigos facultados não mencionam se o fiador tem o direito de exigir a execução prévia dos bens do devedor."
     },
     {
       "id": "ar-0037",
@@ -2183,6 +3435,8 @@
       "refused": false,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [
         "dl-47344-1966/1059",
         "dl-47344-1966/1106",
@@ -2200,26 +3454,52 @@
         "completion_tokens": 292,
         "thinking_tokens": 138,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1106@2019-02-13",
+        "lei-6-2006/57@2019-02-13",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1059@1967-06-01",
+        "dl-47344-1966/1105@2006-06-27"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0038",
       "type": "unanswerable",
-      "refused": true,
+      "refused": false,
       "precision": null,
       "recall": null,
-      "cited": [],
+      "given_recall": null,
+      "version_right": null,
+      "cited": [
+        "dl-47344-1966/1091"
+      ],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta. Os artigos fornecidos não mencionam qualquer direito de preferência atribuído aos condóminos na venda de frações autónomas.",
+      "text": "Os artigos fornecidos não conferem aos condóminos, na qualidade de tal, direito de preferência na venda de uma fração autónoma. (art. 1091.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1091.º (versão em vigor desde 30/10/2018)",
       "requests": [],
       "tokens": {
         "calls": 1,
-        "prompt_tokens": 1819,
-        "completion_tokens": 52,
-        "thinking_tokens": 91,
+        "prompt_tokens": 1992,
+        "completion_tokens": 121,
+        "thinking_tokens": 127,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1091@2018-10-30",
+        "dl-47344-1966/1067-A@2019-02-13",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1102@2012-11-12",
+        "dl-47344-1966/1112@2006-06-27"
+      ],
+      "refusal_reason": ""
     },
     {
       "id": "ar-0039",
@@ -2227,10 +3507,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 06/10/2026, base para responder a esta pergunta. Os artigos fornecidos definem locação, arrendamento, aluguer e locação de estabelecimento, mas não contêm qualquer informação sobre locação financeira (leasing).",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 06/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -2238,7 +3520,18 @@
         "completion_tokens": 59,
         "thinking_tokens": 122,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1023@1967-06-01",
+        "dl-47344-1966/1022@1967-06-01",
+        "dl-47344-1966/1058@1967-06-01",
+        "dl-47344-1966/1109@2006-06-27",
+        "dl-47344-1966/1060@1967-06-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos definem locação, arrendamento, aluguer e locação de estabelecimento, mas não contêm qualquer informação sobre locação financeira (leasing)."
     },
     {
       "id": "ar-0040",
@@ -2246,10 +3539,12 @@
       "refused": true,
       "precision": null,
       "recall": null,
+      "given_recall": null,
+      "version_right": null,
       "cited": [],
       "expected": [],
       "allowed": [],
-      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 06/10/2026, base para responder a esta pergunta. Os artigos fornecidos não mencionam taxas de imposto do selo.",
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 06/10/2026, base para responder a esta pergunta.",
       "requests": [],
       "tokens": {
         "calls": 1,
@@ -2257,7 +3552,496 @@
         "completion_tokens": 104,
         "thinking_tokens": 100,
         "thinking_unrecorded": 0
-      }
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1067-A@2019-02-13",
+        "dl-47344-1966/1094@2017-06-15",
+        "lei-6-2006/55@2012-11-12",
+        "lei-6-2006/31@2015-01-18",
+        "dl-47344-1966/1078@2006-06-27"
+      ],
+      "refusal_reason": "Os artigos fornecidos não mencionam taxas de imposto do selo."
+    },
+    {
+      "id": "ct-0001",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [
+        "lei-7-2009/249"
+      ],
+      "text": "O trabalhador pode faltar justificadamente até cinco dias consecutivos por falecimento de parente em 1.º grau na linha reta, categoria onde se inclui o pai. (art. 251.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2068,
+        "completion_tokens": 66,
+        "thinking_tokens": 100,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência (prazo e grau de parentesco) sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/252@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0002",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [
+        "lei-7-2009/249"
+      ],
+      "text": "O trabalhador pode faltar justificadamente até 20 dias consecutivos pelo falecimento de filho ou enteado. (art. 251.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2069,
+        "completion_tokens": 82,
+        "thinking_tokens": 114,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém a informação essencial da referência e não a contradiz.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/252@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0003",
+      "type": "composite",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 0.5,
+      "version_right": null,
+      "cited": [],
+      "expected": [
+        "lei-7-2009/251",
+        "lei-7-2009/248"
+      ],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1934,
+        "completion_tokens": 105,
+        "thinking_tokens": 121,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/238@2012-08-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos regulam o direito às faltas por falecimento, mas não especificam a forma de contagem dos dias (úteis ou consecutivos) relativamente a fins de semana e feriados."
+    },
+    {
+      "id": "ct-0011",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [],
+      "text": "O empregador tem o dever de se abster de contactar o trabalhador no período de descanso, salvo em situações de força maior. (art. 199.º-A do CT) A violação deste dever constitui uma contraordenação grave. (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1652,
+        "completion_tokens": 135,
+        "thinking_tokens": 104,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém exatamente o conteúdo essencial da referência sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/199@2009-02-17",
+        "lei-7-2009/214@2009-02-17",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/232@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0012",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [],
+      "text": "O empregador tem o dever de se abster de contactar o trabalhador no período de descanso, exceto em situações de força maior. (art. 199.º-A do CT) Os artigos fornecidos não esclarecem se o envio de um email sem pedido de resposta constitui um contacto proibido nem se tal conduta configura uma violação do dever de abstenção. (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2113,
+        "completion_tokens": 118,
+        "thinking_tokens": 137,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "O sistema afirma que a lei não esclarece se o envio de um email sem pedido de resposta constitui contacto, enquanto a referência afirma explicitamente que sim.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/22@2009-02-17",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/170@2022-01-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0014",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [],
+      "text": "O empregador tem o dever de se abster de contactar o trabalhador no período de descanso, exceto em situações de força maior. (art. 199.º-A do CT) Qualquer tratamento menos favorável dado a um trabalhador por exercer o seu direito ao período de descanso é considerado uma ação discriminatória. (art. 199.º-A do CT) A violação deste dever de abstenção de contacto constitui uma contraordenação grave. (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3777,
+        "completion_tokens": 142,
+        "thinking_tokens": 107,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência sem apresentar erros ou contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/169-B@2022-01-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/65@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0015",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/551",
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A",
+        "lei-7-2009/551"
+      ],
+      "allowed": [],
+      "text": "O empregador é o responsável pelas contraordenações laborais, incluindo as praticadas pelos seus trabalhadores no exercício das respetivas funções. (art. 551.º do CT) O dever de abstenção de contacto no período de descanso é exigido ao empregador e a sua violação constitui uma contraordenação grave. (art. 199.º-A do CT) Se o infrator for uma pessoa coletiva, os seus administradores, gerentes ou diretores respondem solidariamente pelo pagamento da coima. (art. 551.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 551.º (versão em vigor desde 22/09/2016)\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1916,
+        "completion_tokens": 152,
+        "thinking_tokens": 114,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, identificando o empregador como responsável e a infração como grave, sem contradizer a lei.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/551@2016-09-22",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/329@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0041",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar justificadamente até cinco dias consecutivos pelo falecimento de um filho, por ser parente no 1.º grau na linha reta. (art. 251.º do CT)\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 251.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2145,
+        "completion_tokens": 64,
+        "thinking_tokens": 107,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente o prazo de cinco dias e a condição de parentesco aplicável à data da pergunta.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2009-02-17",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/42@2020-04-01",
+        "lei-7-2009/252@2009-02-17",
+        "lei-7-2009/249@2019-10-04"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0042",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar justificadamente até cinco dias consecutivos por falecimento de cônjuge não separado de pessoas e bens. (art. 251.º do CT) Esta regra aplica-se também em caso de falecimento de pessoa que viva em união de facto ou economia comum com o trabalhador. (art. 251.º do CT)\n\nFontes (lei em vigor a 01/06/2022):\n- Código do Trabalho, art. 251.º (versão em vigor desde 04/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2033,
+        "completion_tokens": 144,
+        "thinking_tokens": 126,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente o prazo de cinco dias consecutivos em vigor na data solicitada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2022-01-04",
+        "lei-7-2009/249@2019-10-04",
+        "lei-7-2009/252@2009-02-17",
+        "lei-7-2009/252-A@2019-10-04",
+        "lei-7-2009/49@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0064",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/101-B",
+        "lei-7-2009/101-C"
+      ],
+      "expected": [
+        "lei-7-2009/101-B",
+        "lei-7-2009/101-C"
+      ],
+      "allowed": [],
+      "text": "O trabalhador cuidador está proibido de exercer atividade incompatível com a finalidade da licença do cuidador, nomeadamente trabalho subordinado ou prestação continuada de serviços fora da sua residência habitual. (art. 101.º-B do CT) Durante o período de trabalho em regime de tempo parcial, o trabalhador cuidador também não pode exercer outra atividade incompatível com a respetiva finalidade, como trabalho subordinado ou prestação continuada de serviços fora da sua residência habitual. (art. 101.º-C do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 101.º-B (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 101.º-C (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1686,
+        "completion_tokens": 185,
+        "thinking_tokens": 139,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência, identificando corretamente as duas situações e as restrições aplicáveis.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/101-B@2023-05-01",
+        "lei-7-2009/101-H@2023-05-01",
+        "lei-7-2009/101-C@2023-05-01",
+        "lei-7-2009/101-E@2023-05-01",
+        "lei-7-2009/101-A@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0127",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 0.3333333333333333,
+      "given_recall": 0.3333333333333333,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/44",
+        "lei-7-2009/65"
+      ],
+      "expected": [
+        "lei-7-2009/44",
+        "lei-7-2009/40",
+        "lei-7-2009/43"
+      ],
+      "allowed": [],
+      "text": "A licença por adoção é concedida em caso de adoção de menor de 15 anos, conferindo ao candidato a adotante o direito à licença parental inicial, bem como à licença parental exclusiva do pai. (art. 44.º do CT) O período de licença tem início a partir da confiança judicial ou administrativa do adotando, nos termos do regime jurídico da adoção. (art. 44.º do CT) Em caso de adoções múltiplas, o período da licença é acrescido de 30 dias, e a licença exclusiva do pai é acrescida de 2 dias, por cada adoção além da primeira. (art. 44.º do CT) A licença por adoção não determina a perda de quaisquer direitos, salvo quanto à retribuição, e é considerada como prestação efetiva de trabalho. (art. 65.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 44.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 65.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2560,
+        "completion_tokens": 223,
+        "thinking_tokens": 130,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite os prazos e números específicos relativos à duração da licença parental inicial e ao período de transição mencionados na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/44@2023-05-01",
+        "lei-7-2009/45@2023-05-01",
+        "lei-7-2009/64@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/39@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0153",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar até 20 dias consecutivos por falecimento de cônjuge, filho, enteado ou pessoa que viva em união de facto ou economia comum. (art. 251.º do CT) Por falecimento de parente ou afim no 1.º grau na linha reta, não incluído no caso anterior, o trabalhador pode faltar até cinco dias consecutivos. (art. 251.º do CT) O trabalhador tem direito a faltar até dois dias consecutivos por falecimento de outro parente ou afim na linha reta ou no 2.º grau da linha colateral. (art. 251.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2070,
+        "completion_tokens": 214,
+        "thinking_tokens": 1557,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta todos os prazos e os respetivos graus de parentesco de forma fiel à referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/49@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0159",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar até 20 dias consecutivos pelo falecimento de descendente ou afim no 1.º grau na linha reta. (art. 251.º do CT) Por falecimento de cônjuge não separado de pessoas e bens ou de parente ou afim ascendente no 1.º grau na linha reta, o trabalhador pode faltar até cinco dias consecutivos. (art. 251.º do CT) Este direito de cinco dias aplica-se também em caso de falecimento de pessoa que viva em união de facto ou economia comum com o trabalhador. (art. 251.º do CT) Por falecimento de outro parente ou afim na linha reta ou no 2.º grau da linha colateral, o trabalhador tem direito a faltar até dois dias consecutivos. (art. 251.º do CT)\n\nFontes (lei em vigor a 01/06/2022):\n- Código do Trabalho, art. 251.º (versão em vigor desde 04/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2247,
+        "completion_tokens": 295,
+        "thinking_tokens": 127,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os prazos e condições previstos na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2022-01-04",
+        "lei-7-2009/252@2009-02-17",
+        "lei-7-2009/249@2019-10-04",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/50@2009-02-17"
+      ],
+      "refusal_reason": ""
     }
   ]
 }

@@ -2,7 +2,8 @@
   "split": "test",
   "bench": {
     "items": 109,
-    "sha": "7d5960a801ab"
+    "sha": "7d5960a801ab",
+    "scored": "c5bfe8bbb906"
   },
   "system": "dense-bge-m3",
   "config": {

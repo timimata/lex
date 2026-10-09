@@ -1,0 +1,25 @@
+name: An item is wrong
+description: A benchmark item's answer, citations or date do not match the law
+labels: [benchmark]
+body:
+  - type: input
+    id: item
+    attributes:
+      label: Item id
+      description: e.g. ct-0042. For a test item, give the id only and do not quote it.
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong
+      description: The answer, an article it must or may cite, or the date it is asked about.
+    validations:
+      required: true
+  - type: textarea
+    id: law
+    attributes:
+      label: The law that shows it
+      description: The article and the version in force on the item's date, with a link to the Diário da República.
+    validations:
+      required: true

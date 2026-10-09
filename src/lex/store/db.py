@@ -6,6 +6,7 @@ from collections.abc import Iterable
 
 import psycopg
 
+from lex.domain import corpus_fingerprint, text_sha
 from lex.store.models import ArticleVersion
 
 # 127.0.0.1, not localhost: on Windows, localhost tries IPv6 first, and a connection to Docker's
@@ -34,12 +35,15 @@ CREATE TABLE IF NOT EXISTS article_versions (
     introduced_by text   NOT NULL,
     source_url    text   NOT NULL,
     fetched       date   NOT NULL,
+    notes         text[] NOT NULL DEFAULT '{}',
     CHECK (valid_to IS NULL OR valid_to > valid_from),
     -- ADR 0002: at most one version of an article is in force on any day.
     EXCLUDE USING gist (
         diploma WITH =, article WITH =, daterange(valid_from, valid_to) WITH &&
     )
 );
+-- Notes on versions (ROADMAP, Phase 11), for a table made before them.
+ALTER TABLE article_versions ADD COLUMN IF NOT EXISTS notes text[] NOT NULL DEFAULT '{}';
 -- BM25 over heading and text with the Portuguese stemmer (ADR 0006). Maintained on insert.
 CREATE INDEX IF NOT EXISTS article_versions_bm25 ON article_versions USING bm25 (
     id,
@@ -61,7 +65,7 @@ CREATE TABLE IF NOT EXISTS article_embeddings (
 
 _COLUMNS = (
     "diploma, article, heading, path, text, valid_from, valid_to, introduced_by, source_url, "
-    "fetched"
+    "fetched, notes"
 )
 
 
@@ -94,6 +98,7 @@ def load(conn: psycopg.Connection, versions: Iterable[ArticleVersion]) -> int:
             v.introduced_by,
             v.source_url,
             v.fetched,
+            v.notes,
         )
         for v in versions
     ]
@@ -102,7 +107,7 @@ def load(conn: psycopg.Connection, versions: Iterable[ArticleVersion]) -> int:
         with conn.cursor() as cur:
             cur.executemany(
                 f"INSERT INTO article_versions ({_COLUMNS}) VALUES "
-                "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 rows,
             )
     return len(rows)
@@ -166,12 +171,21 @@ def import_embeddings(conn: psycopg.Connection, rows: Iterable[dict[str, str]]) 
 
 
 def fingerprint(conn: psycopg.Connection) -> str:
-    """A hash of every article version's identity, dates and text: it changes whenever the
-    store's contents do."""
-    row = conn.execute(
-        "SELECT md5(coalesce(string_agg(concat_ws('|', diploma, article, valid_from, valid_to, "
-        "md5(heading || text)), ',' ORDER BY diploma, article, valid_from), '')) "
-        "FROM article_versions"
-    ).fetchone()
-    assert row is not None
-    return str(row[0])
+    """The corpus's one fingerprint (lex.domain.corpus_fingerprint), as the corpus in memory and
+    the committed index give it for the same versions: it changes whenever the store's contents
+    do, headings included."""
+    rows = conn.execute(
+        "SELECT diploma, article, valid_from, valid_to, heading, text, notes FROM article_versions"
+    ).fetchall()
+    return corpus_fingerprint(
+        (d, a, start.isoformat(), end.isoformat() if end else None, text_sha(heading, text, notes))
+        for d, a, start, end, heading, text, notes in rows
+    )
+
+
+def counts(conn: psycopg.Connection) -> dict[str, int]:
+    """Article versions per diploma."""
+    rows = conn.execute(
+        "SELECT diploma, count(*) FROM article_versions GROUP BY diploma ORDER BY diploma"
+    ).fetchall()
+    return {str(d): int(n) for d, n in rows}

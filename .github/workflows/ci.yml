@@ -24,11 +24,19 @@ jobs:
       DATABASE_URL: postgresql://lex:lex@127.0.0.1:5432/lex
       LEX_REQUIRE_DB: "1" # store tests fail here instead of skipping
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
-          python-version: "3.14"
-      - run: pip install -e ".[dev,llm,api,mcp]" # not dense: torch is too heavy for CI
+          fetch-depth: 0 # check-results holds each run to the code of the commit that added it
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version-file: ".python-version"
+      # Every dependency as uv.lock pins it (ADR 0019); --locked fails if the lock is out of
+      # date. Not dense: torch is too heavy for CI.
+      - run: pip install uv==0.12.23
+      - run: uv export --locked --extra dev --extra llm --extra api --extra mcp --no-hashes -o requirements-ci.txt
+      - run: pip install -r requirements-ci.txt
+      # The demo installs what the lock says too.
+      - run: uv export --locked --extra llm --extra api --no-dev --no-hashes --no-emit-project --no-header -o vercel-requirements.txt && diff vercel-requirements.txt vercel/requirements.txt
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy
@@ -36,15 +44,25 @@ jobs:
       - run: python -m lex.bench validate
       - run: python -m lex.eval check-results # every reported number adds up; no model
 
-  web: # the demo's page: types and a production build
+  web: # the demo's page: types, a production build, then the page in Chromium
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "24"
       - run: npm ci --no-audit --no-fund
+        working-directory: web
       - run: npm run build
+        working-directory: web
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version-file: ".python-version"
+      - run: pip install uv==0.12.23
+      - run: uv export --locked --extra api --extra ingest --no-hashes -o requirements-web.txt
+      - run: pip install -r requirements-web.txt
+      - run: playwright install --with-deps chromium
+      # Scripted answers on the committed corpus (corpus/versions.jsonl.gz), no model, no quota:
+      # every view, the keyboard alone, axe (WCAG 2.2 A and AA), both colour schemes.
+      - run: python web/e2e.py
+      - run: python web/contrast.py # every colour pair at its WCAG bar

@@ -92,6 +92,11 @@ def test_an_answer_cites_only_articles_it_was_given_and_names_their_versions() -
     assert ReferenceSystem(Fixed([]), articles, model).name == "fixed+scripted"
     assert not answer.refused
     assert answer.citations == [cite("251"), cite("238")]
+    # What the model read is kept with the answer, each article with its version.
+    assert [(v.article, v.valid_from) for v in answer.given] == [
+        (c.article, articles(c, TODAY).valid_from)  # type: ignore[union-attr]
+        for c in (cite("251"), cite("238"))
+    ]
     assert answer.text.startswith("Cinco dias consecutivos.\n\nFontes (lei em vigor a 30/09/2026):")
     assert "- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)" in answer.text
     assert system.counts == {
@@ -437,7 +442,9 @@ def test_claims_with_no_support_or_a_refusal_are_refusals() -> None:
     reply = claims(refused=True, reason="A lei não trata disso.")
     refused = ReferenceSystem(Fixed(["251"]), articles, Scripted(reply), format="claims")
     answer = refused.answer("P?", TODAY)
-    assert answer.refused and answer.text.endswith("A lei não trata disso.")
+    # The model's reason cites nothing: kept apart, never in the answer's text.
+    assert answer.refused and "A lei não trata disso." not in answer.text
+    assert answer.reason == "A lei não trata disso."
     with pytest.raises(ValueError):
         ReferenceSystem(Fixed(["251"]), articles, Scripted(reply), format="prose")
 
@@ -448,3 +455,64 @@ def test_a_sentence_may_rest_on_several_articles() -> None:
         Fixed(["251", "238"]), articles, Scripted(reply), format="claims"
     ).answer("P?", TODAY)
     assert answer.text.startswith("Ambos se aplicam. (arts. 238.º e 251.º do CT)")
+
+
+def test_a_run_says_when_the_responses_it_used_were_made(tmp_path: Path) -> None:
+    old = Cached(Scripted("antiga"), tmp_path)
+    old.complete("s", "u")
+    [path] = list(tmp_path.rglob("*.json"))
+    record = json.loads(path.read_text(encoding="utf-8"))
+    path.write_text(json.dumps(record | {"made_at": "2026-09-30T10:00:00+01:00"}), "utf-8")
+
+    run = Cached(Scripted("nova"), tmp_path)
+    assert run.complete("s", "u").text == "antiga"  # from the cache, made a week before
+    run.complete("s", "outra")
+    dates = run.dates()
+    assert (dates["calls"], dates["cached"], dates["sample"]) == (2, 1, None)
+    assert dates["made_from"] == "2026-09-30T10:00:00+01:00"
+    assert dates["made_until"] > dates["made_from"]
+
+    fresh = Cached(Scripted("de hoje"), tmp_path, sample="fresh-2026-10-08")
+    assert fresh.complete("s", "u").text == "de hoje"  # a milestone asks again
+    assert fresh.dates()["cached"] == 0
+    again = Cached(Scripted("não chamado"), tmp_path, sample="fresh-2026-10-08")
+    assert again.complete("s", "u").text == "de hoje"  # and a re-run that day reuses it
+
+
+def test_an_interrupted_write_leaves_the_old_entry_and_a_broken_one_is_asked_again(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from lex import atomic
+
+    first = Cached(Scripted("primeira"), tmp_path)
+    first.complete("s", "u")
+    [path] = list(tmp_path.rglob("*.json"))
+    before = path.read_text(encoding="utf-8")
+
+    def interrupted(src: str, dst: str) -> None:
+        raise KeyboardInterrupt  # the run stopped between writing and putting in place
+
+    monkeypatch.setattr("lex.atomic.os.replace", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        atomic.write_text(path, "{meia escr")
+    monkeypatch.undo()
+    assert path.read_text(encoding="utf-8") == before  # untouched, and no temporary left
+    assert sorted(p.name for p in path.parent.iterdir()) == [path.name]
+
+    path.write_text("{meia escr", encoding="utf-8")  # as a non-atomic write could leave it
+    model = Scripted("de novo")
+    again = Cached(model, tmp_path)
+    assert again.complete("s", "u").text == "de novo" and len(model.prompts) == 1
+    assert again.dates()["broken"] == 1
+    assert path.with_name(f"{path.name}.broken").exists()  # set aside, for counting
+    assert Cached(Scripted("x"), tmp_path).complete("s", "u").text == "de novo"
+
+
+def test_a_versions_notes_reach_the_model_inside_its_article() -> None:
+    from types import SimpleNamespace
+
+    noted = SimpleNamespace(
+        heading="Despedimento", text="Texto.", valid_from=TODAY, notes=["Acórdão n.º 602/2013."]
+    )
+    sent = prompt("P?", TODAY, [(cite("368"), noted)])
+    assert "Texto.\n<nota>Acórdão n.º 602/2013.</nota>\n</artigo>" in sent

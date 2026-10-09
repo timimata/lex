@@ -7,12 +7,14 @@ as the Postgres query breaks them.
 
 import datetime as dt
 import hashlib
+import io
 import json
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 
+from lex import atomic
 from lex.domain import Citation
 from lex.retrieval.dense import Embedder, document, retriever_name
 from lex.store.memory import Corpus
@@ -31,11 +33,10 @@ class Vectors:
     matrix: np.ndarray  # float32, one row per version
 
     def save(self, path: Path) -> None:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("wb") as f:
-            np.savez_compressed(
-                f, matrix=self.matrix, meta=np.array(json.dumps([self.model, self.shas]))
-            )
+        buffer = io.BytesIO()
+        meta = np.array(json.dumps([self.model, self.shas]))
+        np.savez_compressed(buffer, matrix=self.matrix, meta=meta)
+        atomic.write_bytes(path, buffer.getvalue())  # an interrupted save leaves the old file
 
     @classmethod
     def load(cls, path: Path) -> "Vectors":

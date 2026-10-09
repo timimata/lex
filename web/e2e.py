@@ -54,7 +54,9 @@ class Scripted:
 
 
 def serve() -> None:
-    corpus = Corpus.load(*corpus_files(ROOT / "data" / "processed"))
+    # The ingested corpus, or, where it is not (CI), the committed copy of its text.
+    files = corpus_files(ROOT / "data" / "processed") or [ROOT / "corpus" / "versions.jsonl.gz"]
+    corpus = Corpus.load(*files)
     app = create_app(
         Scripted(),
         library=corpus.versions_of,
@@ -72,8 +74,11 @@ violations: list[str] = []  # every page audited adds what axe found; main fails
 
 
 def audit(page: Page, where: str) -> None:
-    """axe-core on the page as it stands, against WCAG 2.2 A and AA."""
-    page.add_script_tag(path=str(AXE))
+    """axe-core on the page as it stands, against WCAG 2.2 A and AA. Evaluated by the browser's
+    driver, not added as a script: the page's Content-Security-Policy refuses inline scripts, as
+    it should, and the check runs with it in force."""
+    if not page.evaluate("typeof axe !== 'undefined'"):
+        page.evaluate(AXE.read_text(encoding="utf-8"))
     found = page.evaluate(
         "tags => axe.run(document, {runOnly: {type: 'tag', values: tags}})"
         ".then(r => r.violations.map(v => v.id + ': ' + v.nodes.length + ' ' + v.help))",
@@ -148,6 +153,10 @@ def check(page: Page, shots: Path | None) -> None:
     assert any("165" in h for h in page.locator(".hits li").all_inner_texts())
     shot("4-articles")
     audit(page, "articles, a word search")
+    # A version the Constitutional Court ruled on carries the DR's note above its text.
+    page.goto(URL + "?art=368&d=2013-12-01&lang=pt")
+    expect(page.locator(".browse .reader-notes")).to_contain_text("602/2013")
+    audit(page, "an article with a note")
     page.goto(URL + "?art=252-B&d=2025-05-01&lang=pt")
     expect(page.locator(".browse .reader-meta")).to_contain_text("01/05/2025")
     page.goto(URL + "?art=252-B&d=2024-01-01&lang=pt")
@@ -238,6 +247,10 @@ def check(page: Page, shots: Path | None) -> None:
     expect(page.locator(".answer-text")).to_contain_text("01/06/2011")
     tab("Resultados").click()
     expect(page.locator("table").first).to_be_visible()
+    # Correct, partial and wrong, each shown, and the rule that tells them apart.
+    for column in ("Respostas corretas", "Parciais", "Erradas"):
+        expect(page.locator("table").first.locator("th", has_text=column)).to_be_visible()
+    expect(page.locator(".note", has_text="Parcial: falta parte")).to_be_visible()
     shot("3-results")
     audit(page, "results")
     page.get_by_role("button", name="EN", exact=True).click()
@@ -246,6 +259,51 @@ def check(page: Page, shots: Path | None) -> None:
     audit(page, "about, in English")
     tab("Ask").click()
     expect(page.locator(".answer")).to_be_visible()
+
+
+def keyboard(page: Page) -> None:
+    """The page by keyboard alone: tab to a view in the nav and open it, focus lands on the new
+    view's heading; back, and focus lands on the first view's; tab to the question, ask it."""
+    page.goto(URL + "?lang=pt")
+    expect(page.locator(".examples")).to_be_visible()
+
+    def tab_to(name: str) -> None:
+        for _ in range(40):
+            page.keyboard.press("Tab")
+            if page.evaluate("document.activeElement.textContent.trim()") == name:
+                return
+        raise AssertionError(f"«{name}» cannot be reached by Tab")
+
+    def focused() -> str:
+        return str(
+            page.evaluate(
+                "document.activeElement.tagName + ' ' + document.activeElement.textContent.trim()"
+            )
+        )
+
+    def on_heading() -> None:
+        # Polled from here: the page's CSP refuses the eval that wait_for_function would need.
+        for _ in range(100):
+            if page.evaluate("document.activeElement.tagName") == "H1":
+                return
+            page.wait_for_timeout(50)
+        raise AssertionError(f"focus is not on a heading but on {focused()}")
+
+    tab_to("Resultados")
+    page.keyboard.press("Enter")
+    page.wait_for_url(URL + "resultados?lang=pt")
+    on_heading()
+    assert focused().startswith("H1 Resultados"), focused()
+    page.go_back()
+    on_heading()
+    assert focused().startswith("H1 Pergunte"), focused()
+    for _ in range(40):  # the question field, by Tab from the heading
+        page.keyboard.press("Tab")
+        if page.evaluate("document.activeElement.id") == "question":
+            break
+    page.keyboard.type("Quantos dias de férias?")
+    page.keyboard.press("Enter")
+    expect(page.locator(".answer-text")).to_be_visible()
 
 
 def main() -> int:
@@ -261,6 +319,7 @@ def main() -> int:
         page = browser.new_page(viewport={"width": 1100, "height": 900}, locale="pt-PT")
         try:
             check(page, args.shots)
+            keyboard(browser.new_page(viewport={"width": 1100, "height": 900}, locale="pt-PT"))
             mobile = browser.new_page(viewport={"width": 390, "height": 844}, locale="en-GB")
             mobile.goto(URL)
             expect(mobile.get_by_role("navigation").get_by_role("link", name="Ask")).to_be_visible()

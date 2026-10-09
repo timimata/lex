@@ -110,3 +110,18 @@ def test_search_and_answers_use_the_parts_they_are_given() -> None:
     answer = call("responder", {"pergunta": "Férias?", "data": "2011-06-01"}, respond=respond)
     assert (answer["resposta"], answer["citacoes"]) == ("Resposta a 01/06/2011.", ["CT 238"])
     assert "indisponíveis" in call("responder", {"pergunta": "Férias?"})["error"]
+
+
+def test_the_mcp_server_needs_no_fastapi() -> None:
+    """The `mcp` extra installs the MCP server's needs and not the API's (ROADMAP, Phase 11)."""
+    import subprocess
+    import sys
+
+    blocked = "import sys; sys.modules['fastapi'] = sys.modules['uvicorn'] = None"
+    run = subprocess.run(
+        [sys.executable, "-c", f"{blocked}; import lex.mcp_server"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert run.returncode == 0, run.stderr

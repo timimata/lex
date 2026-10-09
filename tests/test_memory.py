@@ -189,3 +189,58 @@ def test_changes_in_a_period_say_what_each_version_did() -> None:
     first = corpus.changes("lei-7-2009", dt.date(2009, 1, 1), dt.date(2009, 12, 31))
     assert {kind for _, kind in first} == {"original"}
     assert corpus.changes("lei-6-2006", dt.date(2009, 1, 1), dt.date(2030, 1, 1)) == []
+
+
+def test_every_store_gives_the_corpus_one_fingerprint_headings_included(
+    tmp_path: Path,
+) -> None:
+    import json
+
+    from lex.bench.corpus_check import index_fingerprint, index_lines
+
+    corpus = Corpus(VERSIONS)
+    versions = tmp_path / "ct" / "versions.jsonl"
+    versions.parent.mkdir()
+    versions.write_text("".join(v.model_dump_json() + "\n" for v in VERSIONS), encoding="utf-8")
+    index = tmp_path / "index.jsonl"
+    index.write_text("".join(f"{line}\n" for line in index_lines([versions])), encoding="utf-8")
+
+    assert corpus.fingerprint() == index_fingerprint(index)
+    assert corpus.counts() == {"lei-7-2009": len(VERSIONS)}
+    # A heading is part of what an embedding reads: changing it changes the fingerprint, which
+    # keys the ranking cache.
+    renamed = [VERSIONS[0].model_copy(update={"heading": "Outra"}), *VERSIONS[1:]]
+    assert Corpus(renamed).fingerprint() != corpus.fingerprint()
+    assert json.loads(index.read_text(encoding="utf-8").splitlines()[0])["sha256"]
+
+
+def test_postgres_gives_the_same_fingerprint_as_memory(conn: psycopg.Connection) -> None:
+    db.load(conn, VERSIONS)
+    assert db.fingerprint(conn) == Corpus(VERSIONS).fingerprint()
+    assert db.counts(conn) == {"lei-7-2009": len(VERSIONS)}
+
+
+def test_the_corpus_in_memory_refuses_what_postgres_refuses(tmp_path: Path) -> None:
+    overlapping = [
+        version("238", "primeira", dt.date(2009, 2, 17), dt.date(2012, 8, 2)),
+        version("238", "segunda", dt.date(2012, 8, 1), None),  # a day in force with the first
+    ]
+    backwards = [version("251", "ao contrário", dt.date(2012, 8, 1), dt.date(2012, 8, 1))]
+    assert Corpus(VERSIONS).check() == []
+    assert Corpus(overlapping).check() == [
+        "lei-7-2009/238: the versions from 2009-02-17 and 2012-08-01 overlap"
+    ]
+    assert Corpus(backwards).check() == ["lei-7-2009/251 from 2012-08-01: ends before it starts"]
+
+    path = tmp_path / "versions.jsonl"
+    path.write_text("".join(v.model_dump_json() + "\n" for v in overlapping), encoding="utf-8")
+    with pytest.raises(ValueError, match="overlap"):
+        Corpus.load(path)
+
+
+def test_the_committed_copy_of_the_corpus_is_the_indexed_one() -> None:
+    """CI's end-to-end check reads corpus/versions.jsonl.gz: it must be the corpus the index,
+    and so every result, describes."""
+    from lex.bench.corpus_check import INDEX, TEXT, index_fingerprint
+
+    assert Corpus.load(TEXT).fingerprint() == index_fingerprint(INDEX)

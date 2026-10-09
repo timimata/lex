@@ -1,22 +1,40 @@
 name: Probe
 
-# Every six hours, the deployed demo from outside (Phase 8): health, an article, a search, a
+# Every six hours, the deployed demo from outside (Phase 8): health, an article, a search, every
 # page example's answer from the cache (no quota), an unknown path and the instance's usage, each
-# timed. A failure is GitHub's email to the owner: the demo is down, slow, or spending quota on
-# what should be cached.
+# timed. Once a day, the run of 06:41 UTC also asks one question no cache holds (--live), the
+# only check that sees a revoked key. A failure is GitHub's email to the owner. Each run keeps
+# what it measured as an artifact (probe.jsonl), from which cold starts are counted:
+# gh run download --name probe-<run id> into results/probe/ (ROADMAP, Phase 11).
 on:
   schedule:
     - cron: "41 */6 * * *"
   workflow_dispatch:
+    inputs:
+      live:
+        description: "Also spend one real answer"
+        type: boolean
+        default: false
 
 jobs:
   probe:
     if: github.repository == 'timimata/lex-pt' # not the public mirror's copy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          python-version: "3.14"
+          python-version-file: ".python-version"
       - run: pip install -e . --no-deps # the probe needs the standard library only
-      - run: python -m lex.probe https://lex-beryl.vercel.app
+      - name: probe
+        run: |
+          live=""
+          if [ "${{ github.event.schedule }}" = "41 */6 * * *" ] && [ "$(date -u +%H)" = "06" ]; then live="--live"; fi
+          if [ "${{ inputs.live }}" = "true" ]; then live="--live"; fi
+          python -m lex.probe https://lex-beryl.vercel.app $live --record probe.jsonl
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: probe-${{ github.run_id }}
+          path: probe.jsonl
+          retention-days: 90

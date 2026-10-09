@@ -1,7 +1,7 @@
 # 0005. Consolidated text and article history come from the PGDL, checked against the DR
 
 Date: 2026-09-29
-Status: accepted
+Status: accepted; amended 2026-10-08 (the current text is the DR's)
 
 ## Context
 
@@ -81,3 +81,15 @@ numbers 1.º to 14.º collide with the code's; the parser keeps them apart.
   the DR wins. If the PGDL turns out to be missing amendments, the missing versions are entered
   from the DR by hand, or the affected articles are excluded from temporal items.
 - If the PGDL changes its markup or goes away, the raw cache still rebuilds the store.
+
+## Amendment, 2026-10-08: what is taken from which source
+
+The build (`src/lex/ingest/build.py`) takes the current text of every article, its place in the
+code and the entry-into-force date of each change from the DR, the official source, and only the
+earlier versions from the PGDL; where the PGDL's current text differs from the DR's, the DR's is
+stored and the difference logged. Dates the DR does not give are resolved by the rules in
+`build.py` and the per-diploma tables in `codes.py` (corrections, dates read from a diploma's own
+entry-into-force article), each logged. The spot checks run for every diploma of the corpus, not
+the Código do Trabalho alone. Constitutional Court rulings are still not versions; Phase 11 of the
+roadmap keeps them, with deferred and suspended effects, as notes on the versions they concern;
+done the same day (ADR 0002, amended).

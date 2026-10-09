@@ -5,9 +5,15 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
+from lex.bench import card
 from lex.bench.corpus_check import Periods, check_citations, refusals_to_review
 from lex.bench.schema import Item
-from lex.bench.splits import assign, check, split_for
+from lex.bench.splits import (
+    assign,
+    check,
+    cross_split_pairs,
+    split_for,
+)
 
 
 def make(**overrides: Any) -> dict[str, Any]:
@@ -139,6 +145,7 @@ def test_check_catches_an_faq_entry_asked_twice_about_the_present(tmp_path: Path
         "url": "https://portal.act.gov.pt/_api/web/lists/getByTitle('FAQs')/items(194)",
         "title": "ACT, Perguntas Frequentes",
         "retrieved": "2026-09-29",
+        "modified": "2023-04-30",
     }
     first = make(id="ct-0001", source=entry)
     # Written another day, about the present again: the same question.
@@ -259,3 +266,215 @@ def test_the_dataset_folder_has_the_card_dev_and_the_licence(tmp_path: Path) -> 
     assert files == ["LICENSE.md", "README.md", "data/dev.jsonl"]
     assert ADR_ONLINE in (tmp_path / "hf" / "LICENSE.md").read_text(encoding="utf-8")
     assert "test.jsonl" not in files
+
+
+def _articles_by_split() -> tuple[str, str]:
+    """An article whose group hashes to dev, and one that hashes to test."""
+    split = {n: split_for(on_article(n)) for n in range(1, 40)}
+    return (
+        str(next(n for n, s in split.items() if s == "dev")),
+        str(next(n for n, s in split.items() if s == "test")),
+    )
+
+
+def citing(item_id: str, *articles: str, **overrides: Any) -> dict[str, Any]:
+    must = [{"diploma": "lei-7-2009", "article": a} for a in articles]
+    own = {"url": f"https://example.org/{item_id}", "title": "Fonte", "retrieved": "2026-09-29"}
+    fields = {"source": own} | overrides
+    return make(id=item_id, question=f"Pergunta {item_id}", must_cite=must, **fields)
+
+
+def test_an_item_citing_another_main_article_joins_its_group_in_dev(tmp_path: Path) -> None:
+    dev_article, test_article = _articles_by_split()
+    on_dev = citing("ct-0001", dev_article)
+    # Its own main article hashes to test, but it must cite dev's main article: one group.
+    linked = citing("ct-0002", test_article, dev_article)
+    alone = citing("ct-0003", test_article)
+    write(tmp_path / "dev.jsonl", [on_dev])
+    write(tmp_path / "test.jsonl", [linked, alone])
+
+    # Since v4 a test item in a group with dev items is a fault; ct-0003 shares ct-0002's group.
+    assert check(tmp_path) == [
+        "ct-0002 is in test, but its group puts it in dev",
+        "ct-0003 is in test, but its group puts it in dev",
+    ]
+    assert cross_split_pairs(tmp_path) == ["ct-0001 (dev) ~ ct-0002 (test): a must_cite article"]
+
+
+def test_assign_puts_a_new_item_in_its_group_and_refuses_one_linking_both(
+    tmp_path: Path,
+) -> None:
+    dev_article, test_article = _articles_by_split()
+    write(tmp_path / "dev.jsonl", [citing("ct-0001", dev_article)])
+    write(tmp_path / "test.jsonl", [citing("ct-0002", test_article)])
+    # Main article on test's side, but it must cite dev's: it goes to dev.
+    write(tmp_path / "incoming.jsonl", [citing("ct-0003", test_article, dev_article)])
+    problems = check(tmp_path)
+    assert problems == ["ct-0003 (incoming) links items in dev and in test"]
+
+    write(tmp_path / "incoming.jsonl", [citing("ct-0004", "999", dev_article)])
+    assert check(tmp_path) == []
+    assert assign(tmp_path) == {"dev": 1}
+
+
+def test_a_faq_entry_links_its_items_and_a_shared_page_is_only_listed(tmp_path: Path) -> None:
+    dev_article, test_article = _articles_by_split()
+    entry = {
+        "url": "https://portal.act.gov.pt/_api/web/lists/getByTitle('FAQs')/items(7)",
+        "title": "ACT",
+        "retrieved": "2026-09-29",
+        "modified": "2026-09-01",
+    }
+    page = {"url": "https://example.org/guia", "title": "Guia", "retrieved": "2026-09-29"}
+    write(tmp_path / "dev.jsonl", [citing("ct-0001", dev_article, source=entry)])
+    earlier = citing("ct-0002", test_article, source=entry, type="temporal", as_of="2011-06-01")
+    write(tmp_path / "test.jsonl", [earlier])
+    assert check(tmp_path) == ["ct-0002 is in test, but its group puts it in dev"]
+
+    write(tmp_path / "dev.jsonl", [citing("ct-0001", dev_article, source=page)])
+    write(tmp_path / "test.jsonl", [citing("ct-0002", test_article, source=page)])
+    assert check(tmp_path) == []
+    assert cross_split_pairs(tmp_path) == ["ct-0001 (dev) ~ ct-0002 (test): the same page"]
+
+
+def test_the_leak_scan_catches_rewording_and_an_id_beside_its_article() -> None:
+    from lex.bench.snapshot import find_leaks
+
+    secret = Item.model_validate(
+        make(
+            id="zz-9042",
+            question="O trabalhador que perde o filho tem direito a quantos dias de faltas "
+            "justificadas?",
+            answer="Tem direito a faltar justificadamente até vinte dias consecutivos por "
+            "falecimento de filho.",
+            must_cite=[{"diploma": "lei-7-2009", "article": "251"}],
+        )
+    )
+    # A dev item: what it shares with the test item is public already, and proves nothing.
+    public = Item.model_validate(
+        make(
+            id="zz-9043",
+            question="Quantos dias de faltas justificadas tem o trabalhador que perde o filho?",
+            answer="Tem direito a faltar justificadamente até vinte dias consecutivos.",
+        )
+    )
+    texts = {
+        "reworded-question.md": "Pergunta-se se o trabalhador que perde o filho tem direito a "
+        "quantos dias de faltas justificadas, e com que prova.",
+        "reworded-answer.md": "Faltar justificadamente até vinte dias consecutivos por "
+        "falecimento de filho: é o que a lei dá.",
+        "sheet.md": "| zz-9042 | composto | art. 251.º |",
+        "other-article.md": "| zz-9042 | composto | art. 2510.º | art. 251.º-A |",
+        "dev-only.md": "Tem direito a faltar justificadamente até vinte dias consecutivos.",
+    }
+    assert find_leaks(texts, [secret], [public.question, public.answer]) == [
+        "reworded-question.md holds test content",
+        "reworded-answer.md holds test content",
+        "sheet.md holds a test id beside an article it must cite",
+    ]
+
+
+def test_without_the_corpus_validate_checks_citations_against_the_index(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from lex.bench.__main__ import main
+
+    data, empty = tmp_path / "data", tmp_path / "no-corpus"
+    data.mkdir()
+    empty.mkdir()
+    item = make()  # article 238, asked about 2026-09-29
+    write(data / f"{split_for(Item.model_validate(item))}.jsonl", [item])
+    index, card_path = tmp_path / "index.jsonl", tmp_path / "card.md"
+    card_path.write_text(f"{card.START}\n{card.END}\n", encoding="utf-8")
+    card.refresh(card_path, data)
+    row = {"diploma": "lei-7-2009", "article": "238", "introduced_by": "lei-7-2009"}
+    args = ["validate", "--data-dir", str(data), "--corpus", str(empty), "--index", str(index)]
+    args += ["--card", str(card_path)]
+
+    write(index, [row | {"valid_from": "2009-02-17", "valid_to": None, "sha256": "x"}])
+    assert main(args) == 0
+    write(index, [row | {"valid_from": "2027-01-01", "valid_to": None, "sha256": "x"}])
+    assert main(args) == 1
+    assert "has no version in force on as_of" in capsys.readouterr().err
+
+
+def test_a_reviewers_sign_off_changes_the_card_but_not_what_runs_are_compared_by(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from lex.bench.__main__ import main
+    from lex.eval.results import bench_version
+
+    item = make()
+    split = split_for(Item.model_validate(item))
+    write(tmp_path / f"{split}.jsonl", [item, make(id="ct-0002", question="Outra pergunta?")])
+    card_path = tmp_path / "card.md"
+    card_path.write_text(f"Antes.\n{card.START}\n{card.END}\nDepois.\n", encoding="utf-8")
+    card.refresh(card_path, tmp_path)
+    before = bench_version(split, tmp_path)
+    assert "Validated by a legal reviewer" in card_path.read_text(encoding="utf-8")
+
+    monkeypatch.setattr("builtins.input", lambda prompt: "s")
+    args = ["review", "ct-0001", "--by", "Ana Jurista", "--data-dir", str(tmp_path)]
+    assert main([*args, "--card", str(card_path)]) == 0
+    shown = capsys.readouterr().out
+    assert item["question"] in shown and "validado por Ana Jurista" in shown
+
+    signed = Item.model_validate_json(
+        (tmp_path / f"{split}.jsonl").read_text(encoding="utf-8").splitlines()[0]
+    )
+    assert (signed.status, signed.validated_by) == ("validated", "Ana Jurista")
+    assert signed.validated_on is not None
+    after = bench_version(split, tmp_path)
+    assert after["sha"] != before["sha"] and after["scored"] == before["scored"]
+    text = card_path.read_text(encoding="utf-8")
+    assert text.startswith("Antes.") and text.endswith("Depois.\n")
+    assert f"1 of the 2 {split} items" in text or "1 of the 2 dev items" in text
+
+    # A correction is what runs are compared by.
+    corrected = make(answer="O período anual de férias tem a duração mínima de 25 dias úteis.")
+    write(tmp_path / f"{split}.jsonl", [corrected, make(id="ct-0002", question="Outra pergunta?")])
+    assert bench_version(split, tmp_path)["scored"] != before["scored"]
+
+
+def test_a_validated_item_names_who_and_when() -> None:
+    with pytest.raises(ValidationError):
+        Item.model_validate(make(status="validated", validated_by="Ana Jurista"))
+    Item.model_validate(
+        make(status="validated", validated_by="Ana Jurista", validated_on="2026-10-08")
+    )
+
+
+def test_a_faq_item_records_its_entrys_date_and_stamp_writes_it(tmp_path: Path) -> None:
+    import datetime as dt
+
+    from lex.bench.splits import stamp
+    from lex.eval.results import bench_version
+
+    entry = "https://portal.act.gov.pt/_api/web/lists/getByTitle('FAQs')/items(194)"
+    item = make(source={"url": entry, "title": "ACT", "retrieved": "2026-09-29"})
+    split = split_for(Item.model_validate(item))
+    write(tmp_path / f"{split}.jsonl", [item])
+    assert any("records no source.modified" in p for p in check(tmp_path))
+    before = bench_version(split, tmp_path)["scored"]
+
+    assert (
+        stamp(
+            {Item.model_validate(item).source.url.unicode_string(): dt.date(2023, 4, 30)}, tmp_path
+        )
+        == 1
+    )
+    assert check(tmp_path) == []
+    stamped = Item.model_validate_json((tmp_path / f"{split}.jsonl").read_text(encoding="utf-8"))
+    assert stamped.source.modified == dt.date(2023, 4, 30)
+    assert bench_version(split, tmp_path)["scored"] == before  # nothing a run reads changed
+
+
+def test_the_cards_faq_line_is_left_out_where_the_faq_is_not(tmp_path: Path) -> None:
+    write(tmp_path / f"{split_for(Item.model_validate(make()))}.jsonl", [make()])
+    card_path = tmp_path / "card.md"
+    card_path.write_text(f"{card.START}\n{card.END}\n", encoding="utf-8")
+    faq = tmp_path / "act_faq.jsonl"
+    faq.write_text('{"url": "https://example.org/faq", "question": "Outra?"}\n', encoding="utf-8")
+    card.refresh(card_path, tmp_path, faq)
+    assert card.VERBATIM in card_path.read_text(encoding="utf-8")
+    assert card.is_current(card_path, tmp_path, tmp_path / "absent.jsonl")  # CI

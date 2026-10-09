@@ -210,6 +210,8 @@ export default function App() {
   // Lisbon's date, from the server: the law asked about is Portuguese.
   const [serverToday, setServerToday] = useState<string>(today());
   const t = STRINGS[lang];
+  // Set when the route changes, so focus moves to the new view (WCAG 2.4.3).
+  const routed = useRef(false);
 
   useEffect(() => {
     api.health().then(
@@ -221,6 +223,7 @@ export default function App() {
     );
     api.leaderboard().then(setRuns, (e: Error) => setRunsError(e.message));
     const back = () => {
+      routed.current = true;
       setView(viewFromLocation());
       setMissing(pathMissing());
     };
@@ -232,6 +235,24 @@ export default function App() {
     document.documentElement.lang = lang === "pt" ? "pt-PT" : "en";
     document.title = missing ? t.notFoundTitle : t.titles[view];
   }, [lang, view, missing, t]);
+
+  // After a route change, by the nav or back, focus starts at the new view's heading rather than
+  // on the link left behind; a lazily loaded view gets a few frames to draw it.
+  useEffect(() => {
+    if (!routed.current) return;
+    routed.current = false;
+    const focus = (frames: number) => {
+      // The views stay mounted, hidden: the heading is the one not inside a hidden view.
+      const heading = Array.from(document.querySelectorAll<HTMLElement>("#content h1")).find(
+        (h) => !h.closest("[hidden]"),
+      );
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+      } else if (frames > 0) requestAnimationFrame(() => focus(frames - 1));
+    };
+    requestAnimationFrame(() => focus(60));
+  }, [view, missing]);
 
   function choose(next: Lang) {
     setLang(next);
@@ -248,6 +269,7 @@ export default function App() {
       if (next !== "ask" && next !== "articles") url.searchParams.delete("d");
       window.history.pushState(null, "", url.toString());
     }
+    routed.current = true;
     setMissing(false);
     setView(next);
     window.scrollTo({ top: 0 });
@@ -528,6 +550,7 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
               maxLength={1000}
               rows={2}
               placeholder={t.placeholder}
+              aria-describedby="question-note"
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -554,6 +577,9 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
                 {busy ? t.asking : t.ask}
               </button>
             </div>
+            <p id="question-note" className="query-note">
+              {t.privacyNote}
+            </p>
           </form>
 
           {idle && (
@@ -1095,6 +1121,16 @@ function Reader({
             )}
             <CopyArticleLink citation={citation} asOf={view.as_of} />
           </div>
+          {view.notes && view.notes.length > 0 && (
+            <div className="reader-notes">
+              <p className="section-label">{t.notesTitle}</p>
+              <ul>
+                {view.notes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           {view.text ? (
             comparing && previous ? (
               <Changes before={before.view?.text ?? null} after={view.text} since={previous.valid_from} />

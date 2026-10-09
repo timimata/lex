@@ -19,6 +19,28 @@ const pt = {
     "Os textos consolidados não têm valor legal: só faz fé a publicação no Diário da República. O Lex não é aconselhamento jurídico.",
   notice: "Textos consolidados sem valor legal; só faz fé o Diário da República. Não é aconselhamento jurídico.",
   unexpected: "Erro inesperado.",
+  notesTitle: "Notas do Diário da República sobre os efeitos desta versão",
+  // What the API's errors say, by the code it sends (X-Lex-Error, lex.api.app.ERRORS).
+  errors: {
+    future_date: "A data não pode ser futura: a lei desse dia não é conhecida.",
+    before_corpus:
+      "O Lex guarda a lei do arrendamento desde 27/06/2006 e o Código do Trabalho desde 17/02/2009, quando entrou em vigor.",
+    day_cap: "O Lex já respondeu a todas as perguntas que pode hoje. Volte depois das {hour}.",
+    visitor_hour: "Fez muitas perguntas na última hora. Tente de novo mais tarde.",
+    quota_day:
+      "O limite diário gratuito do modelo foi atingido; renova às {hour}, hora de Lisboa. Até lá, o separador Artigos continua a funcionar.",
+    quota_minute: "Há demasiados pedidos ao modelo neste minuto. Tente outra vez dentro de um minuto.",
+    overloaded:
+      "O modelo está sobrecarregado neste momento, um problema passageiro do fornecedor. Tente outra vez dentro de instantes.",
+    too_slow: "O modelo demorou demasiado a responder. Tente outra vez.",
+    unavailable: "O Lex não conseguiu responder agora. Tente mais tarde.",
+    no_articles: "Artigos indisponíveis.",
+    no_article: "Artigo não encontrado.",
+    no_search: "Pesquisa indisponível.",
+    no_changes: "Alterações indisponíveis.",
+    bad_period: "A data inicial tem de ser anterior à final.",
+    invalid: "Pedido inválido: a pergunta tem de ter entre 3 e 1000 caracteres, e a data tem de ser válida.",
+  } as Record<string, string>,
   loading: "A carregar",
   // Ask
   askTitle: "Pergunte à lei do trabalho e do arrendamento",
@@ -26,6 +48,8 @@ const pt = {
     "A resposta assenta apenas nos artigos em vigor na data que indicar, e cada frase cita o seu artigo. Quando os artigos não permitem responder, o Lex di-lo.",
   question: "Pergunta",
   placeholder: "Escreva a sua pergunta sobre trabalho ou arrendamento",
+  privacyNote:
+    "A pergunta é enviada à API Gemini da Google, no nível gratuito, cujos termos deixam a Google usá-la para melhorar os seus produtos. Não escreva dados pessoais.",
   lawInForceOn: "Lei em vigor a",
   ask: "Perguntar",
   asking: "A consultar…",
@@ -118,6 +142,10 @@ const pt = {
   answersNote:
     "Recall: parte dos artigos obrigatórios que a resposta cita. Precisão: parte das citações que estão corretas.",
   correct: "Respostas corretas",
+  partial: "Parciais",
+  wrong: "Erradas",
+  verdictRule:
+    "Correta: diz o essencial da resposta de referência sem a contradizer. Parcial: falta parte do que se perguntou, ou tem um erro menor. Errada: contradiz a referência, erra o que muda a conclusão, ou recusa uma pergunta que tem resposta.",
   judgedByChecks: (model: string, references: string, altered: string) =>
     `Respostas corretas: avaliadas por um modelo (${model}) contra a resposta de referência de cada pergunta; com —, o sistema não foi avaliado. O avaliador não foi medido contra rótulos feitos por pessoas, mas em casos de resposta conhecida: aceitou ${references} respostas de referência e apanhou ${altered} respostas alteradas, com um número trocado ou o sim e o não invertidos. Mostra que apanha erros claros, não como avalia respostas ambíguas.`,
   judgedByLabels: (model: string, items: number, agreement: string, kappa: string) =>
@@ -187,7 +215,7 @@ const pt = {
     limitsTitle: "Limitações",
     limits: [
       "Abrange o Código do Trabalho e, no arrendamento, o Código Civil (artigos 1022.º a 1113.º) e o NRAU, e só o texto dos seus artigos: não inclui portarias, decretos complementares, convenções coletivas nem jurisprudência.",
-      "As datas são as de entrada em vigor; normas transitórias e efeitos diferidos não estão representados.",
+      "As datas são as de entrada em vigor; efeitos diferidos ou suspensos e acórdãos do Tribunal Constitucional aparecem como notas do Diário da República em cada versão, e as normas transitórias não estão representadas.",
       "O número de perguntas por hora e por dia é limitado.",
     ],
     linksTitle: "Código e dados",
@@ -216,12 +244,34 @@ const en: Strings = {
     "Consolidated texts have no legal value: only the publication in the Diário da República is authentic. Lex is not legal advice.",
   notice: "Consolidated texts have no legal value; only the Diário da República is authentic. Not legal advice.",
   unexpected: "Unexpected error.",
+  notesTitle: "The Diário da República's notes on this version's effects",
+  errors: {
+    future_date: "The date cannot be in the future: that day's law is not known.",
+    before_corpus:
+      "Lex holds tenancy law from 27/06/2006 and the Labour Code from 17/02/2009, when it came into force.",
+    day_cap: "Lex has answered all the questions it can today. Come back after {hour}.",
+    visitor_hour: "You asked many questions in the last hour. Try again later.",
+    quota_day:
+      "The model's free daily limit has been reached; it renews at {hour}, Lisbon time. Until then, the Articles tab still works.",
+    quota_minute: "Too many requests to the model this minute. Try again in a minute.",
+    overloaded: "The model is overloaded right now, a passing problem at the provider. Try again in a moment.",
+    too_slow: "The model took too long to answer. Try again.",
+    unavailable: "Lex could not answer just now. Try again later.",
+    no_articles: "Articles unavailable.",
+    no_article: "Article not found.",
+    no_search: "Search unavailable.",
+    no_changes: "Changes unavailable.",
+    bad_period: "The start date must come before the end date.",
+    invalid: "Invalid request: the question must have between 3 and 1000 characters, and the date must be valid.",
+  } as Record<string, string>,
   loading: "Loading",
   askTitle: "Ask the labour and tenancy law",
   askLead:
     "The answer rests only on the articles in force on the date you give, and every sentence cites its article. When the articles do not support an answer, Lex says so.",
   question: "Question (in Portuguese)",
   placeholder: "Type a question about work or renting, in Portuguese",
+  privacyNote:
+    "Your question is sent to Google's Gemini API, on its free tier, whose terms let Google use it to improve its products. Do not write personal data.",
   lawInForceOn: "Law in force on",
   ask: "Ask",
   asking: "Consulting…",
@@ -310,6 +360,10 @@ const en: Strings = {
   answersNote:
     "Recall: share of the required articles the answer cites. Precision: share of the citations that are correct.",
   correct: "Correct answers",
+  partial: "Partial",
+  wrong: "Wrong",
+  verdictRule:
+    "Correct: says what the reference answer says that matters, without contradicting it. Partial: leaves out part of what was asked, or has a minor error. Wrong: contradicts the reference, gets wrong what changes the conclusion, or refuses a question that has an answer.",
   judgedByChecks: (model: string, references: string, altered: string) =>
     `Correct answers: judged by a model (${model}) against each question's reference answer; a — means the system was not judged. The judge was measured not against human labels but on known-answer cases: it accepted ${references} reference answers and caught ${altered} altered ones, with a number changed or the yes and no turned over. That shows it catches clear errors, not how it judges ambiguous answers.`,
   judgedByLabels: (model: string, items: number, agreement: string, kappa: string) =>
@@ -377,7 +431,7 @@ const en: Strings = {
     limitsTitle: "Limitations",
     limits: [
       "It covers the Labour Code and, on tenancy, the Civil Code (articles 1022 to 1113) and the NRAU, and only their articles' text: no ordinances, implementing decrees, collective agreements or case law.",
-      "Dates are when each version entered into force; transitional rules and deferred effects are not represented.",
+      "Dates are when each version entered into force; deferred or suspended effects and Constitutional Court rulings appear as the Diário da República's notes on each version, and transitional rules are not represented.",
       "Questions are limited per hour and per day.",
     ],
     linksTitle: "Code and data",

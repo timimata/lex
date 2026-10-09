@@ -2,13 +2,15 @@
   "split": "test",
   "bench": {
     "items": 109,
-    "sha": "7d5960a801ab"
+    "sha": "7d5960a801ab",
+    "scored": "c5bfe8bbb906"
   },
-  "system": "dense-bge-m3+rerank+refs+gemini-3.1-flash-lite",
+  "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+claims",
   "config": {
-    "model": "BAAI/bge-m3@5617a9f",
-    "reranker": "BAAI/bge-reranker-v2-m3@953dc6f",
-    "rerank_depth": 20,
+    "model": "gemini-embedding-2@768",
+    "store": "memory",
+    "query": "task: question answering | query: {}",
+    "document": "{heading}\n{text}",
     "references": "ADR 0004 parser",
     "task": "answers",
     "llm": "gemini-3.1-flash-lite",
@@ -16,23 +18,23 @@
       "reasoning_effort": "low"
     },
     "k": 5,
-    "format": "answer",
+    "format": "claims",
     "repeat": 0,
     "usage": {
       "calls": 109,
-      "prompt_tokens": 244941,
-      "completion_tokens": 10425,
-      "thinking_tokens": 1802,
+      "prompt_tokens": 210990,
+      "completion_tokens": 16462,
+      "thinking_tokens": 2576,
       "thinking_unrecorded": 97,
-      "cached": 97
+      "cached": 108
     },
     "cost": {
       "usd_per_million": {
         "input": 0.25,
         "output": 1.5
       },
-      "usd": 0.079576,
-      "usd_per_question": 0.00073,
+      "usd": 0.081305,
+      "usd_per_question": 0.000746,
       "lower_bound": true
     },
     "counts": {
@@ -59,23 +61,23 @@
       "unparsed": 0
     }
   },
-  "commit": "186a6fd48380e21eb424871f075e22f18d45bb29",
+  "commit": "bff58484885374bcbf08542f8332ff78db69f791",
   "uncommitted_changes": false,
-  "run_at": "2026-10-07T18:16:18+01:00",
+  "run_at": "2026-10-07T16:53:01+01:00",
   "summary": {
     "answerable": {
       "items": 89,
-      "refused": 0.033707865168539325,
-      "cited": 86,
-      "citation_precision": 0.9013565891472868,
-      "citation_recall": 0.8868913857677903
+      "refused": 0.0,
+      "cited": 89,
+      "citation_precision": 0.9249063670411984,
+      "citation_recall": 0.9318352059925094
     },
     "composite": {
       "items": 17,
       "refused": 0.0,
       "cited": 17,
-      "citation_precision": 0.8235294117647058,
-      "citation_recall": 0.6960784313725491
+      "citation_precision": 0.857843137254902,
+      "citation_recall": 0.6666666666666667
     },
     "explicit_reference": {
       "items": 9,
@@ -86,21 +88,21 @@
     },
     "simple": {
       "items": 46,
-      "refused": 0.043478260869565216,
-      "cited": 44,
-      "citation_precision": 0.9037878787878788,
-      "citation_recall": 0.9347826086956522
+      "refused": 0.0,
+      "cited": 46,
+      "citation_precision": 0.9202898550724639,
+      "citation_recall": 1.0
     },
     "temporal": {
       "items": 17,
-      "refused": 0.058823529411764705,
-      "cited": 16,
-      "citation_precision": 0.921875,
-      "citation_recall": 0.888235294117647
+      "refused": 0.0,
+      "cited": 17,
+      "citation_precision": 0.9647058823529411,
+      "citation_recall": 0.9764705882352942
     },
     "unanswerable": {
       "items": 20,
-      "refused": 0.8,
+      "refused": 0.9,
       "cited": 0,
       "citation_precision": null,
       "citation_recall": null
@@ -109,13 +111,13 @@
       "answerable": {
         "items": 89,
         "correta": 0.7303370786516854,
-        "parcial": 0.19101123595505617,
-        "errada": 0.07865168539325842
+        "parcial": 0.24719101123595505,
+        "errada": 0.02247191011235955
       },
       "composite": {
         "items": 17,
-        "correta": 0.5294117647058824,
-        "parcial": 0.4117647058823529,
+        "correta": 0.4117647058823529,
+        "parcial": 0.5294117647058824,
         "errada": 0.058823529411764705
       },
       "explicit_reference": {
@@ -126,15 +128,15 @@
       },
       "simple": {
         "items": 46,
-        "correta": 0.7391304347826086,
-        "parcial": 0.17391304347826086,
-        "errada": 0.08695652173913043
+        "correta": 0.782608695652174,
+        "parcial": 0.21739130434782608,
+        "errada": 0.0
       },
       "temporal": {
         "items": 17,
         "correta": 0.7647058823529411,
-        "parcial": 0.11764705882352941,
-        "errada": 0.11764705882352941
+        "parcial": 0.17647058823529413,
+        "errada": 0.058823529411764705
       }
     }
   }

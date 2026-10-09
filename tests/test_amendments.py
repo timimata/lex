@@ -36,3 +36,38 @@ def test_a_new_amendment_is_reported_and_a_changed_page_is_an_error() -> None:
     assert amendments.new_since(known, known) == []
     with pytest.raises(ValueError):
         amendments.parse("<html>nothing here</html>")
+
+
+def test_an_act_of_a_kind_the_check_cannot_read_fails_it() -> None:
+    page = (FIXTURES / "ct-amendments.html").read_text(encoding="utf-8")
+    assert amendments.unknown(page) == []
+    # A kind no pattern reads, slipped into the list as the page writes its rows.
+    odd = (
+        '<a  href= "lei_mostra_articulado.php?nid=1&tabela=leis">Resolução n.º 9/2026, de 01/02</a>'
+    )
+    strange = page.replace("<a  href=", odd + "<br>&nbsp;&nbsp;  - <a  href=", 1)
+    assert amendments.unknown(strange) == ["Resolução n.º 9/2026, de 01/02"]
+    # Two numberless declarations the Código Civil's page has always listed are read now.
+    assert "Declaração de 31/12 de 1986" in listed("cc")
+
+
+def test_the_drs_own_list_of_amending_acts_is_read() -> None:
+    text = "\n".join(
+        [
+            "Alterações",
+            "2025-03-27",
+            "Lei n.º 32/2025 - 1.ª Série",
+            "Promoção dos direitos das pessoas com endometriose",
+            "Ver detalhes das alterações ",
+            "2013-10-24",
+            "Acórdão do Tribunal Constitucional n.º 602/2013 - 1.ª Série",
+            "Declara a inconstitucionalidade",
+            "Ver detalhes das alterações ",
+        ]
+    )
+    assert amendments.dr_acts(text) == [
+        "2025-03-27 Lei n.º 32/2025",
+        "2013-10-24 Acórdão do Tribunal Constitucional n.º 602/2013",
+    ]
+    for key in sorted(CODES):  # a list kept for each diploma, from the corpus's own render
+        assert amendments.known(amendments.dr_known_path(CODES[key]))

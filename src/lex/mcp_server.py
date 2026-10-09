@@ -23,8 +23,7 @@ from dotenv import load_dotenv
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 
-from lex.api.app import DISCLAIMER, lisbon_today
-from lex.domain import DIPLOMAS, Answer, Citation, Retriever
+from lex.domain import DIPLOMAS, DISCLAIMER, Answer, Citation, Retriever, lisbon_today
 from lex.store.memory import Corpus, corpus_files
 from lex.store.models import ArticleVersion
 
@@ -99,6 +98,7 @@ def build_server(
             "em_vigor_ate": version.valid_to.isoformat() if version.valid_to else None,
             "introduzido_por": version.introduced_by,
             "fonte": version.source_url,
+            "notas": version.notes,  # deferred or suspended effects, rulings
             "aviso": DISCLAIMER,
         }
 

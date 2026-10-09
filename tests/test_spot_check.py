@@ -75,3 +75,38 @@ def test_a_version_published_but_not_yet_in_force_is_compared_with_the_next_one(
     shown = dr.Article("370", "", "", (), (), ())
     check = check_one(store.article_at, "lei-7-2009", "370", dt.date(2012, 7, 31), shown)
     assert (check.result, check.ours) == ("next version, revoked on both", "2012-08-01 to in force")
+
+
+def test_rule_dated_versions_are_read_from_the_build_report_and_corrections_named() -> None:
+    import datetime as dt
+
+    from lex.ingest import dr
+    from lex.ingest.spot_check import check_one, rule_dated
+    from lex.store.models import ArticleVersion
+
+    resolved = [
+        "12-A: retificacao-13-2023 dated 2023-05-01, as lei-13-2023, which it rectifies",
+        "35: lei-90-2019 dated 2020-04-01, read from the diploma's entry-into-force article",
+    ]
+    assert rule_dated(resolved) == {("12-A", "retificacao-13-2023"), ("35", "lei-90-2019")}
+
+    ours = ArticleVersion(
+        diploma="lei-6-2006",
+        article="12",
+        heading="H",
+        path=[],
+        text="Texto.",
+        valid_from=dt.date(2006, 6, 27),
+        introduced_by="retificacao-24-2006",
+        source_url="u",
+        fetched=dt.date(2026, 10, 1),
+    )
+    window = (dt.date(2006, 6, 28), None)
+    theirs = dr.Article("12", "H", "Texto.", (), (), (), (), window)
+    found = check_one(lambda d, a, day: ours, "lei-6-2006", "12", ours.valid_from, theirs)
+    assert found.result == "dates differ"
+    corrected = {("retificacao-24-2006", "12")}
+    found = check_one(
+        lambda d, a, day: ours, "lei-6-2006", "12", ours.valid_from, theirs, corrected
+    )
+    assert found.result == "dates differ, corrected in codes.py"

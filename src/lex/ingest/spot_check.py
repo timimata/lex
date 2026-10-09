@@ -17,6 +17,7 @@ import datetime as dt
 import difflib
 import random
 import re
+from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -76,8 +77,14 @@ def _span(start: dt.date | None, end: dt.date | None) -> str:
 
 
 def check_one(
-    article_at: ArticleAt, diploma: str, article: str, day: dt.date, theirs: dr.Article | None
+    article_at: ArticleAt,
+    diploma: str,
+    article: str,
+    day: dt.date,
+    theirs: dr.Article | None,
+    corrected: Collection[tuple[str, str]] = (),
 ) -> Check:
+    """`corrected`: (diploma, article) dates codes.py corrects on the DR's, with its reason."""
     if theirs is None:
         return Check(article, day, "-", "-", "missing from the DR")
     start, last = theirs.window or (None, None)
@@ -88,8 +95,16 @@ def check_one(
     span = _span(ours.valid_from, ours.valid_to)
     # The DR states the last day in force; the store keeps the first day out of force.
     if (start and ours.valid_from != start) or (last and ours.valid_to != last + DAY):
+        if (ours.introduced_by, article) in corrected:
+            return Check(article, day, stated, span, "dates differ, corrected in codes.py")
         return Check(article, day, stated, span, "dates differ")
     result, diff = compare(ours.text, theirs.text)
+    if result == "differs" and ours.introduced_by.startswith("retificacao"):
+        # The store applies a rectification from the day the text it rectifies took effect
+        # (Lei n.º 74/98, art. 5.º, n.º 4), so the unrectified text often holds no day of its
+        # own; the DR's history shows it until the rectification was published. Listed apart, as
+        # the likely cause, for a person to read the diff: not counted as checked.
+        return Check(article, day, stated, span, "differs, a rectification's version", diff)
     if result == "differs" and theirs.window is None and ours.valid_to is not None:
         # The DR shows the latest version published by that day, which may not be in force
         # yet, and then may state no period: the store's next version is the one to compare.
@@ -102,6 +117,16 @@ def check_one(
     return Check(article, day, stated, span, result, diff)
 
 
+def rule_dated(resolved: list[str]) -> set[tuple[str, str]]:
+    """(article, diploma) of each version the build dated by a rule rather than the DR's note
+    (its report's `resolved`: "12-A: retificacao-13-2023 dated 2023-05-01, ...")."""
+    found = set()
+    for line in resolved:
+        article, _, rest = line.partition(": ")
+        found.add((article, rest.split(" dated ", 1)[0]))
+    return found
+
+
 def run(
     versions: list[ArticleVersion],
     n: int,
@@ -111,11 +136,20 @@ def run(
     code: Code,
     *,
     offline: bool = False,
+    always: Collection[tuple[str, str]] = (),
 ) -> tuple[list[Check], int]:
-    """Check n random earlier versions. Returns the checks and how many versions were drawn from."""
-    older = [v for v in versions if v.valid_to is not None]
-    picked = sorted(random.Random(seed).sample(older, n), key=lambda v: (v.valid_from, v.article))
-    plan = [(v, d) for v in picked if v.valid_to for d in (v.valid_from, v.valid_to - DAY)]
+    """Check every version dated by rule (`always`, from `rule_dated`), the riskiest, and n
+    random earlier versions besides. Returns the checks and how many versions were drawn from."""
+    dated = [v for v in versions if (v.article, v.introduced_by) in always]
+    older = [v for v in versions if v.valid_to is not None and v not in dated]
+    drawn = random.Random(seed).sample(older, min(n, len(older)))
+    picked = sorted(dated + drawn, key=lambda v: (v.valid_from, v.article))
+    # A version in force has no last day yet: its first is checked.
+    plan = [
+        (v, d)
+        for v in picked
+        for d in ((v.valid_from, v.valid_to - DAY) if v.valid_to else (v.valid_from,))
+    ]
     pages: dict[dt.date, dict[str, dr.Article]] = {}
     for day in sorted({d for _, d in plan}):
         print(f"  DR as of {day}", flush=True)
@@ -124,12 +158,15 @@ def run(
         )
         pages[day] = dr.parse_code(text, code.start, code.stop, code.quotes)
     checks = [
-        check_one(article_at, v.diploma, v.article, d, pages[d].get(v.article)) for v, d in plan
+        check_one(article_at, v.diploma, v.article, d, pages[d].get(v.article), code.corrections)
+        for v, d in plan
     ]
     return checks, len(older)
 
 
-def report(checks: list[Check], n: int, seed: int, drawn_from: int, code: Code) -> str:
+def report(
+    checks: list[Check], n: int, seed: int, drawn_from: int, code: Code, rule: int = 0
+) -> str:
     counts: dict[str, int] = {}
     for c in checks:
         counts[c.result] = counts.get(c.result, 0) + 1
@@ -142,10 +179,13 @@ def report(checks: list[Check], n: int, seed: int, drawn_from: int, code: Code) 
     ]
     return (
         f"# Spot check of the {code.name}: {n} earlier article versions\n\n"
-        f"Produced by `python -m lex.ingest spot-check {n} --seed {seed} --code {code.key}`: {n}\n"
-        "versions drawn at "
-        f"random from the {drawn_from} earlier (no longer in force) versions in the store, each\n"
-        "checked against the DR's *Versão à data de* view on its first and its last day in force.\n"
+        f"Produced by `python -m lex.ingest spot-check {n} --seed {seed} --code {code.key}`:\n"
+        f"every one of the {rule} versions the build dated by a rule rather than the DR's note\n"
+        "(a correction, a date read from the diploma, a rectification's, a date the DR gives on\n"
+        f"every other article), the riskiest, and {n} versions drawn at random from the\n"
+        f"{drawn_from} other earlier (no longer in force) versions in the store, each checked\n"
+        "against the DR's "
+        "*Versão à data de* view on its first and, if it has one, its last day in force.\n"
         "How the check works, and what it shares with the build, is in\n"
         "`src/lex/ingest/spot_check.py`. It is automated rather than done by hand.\n\n"
         "*DR states* is the period in force the DR gives for the version it shows (first to last\n"

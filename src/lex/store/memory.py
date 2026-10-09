@@ -4,12 +4,14 @@ tests/test_memory.py checks that it answers them the same way.
 """
 
 import datetime as dt
-import hashlib
+import gzip
 import re
 import unicodedata
-from collections import defaultdict
+from collections import Counter, defaultdict
+from itertools import pairwise
 from pathlib import Path
 
+from lex.domain import corpus_fingerprint, text_sha
 from lex.store.models import ArticleVersion
 
 # Words too common to tell articles apart.
@@ -121,12 +123,37 @@ class Corpus:
 
     @classmethod
     def load(cls, *paths: Path) -> "Corpus":
-        """Every version in the given versions.jsonl files, in their order."""
+        """Every version in the given versions.jsonl files, in their order, refused if they
+        break a rule Postgres would enforce (`check`)."""
         versions = []
         for path in paths:
-            lines = path.read_text(encoding="utf-8").splitlines()
+            # corpus/versions.jsonl.gz, the committed copy CI reads (lex.bench index), or a file.
+            data = gzip.decompress(path.read_bytes()) if path.suffix == ".gz" else path.read_bytes()
+            lines = data.decode("utf-8").splitlines()
             versions += [ArticleVersion.model_validate_json(line) for line in lines if line]
-        return cls(versions)
+        corpus = cls(versions)
+        if problems := corpus.check():
+            raise ValueError("the corpus breaks the store's rules: " + "; ".join(problems))
+        return corpus
+
+    def check(self) -> list[str]:
+        """What Postgres's constraints refuse (lex.store.db.SCHEMA, ADR 0002), checked here for
+        the demo, whose only store this is: a version that ends before it starts, and two
+        versions of an article in force on one day."""
+        problems = []
+        for (diploma, article), history in self.by_article.items():
+            for v in history:
+                if v.valid_to is not None and v.valid_to <= v.valid_from:
+                    problems.append(
+                        f"{diploma}/{article} from {v.valid_from}: ends before it starts"
+                    )
+            for earlier, later in pairwise(history):
+                if earlier.valid_to is None or earlier.valid_to > later.valid_from:
+                    problems.append(
+                        f"{diploma}/{article}: the versions from {earlier.valid_from} and "
+                        f"{later.valid_from} overlap"
+                    )
+        return problems
 
     def article_at(self, diploma: str, article: str, as_of: dt.date) -> ArticleVersion | None:
         """The version of an article in force on `as_of`, or None if there was none that day."""
@@ -181,9 +208,19 @@ class Corpus:
         return [v for _, _, v in sorted(scored, key=lambda s: (s[0], s[1]))[:k]]
 
     def fingerprint(self) -> str:
-        """A hash of every version's identity, dates and text, as db.fingerprint's purpose."""
-        parts = sorted(
-            "|".join([v.diploma, v.article, str(v.valid_from), str(v.valid_to or ""), v.text])
+        """The corpus's one fingerprint (lex.domain.corpus_fingerprint), as Postgres and the
+        committed index give it for the same versions."""
+        return corpus_fingerprint(
+            (
+                v.diploma,
+                v.article,
+                v.valid_from.isoformat(),
+                v.valid_to.isoformat() if v.valid_to else None,
+                text_sha(v.heading, v.text, v.notes),
+            )
             for v in self.versions
         )
-        return hashlib.sha256("\n".join(parts).encode()).hexdigest()
+
+    def counts(self) -> dict[str, int]:
+        """Article versions per diploma."""
+        return dict(sorted(Counter(v.diploma for v in self.versions).items()))

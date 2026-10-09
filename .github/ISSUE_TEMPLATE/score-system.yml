@@ -1,0 +1,32 @@
+name: Score my system on test
+description: Ask the maintainer to run a system on the private test split
+labels: [scoring]
+body:
+  - type: input
+    id: system
+    attributes:
+      label: System
+      description: Its name, and a link to what it is.
+    validations:
+      required: true
+  - type: textarea
+    id: dev
+    attributes:
+      label: Its dev run
+      description: How it scored on dev (python -m lex.eval answers --from), so its test run stands on a dev run.
+    validations:
+      required: true
+  - type: textarea
+    id: access
+    attributes:
+      label: How to run it
+      description: An endpoint with the /api/answer contract (POST {"question", "as_of"}; reply {"answer"} with text, citations with valid_from, refused), or code the maintainer can run.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Test questions
+      options:
+        - label: My endpoint receives the test questions; I will neither keep them nor train on them (ADR 0016).
+          required: true

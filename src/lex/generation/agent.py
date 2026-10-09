@@ -24,6 +24,7 @@ from lex.generation.answer import (
     claims_answer,
     first_object,
     prompt,
+    read,
     refusal,
 )
 from lex.generation.llm import Completion, Llm, spent
@@ -31,7 +32,13 @@ from lex.retrieval.references import diplomas_for
 
 STEPS = 3  # requests the model may make before it must answer; set, not tuned
 PER_SEARCH = 3  # new articles a search adds, at most
-TOO_LATE = "A pesquisa de mais artigos demoraria demasiado; tente de novo."
+
+
+class BudgetTimeout(Exception):
+    """The answer would outlast the caller's time (the demo's): a failure, not an answer, so the
+    API answers 503, gives the visitor's admission back and caches nothing (ROADMAP, Phase 11).
+    Its name says Timeout, which is how the API tells the visitor it took too long."""
+
 
 AGENT_SYSTEM = CLAIMS_SYSTEM.replace(
     "\n\nRegras:\n",
@@ -138,10 +145,9 @@ class AgentSystem:
                 answer = claims_answer(reply, as_of, given, self.counts)
                 break
             if self.budget is not None and sum(seconds.values()) > self.budget:
-                # Another call could outlast the caller's time (the demo's 30 s): say so now.
+                # Another call could outlast the caller's time (the demo's 30 s): fail now.
                 self.counts["over_budget"] += 1
-                answer = refusal(as_of, TOO_LATE)
-                break
+                raise BudgetTimeout(f"past the {self.budget} s budget, a request not followed")
             started = time.perf_counter()
             kind, values = action
             if kind == "pesquisar":
@@ -158,7 +164,12 @@ class AgentSystem:
             timed("retrieval", started)
         assert answer is not None  # the last step always answers
         timings = {stage: round(s, 3) for stage, s in seconds.items()}
-        update = {"timings": timings, "requests": asked, "tokens": spent(calls)}
+        update = {
+            "timings": timings,
+            "requests": asked,
+            "tokens": spent(calls),
+            "given": read(given),
+        }
         return answer.model_copy(update=update)
 
     def _in_force(

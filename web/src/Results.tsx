@@ -78,6 +78,8 @@ export default function Results({ runs, error, demoSystem }: { runs: Run[] | nul
               <tr>
                 <th>{t.system}</th>
                 {judged && <th className="num">{t.correct}</th>}
+                {judged && <th className="num">{t.partial}</th>}
+                {judged && <th className="num">{t.wrong}</th>}
                 <th className="num">{t.citationRecall}</th>
                 <th className="num">{t.precision}</th>
                 <th className="num">{t.wrongRefusals}</th>
@@ -93,11 +95,15 @@ export default function Results({ runs, error, demoSystem }: { runs: Run[] | nul
                     {r.system === demoSystem && <span className="tag">{t.thisDemo}</span>}
                   </td>
                   {judged &&
-                    (r.correctness ? (
-                      <Share value={r.correctness.answerable?.correta} />
-                    ) : (
-                      <td className="num muted-cell">—</td>
-                    ))}
+                    (["correta", "parcial", "errada"] as const).map((verdict) =>
+                      r.correctness ? (
+                        <Share key={verdict} value={r.correctness.answerable?.[verdict]} />
+                      ) : (
+                        <td key={verdict} className="num muted-cell">
+                          —
+                        </td>
+                      ),
+                    )}
                   <Share value={r.summary.answerable?.citation_recall} />
                   <Share value={r.summary.answerable?.citation_precision} />
                   <td className="num">{count(r.summary.answerable?.refused, r.summary.answerable?.items, t.of)}</td>
@@ -109,6 +115,7 @@ export default function Results({ runs, error, demoSystem }: { runs: Run[] | nul
           </table>
         </div>
         <p className="note">{t.answersNote}</p>
+        {judged && <p className="note">{t.verdictRule}</p>}
         {judged && checks && (
           <p className="note">
             {t.judgedByChecks(

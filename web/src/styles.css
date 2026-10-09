@@ -559,6 +559,13 @@ input[type="date"]:focus,
   margin-top: 12px;
 }
 
+/* Where a question goes (ADR 0016): small, under the fields. */
+.query-note {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
 /* Fields and the button in a row stand the same height. */
 .query-row .text-input,
 .query-row input[type="date"],
@@ -1420,4 +1427,18 @@ summary {
   .basis li {
     break-inside: avoid;
   }
+}
+
+/* The DR's notes on a version's effects, above its text (ROADMAP, Phase 11). */
+.reader-notes {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--cobalt);
+  background: var(--paper);
+}
+
+.reader-notes ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 15px;
 }

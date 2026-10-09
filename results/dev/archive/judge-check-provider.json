@@ -1,0 +1,1907 @@
+{
+  "split": "dev",
+  "bench": {
+    "items": 92,
+    "sha": "7fbb529e5bb3",
+    "scored": "1db8e49a4869"
+  },
+  "system": "judge-check",
+  "config": {
+    "judge": "gemma-4-26b-a4b-it",
+    "judge_prompt": "a4aecc7ccf8a",
+    "pass_share": 0.9,
+    "endpoints": {
+      "judge": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemma-4-26b-a4b-it"
+      }
+    },
+    "unparsed": 0,
+    "usage": {
+      "calls": 226,
+      "prompt_tokens": 111182,
+      "completion_tokens": 10462,
+      "thinking_tokens": 70360,
+      "thinking_unrecorded": 114,
+      "cached": 217
+    }
+  },
+  "commit": "b4ee643ae276c113839ab6aace74e8052d184a0f",
+  "uncommitted_changes": true,
+  "source": "afed557bd34f53b3",
+  "environment": {
+    "python": "3.14.4",
+    "lock": "4afebdd1c5e2561f"
+  },
+  "run_at": "2026-10-08T11:54:09+01:00",
+  "summary": {
+    "reference": {
+      "cases": 68,
+      "as_expected": 68,
+      "share": 1.0,
+      "correta": 68,
+      "parcial": 0,
+      "errada": 0
+    },
+    "yes-no": {
+      "cases": 15,
+      "as_expected": 15,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 0,
+      "errada": 15
+    },
+    "altered": {
+      "cases": 48,
+      "as_expected": 48,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 1,
+      "errada": 47
+    },
+    "contradicted": {
+      "cases": 42,
+      "as_expected": 42,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 2,
+      "errada": 40
+    },
+    "lenient": {
+      "cases": 110,
+      "as_expected": 110,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 2,
+      "errada": 108
+    },
+    "other": {
+      "cases": 68,
+      "as_expected": 68,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 0,
+      "errada": 68
+    },
+    "number": {
+      "cases": 33,
+      "as_expected": 33,
+      "share": 1.0,
+      "correta": 0,
+      "parcial": 1,
+      "errada": 32
+    },
+    "passed": true
+  },
+  "items": [
+    {
+      "id": "ct-0004",
+      "kind": "reference",
+      "answer": "Sim, segundo a ACT. O falecimento é um facto não imputável ao trabalhador que o impede de gozar as férias, pelo que o gozo se suspende (art. 244.º, n.º 1), desde que o comunique ao empregador. A ausência rege-se pelo regime das faltas por falecimento (art. 251.º) e os dias de férias por gozar são marcados depois (art. 244.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0004",
+      "kind": "yes-no",
+      "answer": "Não, segundo a ACT. O falecimento é um facto não imputável ao trabalhador que o impede de gozar as férias, pelo que o gozo se suspende (art. 244.º, n.º 1), desde que o comunique ao empregador. A ausência rege-se pelo regime das faltas por falecimento (art. 251.º) e os dias de férias por gozar são marcados depois (art. 244.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema começa com 'Não', o que contradiz diretamente a resposta da referência e a sua própria fundamentação que afirma que o gozo se suspende."
+    },
+    {
+      "id": "ct-0004",
+      "kind": "contradicted",
+      "answer": "Sim, segundo a ACT. O falecimento é um facto não imputável ao trabalhador que o impede de gozar as férias, pelo que o gozo se suspende (art. 244.º, n.º 1), desde que o comunique ao empregador. A ausência rege-se pelo regime das faltas por falecimento (art. 251.º) e os dias de férias por gozar são marcados depois (art. 244.º, n.º 2). Contudo, não, segundo a ACT.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta apresenta uma contradição direta ao final, afirmando 'Contudo, não, segundo a ACT', o que contradiz a referência."
+    },
+    {
+      "id": "ct-0004",
+      "kind": "other",
+      "answer": "Ao empregador, dentro dos limites da lei, tendo em conta prioritariamente a segurança e saúde do trabalhador e facilitando a conciliação com a vida familiar e a frequência de formação; os representantes dos trabalhadores devem ser consultados.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de deveres do empregador e não da suspensão das férias por falecimento."
+    },
+    {
+      "id": "ct-0005",
+      "kind": "reference",
+      "answer": "Que o gozo das férias não se inicia, ou suspende-se, quando o trabalhador esteja temporariamente impedido por doença ou outro facto que não lhe seja imputável, desde que comunique a situação ao empregador.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0005",
+      "kind": "other",
+      "answer": "O crédito vence-se por períodos certos e iguais, em regra a semana, a quinzena ou o mês; deve ser paga em dia útil, durante o período de trabalho ou imediatamente a seguir a este, e estar à disposição do trabalhador na data do vencimento ou em dia útil anterior.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata do vencimento e pagamento de créditos e não responde ao que foi perguntado sobre a suspensão do gozo de férias."
+    },
+    {
+      "id": "ct-0006",
+      "kind": "reference",
+      "answer": "Até 15 de dezembro de cada ano. O valor é igual a um mês de retribuição.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais de forma correta."
+    },
+    {
+      "id": "ct-0006",
+      "kind": "other",
+      "answer": "Sim, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de um tema jurídico completamente diferente e irrelevante para o questionamento."
+    },
+    {
+      "id": "ct-0008",
+      "kind": "reference",
+      "answer": "Pelo menos onze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, apresentando o conteúdo jurídico correto."
+    },
+    {
+      "id": "ct-0008",
+      "kind": "number",
+      "answer": "Pelo menos catorze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica catorze horas de descanso quando a referência estabelece onze horas."
+    },
+    {
+      "id": "ct-0008",
+      "kind": "contradicted",
+      "answer": "Pelo menos onze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei. Contudo, pelo menos catorze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contém uma contradição interna e apresenta um número (14 horas) que contradiz a referência."
+    },
+    {
+      "id": "ct-0008",
+      "kind": "other",
+      "answer": "Quando se verifica o seu termo; por impossibilidade superveniente, absoluta e definitiva de o trabalhador prestar o trabalho ou de o empregador o receber; e com a reforma do trabalhador por velhice ou invalidez.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, abordando causas de cessação de contrato em vez do período de descanso solicitado."
+    },
+    {
+      "id": "ct-0022",
+      "kind": "reference",
+      "answer": "Sim, quando for compatível com a natureza da atividade: até 15 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0022",
+      "kind": "number",
+      "answer": "Sim, quando for compatível com a natureza da atividade: até 22 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o número de dias permitidos, indicando 22 dias em vez dos 15 dias previstos na referência."
+    },
+    {
+      "id": "ct-0022",
+      "kind": "yes-no",
+      "answer": "Não, quando for compatível com a natureza da atividade: até 15 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema inicia a resposta com 'Não', o que contradiz diretamente a resposta de referência e a lógica das condições apresentadas a seguir."
+    },
+    {
+      "id": "ct-0022",
+      "kind": "contradicted",
+      "answer": "Sim, quando for compatível com a natureza da atividade: até 15 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal. Contudo, sim, quando for compatível com a natureza da atividade: até 22 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao mencionar um limite de 22 dias consecutivos em vez dos 15 dias previstos."
+    },
+    {
+      "id": "ct-0022",
+      "kind": "other",
+      "answer": "Sim, a um crédito de horas correspondente a dois dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o encerramento da empresa para férias, tratando de um tema completamente diferente (crédito de horas)."
+    },
+    {
+      "id": "ct-0024",
+      "kind": "reference",
+      "answer": "1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, Corpo de Deus, 10 de junho, 15 de agosto, 5 de outubro, 1 de novembro, 1, 8 e 25 de dezembro.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência."
+    },
+    {
+      "id": "ct-0024",
+      "kind": "other",
+      "answer": "Tem 10 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de prazos processuais em vez de listar os feriados obrigatórios."
+    },
+    {
+      "id": "ct-0027",
+      "kind": "reference",
+      "answer": "Sim: a antiguidade do trabalhador conta-se desde o início do período experimental.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo exatamente a mesma informação jurídica."
+    },
+    {
+      "id": "ct-0027",
+      "kind": "yes-no",
+      "answer": "Não: a antiguidade do trabalhador conta-se desde o início do período experimental.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao responder 'Não' quando o correto é 'Sim'."
+    },
+    {
+      "id": "ct-0027",
+      "kind": "contradicted",
+      "answer": "Sim: a antiguidade do trabalhador conta-se desde o início do período experimental. Contudo, não: a antiguidade do trabalhador conta-se desde o início do período experimental.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta apresenta uma contradição lógica ao afirmar simultaneamente 'sim' e 'não' para a mesma questão."
+    },
+    {
+      "id": "ct-0027",
+      "kind": "other",
+      "answer": "Informar o trabalhador sobre os dispositivos, programas e sistemas usados para acompanhar à distância a sua atividade; abster-se de o contactar no período de descanso, salvo força maior (art. 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a dois meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art. 169.º-B, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de deveres relativos ao teletrabalho e monitorização em vez de antiguidade e período experimental."
+    },
+    {
+      "id": "ct-0029",
+      "kind": "reference",
+      "answer": "Sim, até ao sétimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta é idêntica à referência e contém todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0029",
+      "kind": "number",
+      "answer": "Sim, até ao décimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O prazo de revogação indicado pelo sistema (décimo dia) contradiz o prazo estabelecido na resposta de referência (sétimo dia)."
+    },
+    {
+      "id": "ct-0029",
+      "kind": "yes-no",
+      "answer": "Não, até ao sétimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao iniciar com uma negação ('Não') quando a resposta correta é afirmativa ('Sim')."
+    },
+    {
+      "id": "ct-0029",
+      "kind": "contradicted",
+      "answer": "Sim, até ao sétimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial. Contudo, sim, até ao décimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema apresenta um prazo contraditório (10 dias) que diverge do prazo estabelecido na resposta de referência (7 dias)."
+    },
+    {
+      "id": "ct-0029",
+      "kind": "other",
+      "answer": "14 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art. 366.º, n.os 1 e 2). A mesma compensação aplica-se ao despedimento por extinção do posto de trabalho e por inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando do cálculo de compensações em vez da possibilidade de revogação do acordo."
+    },
+    {
+      "id": "ct-0033",
+      "kind": "reference",
+      "answer": "Sim, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0033",
+      "kind": "yes-no",
+      "answer": "Não, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta começa com uma negação ('Não') que contradiz diretamente a afirmação da resposta de referência ('Sim')."
+    },
+    {
+      "id": "ct-0033",
+      "kind": "contradicted",
+      "answer": "Sim, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco. Contudo, não, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta apresenta uma contradição lógica interna ao afirmar que sim e, em seguida, dizer que não, contradizendo a conclusão da referência."
+    },
+    {
+      "id": "ct-0033",
+      "kind": "other",
+      "answer": "O direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até quatro anos (art. 101.º-C); a trabalhar em horário flexível enquanto se verificar a necessidade de assistência (art. 101.º-D); e a não prestar trabalho suplementar nesse período (art. 101.º-G). Quem opte pelo tempo parcial ou pelo horário flexível não pode ser penalizado na avaliação e na progressão na carreira.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o tema das faltas injustificadas nem responde à pergunta, tratando de trabalho a tempo parcial e horários flexíveis."
+    },
+    {
+      "id": "ct-0034",
+      "kind": "reference",
+      "answer": "Em regra não: o direito a férias é irrenunciável e o gozo não pode ser substituído por compensação, mesmo com acordo (art. 237.º, n.º 3). A exceção é poder renunciar aos dias que excedam 20 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art. 238.º, n.º 5).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais e corretos."
+    },
+    {
+      "id": "ct-0034",
+      "kind": "number",
+      "answer": "Em regra não: o direito a férias é irrenunciável e o gozo não pode ser substituído por compensação, mesmo com acordo (art. 237.º, n.º 3). A exceção é poder renunciar aos dias que excedam 30 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art. 238.º, n.º 5).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o número de dias relativos à exceção, indicando 30 dias úteis em vez dos 20 dias úteis mencionados na referência."
+    },
+    {
+      "id": "ct-0034",
+      "kind": "contradicted",
+      "answer": "Em regra não: o direito a férias é irrenunciável e o gozo não pode ser substituído por compensação, mesmo com acordo (art. 237.º, n.º 3). A exceção é poder renunciar aos dias que excedam 20 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art. 238.º, n.º 5). Contudo, a exceção é poder renunciar aos dias que excedam 30 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao afirmar que a exceção se aplica a dias que excedam 30 dias úteis, quando o correto são 20 dias úteis."
+    },
+    {
+      "id": "ct-0034",
+      "kind": "other",
+      "answer": "Depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 30 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação. Comunica-a ao trabalhador, às estruturas representativas e à ACT com a antecedência mínima de 15, 30, 60 ou 75 dias, conforme a antiguidade seja inferior a um ano, de um a cinco anos, de cinco a 10 anos, ou de 10 ou mais anos (art. 378.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não tem qualquer relação com a pergunta nem com o conteúdo da referência, tratando de procedimentos de despedimento em vez de férias."
+    },
+    {
+      "id": "ct-0035",
+      "kind": "reference",
+      "answer": "Que teletrabalho é a prestação de trabalho em regime de subordinação jurídica do trabalhador a um empregador, em local não determinado por este, através do recurso a tecnologias de informação e comunicação.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0035",
+      "kind": "other",
+      "answer": "12 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta do sistema é sobre compensações por extinção de posto de trabalho e não responde à pergunta sobre a definição de teletrabalho apresentada na referência."
+    },
+    {
+      "id": "ct-0036",
+      "kind": "reference",
+      "answer": "Que, cessando o contrato de trabalho, o trabalhador deve devolver imediatamente ao empregador os instrumentos de trabalho e outros objetos que lhe pertençam, sob pena de responsabilidade civil pelos danos causados.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0036",
+      "kind": "other",
+      "answer": "A falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até três dias consecutivos, e o pai também até três dias (art. 38.º-A). A falta para assistência a filho: até 30 dias por ano, ou durante toda a hospitalização, a filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica; até 15 dias por ano a filho com 12 ou mais anos que, sendo maior, faça parte do agregado familiar; acresce um dia por cada filho além do primeiro, e o pai e a mãe não a podem exercer em simultâneo (art. 49.º). E a falta para assistência a neto: até 30 dias consecutivos a seguir ao nascimento de neto que viva com o trabalhador e seja filho de adolescente com menos de 16 anos, e, em substituição dos progenitores, para assistência inadiável a neto menor ou, independentemente da idade, com deficiência ou doença crónica (art. 50.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de faltas e licenças em vez do conteúdo do artigo 342.º."
+    },
+    {
+      "id": "ct-0038",
+      "kind": "reference",
+      "answer": "Que cabe às partes determinar por acordo a atividade para que o trabalhador é contratado, o que pode ser feito por remissão para categoria de instrumento de regulamentação coletiva ou de regulamento interno da empresa; e que, se a atividade envolver negócios jurídicos, o contrato concede ao trabalhador os poderes necessários, salvo se a lei exigir instrumento especial.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência."
+    },
+    {
+      "id": "ct-0038",
+      "kind": "other",
+      "answer": "Redução de cinco horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art. 54.º); trabalho a tempo parcial e horário flexível para quem tenha filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica que viva consigo (arts. 55.º e 56.º); dispensa de trabalho em adaptabilidade, banco de horas ou horário concentrado para a trabalhadora grávida, puérpera ou lactante e, na aleitação, para qualquer dos progenitores (art. 58.º); dispensa de trabalho suplementar para a trabalhadora grávida e para quem tenha filho com menos de 12 meses, e durante a amamentação se necessário (art. 59.º); e dispensa de trabalho noturno nos 112 dias antes e depois do parto e, se necessário, no resto da gravidez e na amamentação (art. 60.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta do sistema descreve o conteúdo de vários outros artigos relativos a direitos de progenitores e grávidas, falhando completamente em abordar o artigo 115 referido."
+    },
+    {
+      "id": "ct-0043",
+      "kind": "reference",
+      "answer": "Não. A Lei n.º 23/2012 retirou o 5 de outubro dos feriados obrigatórios, com efeitos a partir de 1 de janeiro de 2013; só voltou a ser feriado obrigatório com a Lei n.º 8/2016, em vigor desde 2 de abril de 2016.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, apresentando todos os factos jurídicos corretamente."
+    },
+    {
+      "id": "ct-0043",
+      "kind": "yes-no",
+      "answer": "Sim. A Lei n.º 23/2012 retirou o 5 de outubro dos feriados obrigatórios, com efeitos a partir de 1 de janeiro de 2013; só voltou a ser feriado obrigatório com a Lei n.º 8/2016, em vigor desde 2 de abril de 2016.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema responde 'Sim', contradizendo diretamente a referência que afirma que o dia não era feriado em 2014."
+    },
+    {
+      "id": "ct-0043",
+      "kind": "contradicted",
+      "answer": "Não. A Lei n.º 23/2012 retirou o 5 de outubro dos feriados obrigatórios, com efeitos a partir de 1 de janeiro de 2013; só voltou a ser feriado obrigatório com a Lei n.º 8/2016, em vigor desde 2 de abril de 2016. Contudo, sim.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a conclusão correta ao terminar com 'Contudo, sim'."
+    },
+    {
+      "id": "ct-0043",
+      "kind": "other",
+      "answer": "Sim. O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, salvo se atuarem com dolo, com base em declarações ou factos do processo judicial ou contraordenacional de assédio, até à decisão final transitada em julgado (art. 29.º, n.º 6). É abusiva a sanção motivada por ter alegado ser vítima ou ser testemunha de assédio, e presume-se abusivo o despedimento ou outra sanção aplicada até um ano após a denúncia (art. 331.º, n.º 1, alínea d), e n.º 2, alínea b)).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar 'Sim' e apresenta um conteúdo totalmente irrelevante para a pergunta formulada."
+    },
+    {
+      "id": "ct-0044",
+      "kind": "reference",
+      "answer": "Sim. A Lei n.º 23/2012 tirou-o da lista do art. 234.º a partir de 1 de agosto de 2012, mas o seu art. 10.º determinou que a eliminação só produzia efeitos a partir de 1 de janeiro de 2013.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo toda a informação correta."
+    },
+    {
+      "id": "ct-0044",
+      "kind": "yes-no",
+      "answer": "Não. A Lei n.º 23/2012 tirou-o da lista do art. 234.º a partir de 1 de agosto de 2012, mas o seu art. 10.º determinou que a eliminação só produzia efeitos a partir de 1 de janeiro de 2013.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta afirma 'Não', mas a fundamentação apresentada contradiz essa conclusão ao explicar que a eliminação do feriado só teria efeitos em 2013."
+    },
+    {
+      "id": "ct-0044",
+      "kind": "contradicted",
+      "answer": "Sim. A Lei n.º 23/2012 tirou-o da lista do art. 234.º a partir de 1 de agosto de 2012, mas o seu art. 10.º determinou que a eliminação só produzia efeitos a partir de 1 de janeiro de 2013. Contudo, não.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta termina com uma contradição ('Contudo, não') que invalida a conclusão correta e contradiz a referência."
+    },
+    {
+      "id": "ct-0044",
+      "kind": "other",
+      "answer": "Conforme a modalidade acordada, o trabalhador deixa de estar sujeito aos limites máximos do período normal de trabalho, pode ter um aumento determinado desse período ou cumpre o período acordado; na falta de acordo, aplica-se a primeira (art. 219.º, n.os 1 e 2). A isenção não prejudica o direito ao descanso semanal, obrigatório ou complementar, aos feriados nem ao descanso diário (art. 219.º, n.º 3); este, de onze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art. 214.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta feita, tratando de isenção de horário em vez de confirmar se o dia em questão era feriado."
+    },
+    {
+      "id": "ct-0045",
+      "kind": "reference",
+      "answer": "Sim, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação. Desde 1 de janeiro de 2022 (Lei n.º 83/2021) basta que seja prestado em local não determinado pelo empregador.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos corretos para a data solicitada."
+    },
+    {
+      "id": "ct-0045",
+      "kind": "yes-no",
+      "answer": "Não, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação. Desde 1 de janeiro de 2022 (Lei n.º 83/2021) basta que seja prestado em local não determinado pelo empregador.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta começa com 'Não', contradizendo a referência e a própria explicação que segue, que afirma que o teletrabalho era habitualmente fora da empresa."
+    },
+    {
+      "id": "ct-0045",
+      "kind": "contradicted",
+      "answer": "Sim, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação. Desde 1 de janeiro de 2022 (Lei n.º 83/2021) basta que seja prestado em local não determinado pelo empregador. Contudo, não, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência e a si mesma ao afirmar 'Contudo, não, em regra' imediatamente após fornecer a resposta correta."
+    },
+    {
+      "id": "ct-0045",
+      "kind": "other",
+      "answer": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 48 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art. 207.º (art. 211.º, n.º 1): por exemplo, trabalhador familiar do empregador, cargos de administração ou de direção, atividades que exigem continuidade do serviço ou acréscimos previsíveis de atividade (art. 207.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata da duração máxima do trabalho semanal e não responde à pergunta sobre a definição de teletrabalho."
+    },
+    {
+      "id": "ct-0050",
+      "kind": "reference",
+      "answer": "A propriedade dos instrumentos de trabalho tem de ficar definida no acordo de teletrabalho (art. 166.º, n.º 4, al. g)). O empregador é responsável por disponibilizar os equipamentos e sistemas necessários, e o acordo deve dizer se são fornecidos por ele ou adquiridos pelo trabalhador com a sua concordância quanto às características e preços (art. 168.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta é idêntica à resposta de referência, contendo todo o conteúdo jurídico necessário e correto."
+    },
+    {
+      "id": "ct-0050",
+      "kind": "other",
+      "answer": "Se o empregador impedir culposamente o gozo das férias, o trabalhador tem direito a uma compensação no valor do triplo da retribuição correspondente ao período em falta, que deve ser gozado até 30 de abril do ano civil seguinte (art. 246.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de compensação por férias em vez de instrumentos de teletrabalho."
+    },
+    {
+      "id": "ct-0053",
+      "kind": "reference",
+      "answer": "A ser indemnizado por todos os danos, patrimoniais e não patrimoniais, e a ser reintegrado sem prejuízo da categoria e antiguidade (art. 389.º), e ainda às retribuições que deixou de receber desde o despedimento até ao trânsito em julgado da decisão, com as deduções previstas na lei (art. 390.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta é idêntica à de referência, contendo todos os elementos jurídicos essenciais."
+    },
+    {
+      "id": "ct-0053",
+      "kind": "other",
+      "answer": "Constituem violação do dever de assiduidade e determinam a perda da retribuição do período de ausência, que não conta para a antiguidade. A falta injustificada a um ou meio período normal de trabalho imediatamente antes ou depois de dia ou meio-dia de descanso ou de feriado é infração grave, e a perda de retribuição abrange também esses dias ou meios-dias. Num atraso injustificado superior a 60 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art. 256.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de faltas e assiduidade em vez dos direitos decorrentes do despedimento ilícito."
+    },
+    {
+      "id": "ct-0054",
+      "kind": "reference",
+      "answer": "Com direito a indemnização, comportamentos culposos do empregador como a falta de pagamento pontual da retribuição, a violação de garantias do trabalhador, a sanção abusiva, a falta de condições de segurança e saúde, a lesão de interesses patrimoniais sérios ou a ofensa à integridade, honra ou dignidade (art. 394.º, n.º 2, e art. 396.º, n.º 1). Sem indemnização, situações como uma obrigação legal incompatível, a alteração substancial e duradoura das condições de trabalho ou a falta não culposa de pagamento (art. 394.º, n.º 3).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0054",
+      "kind": "other",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até três dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata de faltas justificadas por motivos de saúde e não responde à pergunta sobre a justa causa para a cessação do contrato de trabalho."
+    },
+    {
+      "id": "ct-0055",
+      "kind": "reference",
+      "answer": "Que, para efeitos do Código, é trabalhador cuidador aquele a quem tenha sido reconhecido o estatuto de cuidador informal não principal, nos termos da legislação aplicável, mediante apresentação do respetivo comprovativo.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0055",
+      "kind": "other",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até três dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o conteúdo do artigo 101.º-A, tratando de um tema completamente diferente (faltas por endometriose)."
+    },
+    {
+      "id": "ct-0056",
+      "kind": "reference",
+      "answer": "15 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais de forma correta."
+    },
+    {
+      "id": "ct-0056",
+      "kind": "number",
+      "answer": "22 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica 22 dias de licença obrigatória, o que contradiz os 15 dias previstos na resposta de referência."
+    },
+    {
+      "id": "ct-0056",
+      "kind": "contradicted",
+      "answer": "15 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Contudo, 22 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao apresentar um segundo valor (22 dias) que é incorreto e contraditório ao primeiro."
+    },
+    {
+      "id": "ct-0056",
+      "kind": "other",
+      "answer": "É um meio processual que se destina a efetivar a cessação do arrendamento, qualquer que seja o fim a que este se destina, quando o arrendatário não desocupa o locado na data prevista na lei ou na data fixada por convenção entre as partes (art. 15.º, n.º 1, do NRAU). Com o pedido de despejo pode ser pedido também o pagamento de rendas, encargos ou despesas em dívida, desde que o montante tenha sido comunicado ao arrendatário (n.º 6).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de despejo e arrendamento em vez de licença parental."
+    },
+    {
+      "id": "ct-0057",
+      "kind": "reference",
+      "answer": "20 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Desde 1 de maio de 2023 são 28 dias.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta é idêntica à resposta de referência, contendo todos os detalhes e prazos corretos para a data solicitada."
+    },
+    {
+      "id": "ct-0057",
+      "kind": "number",
+      "answer": "30 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Desde 1 de maio de 2023 são 28 dias.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica incorretamente 30 dias úteis quando a referência estabelece 20 dias úteis."
+    },
+    {
+      "id": "ct-0057",
+      "kind": "contradicted",
+      "answer": "20 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Desde 1 de maio de 2023 são 28 dias. Contudo, 30 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao afirmar que são 30 dias úteis, informação que não consta no texto de referência."
+    },
+    {
+      "id": "ct-0057",
+      "kind": "other",
+      "answer": "No Balcão do Arrendatário e do Senhorio (BAS), criado junto da Direção-Geral da Administração da Justiça para tramitar o procedimento especial de despejo e a injunção em matéria de arrendamento, com competência em todo o território nacional (art. 15.º-A do NRAU). O requerimento de despejo é apresentado no BAS, em modelo próprio (art. 15.º-B, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta é completamente irrelevante, pois não responde à pergunta sobre licença parental, tratando de um tema de arrendamento."
+    },
+    {
+      "id": "ct-0058",
+      "kind": "reference",
+      "answer": "50 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte. Em dia de descanso semanal ou feriado, 100 %. Os acréscimos baixaram para metade com a Lei n.º 23/2012, a partir de 1 de agosto de 2012.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta é idêntica à resposta de referência e contém todos os dados corretos para a data solicitada."
+    },
+    {
+      "id": "ct-0058",
+      "kind": "number",
+      "answer": "75 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte. Em dia de descanso semanal ou feriado, 100 %. Os acréscimos baixaram para metade com a Lei n.º 23/2012, a partir de 1 de agosto de 2012.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o valor do acréscimo da primeira hora, indicando 75% em vez dos 50% previstos na referência."
+    },
+    {
+      "id": "ct-0058",
+      "kind": "contradicted",
+      "answer": "50 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte. Em dia de descanso semanal ou feriado, 100 %. Os acréscimos baixaram para metade com a Lei n.º 23/2012, a partir de 1 de agosto de 2012. Contudo, 75 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contém uma contradição final que altera o valor do acréscimo da primeira hora de 50% para 75%."
+    },
+    {
+      "id": "ct-0058",
+      "kind": "other",
+      "answer": "Qualquer que seja o fim do arrendamento, à cessação do contrato por revogação (acordo das partes), por caducidade pelo decurso do prazo, não sendo o contrato renovável, por oposição à renovação, por denúncia pelo senhorio, por resolução por comunicação (por falta de pagamento de rendas, encargos ou despesas, ou por oposição do arrendatário à realização de obras) e por denúncia pelo arrendatário em resposta à iniciativa do senhorio; cada caso exige os documentos que o art. 15.º, n.º 2, do NRAU indica, a começar pelo contrato de arrendamento. Também se pode recorrer a ele quando se tenha frustrado a comunicação de resolução ao arrendatário (n.º 4).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata de temas de arrendamento e não responde à pergunta sobre o acréscimo de pagamento do trabalho suplementar."
+    },
+    {
+      "id": "ct-0059",
+      "kind": "reference",
+      "answer": "Não. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 25 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta é idêntica à resposta de referência e contém exatamente o mesmo conteúdo jurídico."
+    },
+    {
+      "id": "ct-0059",
+      "kind": "number",
+      "answer": "Não. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 37 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "parcial",
+      "as_expected": true,
+      "reason": "A resposta acerta a conclusão, mas apresenta um erro no valor do acréscimo da primeira hora (37% em vez de 25%)."
+    },
+    {
+      "id": "ct-0059",
+      "kind": "yes-no",
+      "answer": "Sim. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 25 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema responde 'Sim', contradizendo diretamente a conclusão da resposta de referência que é 'Não'."
+    },
+    {
+      "id": "ct-0059",
+      "kind": "contradicted",
+      "answer": "Não. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 25 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023. Contudo, sim.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta termina com uma contradição ('Contudo, sim') que invalida a explicação jurídica anterior e contradiz a referência."
+    },
+    {
+      "id": "ct-0059",
+      "kind": "other",
+      "answer": "O requerimento tem de se basear nos documentos que o art. 15.º, n.º 2, do NRAU indica para cada forma de cessação, a começar pelo contrato de arrendamento (por exemplo, o contrato escrito com o prazo, na caducidade pelo decurso do prazo), e o procedimento só pode ser usado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC (n.º 5). O requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos quatro anos, salvo contrato mais recente (art. 15.º-C, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta é completamente irrelevante para a pergunta, tratando de temas de arrendamento em vez de trabalho suplementar."
+    },
+    {
+      "id": "ct-0061",
+      "kind": "reference",
+      "answer": "90 dias, o da generalidade dos trabalhadores. O período de 180 dias para quem procura o primeiro emprego ou está em desemprego de longa duração só existe desde 1 de outubro de 2019 (Lei n.º 93/2019).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos corretos para a data solicitada."
+    },
+    {
+      "id": "ct-0061",
+      "kind": "number",
+      "answer": "135 dias, o da generalidade dos trabalhadores. O período de 180 dias para quem procura o primeiro emprego ou está em desemprego de longa duração só existe desde 1 de outubro de 2019 (Lei n.º 93/2019).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica 135 dias como o período da generalidade dos trabalhadores, quando a referência afirma que são 90 dias."
+    },
+    {
+      "id": "ct-0061",
+      "kind": "contradicted",
+      "answer": "90 dias, o da generalidade dos trabalhadores. O período de 180 dias para quem procura o primeiro emprego ou está em desemprego de longa duração só existe desde 1 de outubro de 2019 (Lei n.º 93/2019). Contudo, 135 dias, o da generalidade dos trabalhadores.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao introduzir um número (135 dias) que não é mencionado na base legal fornecida."
+    },
+    {
+      "id": "ct-0061",
+      "kind": "other",
+      "answer": "Só para deduzir oposição ao requerimento de despejo e nos atos processuais posteriores à distribuição do processo a tribunal, em que as partes têm de se fazer representar por advogado (art. 15.º-S, n.os 3 e 4, do NRAU).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta é completamente irrelevante, tratando de matéria de arrendamento em vez de responder sobre o período experimental no Código do Trabalho."
+    },
+    {
+      "id": "ct-0062",
+      "kind": "reference",
+      "answer": "Preferencialmente através dos equipamentos e sistemas de comunicação afetos à atividade do trabalhador, segundo procedimentos que ele conheça previamente e que respeitem a sua privacidade; o controlo tem de ser proporcional e transparente, sendo proibido impor a conexão permanente por imagem ou som (art. 169.º-A, n.os 4 e 5). É vedada a captura e utilização de imagem, som, escrita ou histórico, ou outros meios de controlo que afetem a privacidade (art. 170.º, n.º 5).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0062",
+      "kind": "other",
+      "answer": "Sim: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há seis meses (n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta do sistema não responde à pergunta, tratando de arrendamento urbano em vez de teletrabalho."
+    },
+    {
+      "id": "ct-0065",
+      "kind": "reference",
+      "answer": "Sim. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 60 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0065",
+      "kind": "number",
+      "answer": "Sim. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 90 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica um prazo de 90 dias para a contestação do despedimento, quando a referência estabelece 60 dias."
+    },
+    {
+      "id": "ct-0065",
+      "kind": "yes-no",
+      "answer": "Não. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 60 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz frontalmente a referência ao responder 'Não' à pergunta, apesar de a explicação subsequente estar correta."
+    },
+    {
+      "id": "ct-0065",
+      "kind": "contradicted",
+      "answer": "Sim. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 60 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2). Contudo, não.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao terminar com uma negação ('Contudo, não') que invalida a conclusão correta."
+    },
+    {
+      "id": "ct-0065",
+      "kind": "other",
+      "answer": "Só se tivesse duração superior a seis meses: em 2010, o art. 1069.º do Código Civil, na redação da Lei n.º 6/2006, exigia a forma escrita ao contrato de arrendamento urbano com duração superior a seis meses.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de arrendamento urbano em vez de despedimento de trabalhador."
+    },
+    {
+      "id": "ct-0069",
+      "kind": "reference",
+      "answer": "O contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 35 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0069",
+      "kind": "number",
+      "answer": "O contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 52 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica uma duração de 52 dias, quando a referência estabelece o limite de 35 dias."
+    },
+    {
+      "id": "ct-0069",
+      "kind": "contradicted",
+      "answer": "O contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 35 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses. Contudo, o contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 52 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao indicar uma duração máxima de 52 dias em vez dos 35 dias previstos na lei."
+    },
+    {
+      "id": "ct-0069",
+      "kind": "other",
+      "answer": "A mora igual ou superior a três meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art. 1083.º, n.º 3, do Código Civil); também o é a mora superior a oito dias por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses, se o senhorio tiver avisado o arrendatário por carta registada com aviso de receção, após o terceiro atraso, de que tenciona pôr fim ao contrato (n.os 4 e 6). A resolução por mora de três meses opera por comunicação e fica sem efeito se o arrendatário puser fim à mora no prazo de um mês, o que só pode fazer uma vez por contrato (art. 1084.º, n.os 2 a 4).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de arrendamento em vez do artigo 142.º do Código do Trabalho."
+    },
+    {
+      "id": "ct-0070",
+      "kind": "reference",
+      "answer": "Define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de três meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0070",
+      "kind": "number",
+      "answer": "Define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de seis meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema apresenta um erro no prazo, indicando seis meses em vez dos três meses definidos na referência."
+    },
+    {
+      "id": "ct-0070",
+      "kind": "contradicted",
+      "answer": "Define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de três meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos. Contudo, define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de seis meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao afirmar que o prazo é de seis meses, quando a lei estabelece três meses."
+    },
+    {
+      "id": "ct-0070",
+      "kind": "other",
+      "answer": "É o arrendamento conjunto de uma parte urbana e de uma parte rústica. É havido por urbano quando essa seja a vontade dos contratantes; na dúvida, atende-se ao fim principal do contrato e, depois, à renda que atribuíram a cada parte, e, se esses critérios faltarem ou não bastarem, o arrendamento tem-se por urbano (art. 1066.º do Código Civil).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta aborda o tema do arrendamento no Código Civil, não respondendo à pergunta sobre o despedimento coletivo no Código do Trabalho."
+    },
+    {
+      "id": "ct-0077",
+      "kind": "reference",
+      "answer": "Com acréscimo de 50 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à de referência, contendo todos os elementos essenciais e as percentagens corretas."
+    },
+    {
+      "id": "ct-0077",
+      "kind": "number",
+      "answer": "Com acréscimo de 75 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o valor do acréscimo da primeira hora, indicando 75% em vez dos 50% previstos na referência."
+    },
+    {
+      "id": "ct-0077",
+      "kind": "contradicted",
+      "answer": "Com acréscimo de 50 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado. Contudo, com acréscimo de 75 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar que o acréscimo na primeira hora é de 75% em vez de 50%."
+    },
+    {
+      "id": "ct-0077",
+      "kind": "other",
+      "answer": "O destino do arrendamento é decidido por acordo dos cônjuges, que podem optar pela transmissão ou pela concentração do arrendamento a favor de um deles; na falta de acordo, decide o tribunal, tendo em conta a necessidade de cada um, os interesses dos filhos e outros fatores relevantes. A transferência ou a concentração acordada e homologada, ou a decisão judicial, é notificada oficiosamente ao senhorio (art. 1105.º do Código Civil).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta formulada, tratando de um tema de arrendamento em vez de trabalho suplementar."
+    },
+    {
+      "id": "ct-0079",
+      "kind": "reference",
+      "answer": "Em regra não. Mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 20 dias úteis de férias (art. 257.º, n.º 1, al. a), com o art. 238.º, n.º 5); o subsídio de férias não é reduzido e o empregador não se pode opor.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0079",
+      "kind": "number",
+      "answer": "Em regra não. Mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 30 dias úteis de férias (art. 257.º, n.º 1, al. a), com o art. 238.º, n.º 5); o subsídio de férias não é reduzido e o empregador não se pode opor.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o número de dias úteis de férias exigidos para a renúncia, indicando 30 em vez dos 20 previstos na referência."
+    },
+    {
+      "id": "ct-0079",
+      "kind": "contradicted",
+      "answer": "Em regra não. Mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 20 dias úteis de férias (art. 257.º, n.º 1, al. a), com o art. 238.º, n.º 5); o subsídio de férias não é reduzido e o empregador não se pode opor. Contudo, mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 30 dias úteis de férias (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar que o trabalhador deve gozar pelo menos 30 dias úteis de férias, quando a lei estabelece o mínimo de 20 dias úteis."
+    },
+    {
+      "id": "ct-0079",
+      "kind": "other",
+      "answer": "Como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em quinze dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art. 1038.º do Código Civil).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata de obrigações do locatário no arrendamento, não respondendo à pergunta sobre faltas e férias no Código do Trabalho."
+    },
+    {
+      "id": "ct-0081",
+      "kind": "reference",
+      "answer": "A falta do título profissional determina a nulidade do contrato (art. 117.º, n.º 1), mas o contrato produz efeitos como válido em relação ao tempo em que foi executado (art. 122.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos corretos."
+    },
+    {
+      "id": "ct-0081",
+      "kind": "other",
+      "answer": "Depende do fundamento. Com base nas causas do n.º 2 do art. 1083.º do Código Civil (por exemplo, a violação de regras de sossego ou de boa vizinhança, ou o uso do prédio para fim diverso), a resolução é decretada nos termos da lei de processo, isto é, pelo tribunal (art. 1084.º, n.º 1). Fundada em mora igual ou superior a três meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art. 1083.º, n.º 3), ou em atrasos repetidos (n.º 4), opera por comunicação ao arrendatário em que se invoque fundamentadamente a obrigação incumprida (art. 1084.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de temas de arrendamento em vez da nulidade do contrato de trabalho por falta de título profissional."
+    },
+    {
+      "id": "ct-0082",
+      "kind": "reference",
+      "answer": "Que o trabalhador em teletrabalho tem os mesmos direitos e deveres dos demais trabalhadores da empresa com a mesma categoria ou função idêntica, nomeadamente quanto a formação, promoção na carreira, limites da duração do trabalho, períodos de descanso e férias pagas, segurança e saúde no trabalho, reparação de acidentes de trabalho e doenças profissionais e acesso a informação das estruturas representativas.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todo o conteúdo jurídico essencial."
+    },
+    {
+      "id": "ct-0082",
+      "kind": "other",
+      "answer": "Se as rendas estiverem em correspondência com os meses do calendário gregoriano, a primeira vence-se no momento da celebração do contrato e cada uma das restantes no 1.º dia útil do mês imediatamente anterior àquele a que diga respeito (art. 1075.º, n.º 2, do Código Civil): a renda de julho paga-se em junho.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de regras de pagamento de rendas no Código Civil em vez dos direitos do teletrabalho no Código do Trabalho."
+    },
+    {
+      "id": "ct-0086",
+      "kind": "reference",
+      "answer": "Por acordo entre empregador e trabalhador. Na falta de acordo, marca-as o empregador, ouvidos os representantes dos trabalhadores, sem que possam começar em dia de descanso semanal do trabalhador; em pequena, média ou grande empresa, só entre 1 de maio e 31 de outubro, salvo convenção coletiva ou parecer dos representantes que admita outra época.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0086",
+      "kind": "other",
+      "answer": "A ação de despejo destina-se a fazer cessar o arrendamento sempre que a lei imponha o recurso à via judicial (art. 14.º, n.º 1, do NRAU). É o caso da resolução pelo senhorio fundada num incumprimento que, pela sua gravidade ou consequências, torne inexigível a manutenção do arrendamento, como a violação de regras de higiene, sossego ou boa vizinhança, o uso do prédio para fim diverso ou o não uso do locado por mais de um ano (art. 1083.º, n.º 2, do Código Civil): essa resolução é decretada nos termos da lei de processo (art. 1084.º, n.º 1). A resolução por mora no pagamento da renda (n.os 3 e 4 do art. 1083.º) opera por comunicação ao arrendatário (art. 1084.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta é sobre arrendamento e despejo, não respondendo à pergunta sobre a marcação de férias."
+    },
+    {
+      "id": "ct-0088",
+      "kind": "reference",
+      "answer": "Ao empregador, dentro dos limites da lei, tendo em conta prioritariamente a segurança e saúde do trabalhador e facilitando a conciliação com a vida familiar e a frequência de formação; os representantes dos trabalhadores devem ser consultados.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0088",
+      "kind": "other",
+      "answer": "Sim, segundo a ACT. O falecimento é um facto não imputável ao trabalhador que o impede de gozar as férias, pelo que o gozo se suspende (art. 244.º, n.º 1), desde que o comunique ao empregador. A ausência rege-se pelo regime das faltas por falecimento (art. 251.º) e os dias de férias por gozar são marcados depois (art. 244.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de faltas por falecimento e férias em vez da elaboração do horário de trabalho."
+    },
+    {
+      "id": "ct-0089",
+      "kind": "reference",
+      "answer": "O crédito vence-se por períodos certos e iguais, em regra a semana, a quinzena ou o mês; deve ser paga em dia útil, durante o período de trabalho ou imediatamente a seguir a este, e estar à disposição do trabalhador na data do vencimento ou em dia útil anterior.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0089",
+      "kind": "other",
+      "answer": "Que o gozo das férias não se inicia, ou suspende-se, quando o trabalhador esteja temporariamente impedido por doença ou outro facto que não lhe seja imputável, desde que comunique a situação ao empregador.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta formulada, tratando de férias e não do pagamento da retribuição."
+    },
+    {
+      "id": "ct-0091",
+      "kind": "reference",
+      "answer": "Sim, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0091",
+      "kind": "yes-no",
+      "answer": "Não, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema inicia a resposta com 'Não', o que contradiz diretamente a referência que afirma ser possível (Sim)."
+    },
+    {
+      "id": "ct-0091",
+      "kind": "contradicted",
+      "answer": "Sim, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções. Contudo, não, temporariamente, quando o interesse da empresa o exija e desde que não implique modificação substancial da sua posição; não pode haver diminuição da retribuição, e o trabalhador tem direito às condições mais favoráveis dessas funções.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta apresenta uma contradição interna ao afirmar que a resposta é 'não' sob as mesmas condições em que a referência diz ser 'sim'."
+    },
+    {
+      "id": "ct-0091",
+      "kind": "other",
+      "answer": "Até 15 de dezembro de cada ano. O valor é igual a um mês de retribuição.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta e não tem qualquer relação com o conteúdo jurídico da referência."
+    },
+    {
+      "id": "ct-0097",
+      "kind": "reference",
+      "answer": "Quando se verifica o seu termo; por impossibilidade superveniente, absoluta e definitiva de o trabalhador prestar o trabalho ou de o empregador o receber; e com a reforma do trabalhador por velhice ou invalidez.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0097",
+      "kind": "other",
+      "answer": "Pelo menos onze horas seguidas entre dois períodos diários de trabalho consecutivos, salvo nas exceções previstas na lei.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando do descanso entre períodos de trabalho em vez da caducidade do contrato."
+    },
+    {
+      "id": "ct-0099",
+      "kind": "reference",
+      "answer": "Sim, a um crédito de horas correspondente a dois dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais de forma correta."
+    },
+    {
+      "id": "ct-0099",
+      "kind": "number",
+      "answer": "Sim, a um crédito de horas correspondente a quatro dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta indica quatro dias de trabalho por semana em vez de dois, errando num número essencial da condição do direito."
+    },
+    {
+      "id": "ct-0099",
+      "kind": "yes-no",
+      "answer": "Não, a um crédito de horas correspondente a dois dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta começa com uma negação ('Não'), contradizendo diretamente a afirmação de que o trabalhador tem esse direito apresentada na referência."
+    },
+    {
+      "id": "ct-0099",
+      "kind": "contradicted",
+      "answer": "Sim, a um crédito de horas correspondente a dois dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível. Contudo, sim, a um crédito de horas correspondente a quatro dias de trabalho por semana, sem perda de retribuição, que pode dividir pelos dias da semana e cuja utilização deve comunicar com três dias de antecedência, salvo motivo atendível.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar que o crédito é de quatro dias por semana, quando o correto são dois dias."
+    },
+    {
+      "id": "ct-0099",
+      "kind": "other",
+      "answer": "Sim, quando for compatível com a natureza da atividade: até 15 dias consecutivos entre 1 de maio e 31 de outubro; por mais tempo ou fora desse período se estiver previsto em convenção coletiva ou houver parecer favorável da comissão de trabalhadores; por mais de 15 dias entre 1 de maio e 31 de outubro se a natureza da atividade o exigir. Pode ainda encerrar cinco dias úteis consecutivos nas férias escolares do Natal e um dia entre um feriado à terça ou quinta-feira e o descanso semanal.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata de um tema completamente diferente (relacionado com férias ou períodos de descanso) e não responde à questão sobre o crédito de horas no despedimento coletivo."
+    },
+    {
+      "id": "ct-0100",
+      "kind": "reference",
+      "answer": "Tem 10 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os prazos e direitos mencionados."
+    },
+    {
+      "id": "ct-0100",
+      "kind": "number",
+      "answer": "Tem 15 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo legal, indicando 15 dias úteis em vez dos 10 dias úteis estipulados na resposta de referência."
+    },
+    {
+      "id": "ct-0100",
+      "kind": "contradicted",
+      "answer": "Tem 10 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova. Contudo, tem 15 dias úteis para consultar o processo e responder por escrito, indicando os elementos relevantes para esclarecer os factos e a sua participação, podendo juntar documentos e pedir diligências de prova.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contém uma contradição interna ao apresentar dois prazos diferentes (10 e 15 dias), contradizendo a referência."
+    },
+    {
+      "id": "ct-0100",
+      "kind": "other",
+      "answer": "1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, Corpo de Deus, 10 de junho, 15 de agosto, 5 de outubro, 1 de novembro, 1, 8 e 25 de dezembro.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, apresentando uma lista de feriados em vez de explicar os direitos do trabalhador após a nota de culpa."
+    },
+    {
+      "id": "ct-0118",
+      "kind": "reference",
+      "answer": "Informar o trabalhador sobre os dispositivos, programas e sistemas usados para acompanhar à distância a sua atividade; abster-se de o contactar no período de descanso, salvo força maior (art. 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a dois meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art. 169.º-B, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os deveres e condições mencionados."
+    },
+    {
+      "id": "ct-0118",
+      "kind": "number",
+      "answer": "Informar o trabalhador sobre os dispositivos, programas e sistemas usados para acompanhar à distância a sua atividade; abster-se de o contactar no período de descanso, salvo força maior (art. 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a quatro meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art. 169.º-B, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta erra o prazo para os contactos presenciais, indicando quatro meses em vez de dois meses."
+    },
+    {
+      "id": "ct-0118",
+      "kind": "contradicted",
+      "answer": "Informar o trabalhador sobre os dispositivos, programas e sistemas usados para acompanhar à distância a sua atividade; abster-se de o contactar no período de descanso, salvo força maior (art. 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a dois meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art. 169.º-B, n.º 1). Contudo, 199.º-A); promover contactos presenciais com as chefias e os colegas, com a periodicidade do acordo ou, na sua falta, com intervalos não superiores a quatro meses; garantir ou custear a manutenção e a reparação dos equipamentos e sistemas; consultar o trabalhador por escrito antes de mudar equipamentos, funções ou características da atividade; e facultar-lhe a formação de que careça para os usar (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema apresenta um prazo incorreto para os contactos presenciais, indicando quatro meses em vez de dois meses."
+    },
+    {
+      "id": "ct-0118",
+      "kind": "other",
+      "answer": "Sim: a antiguidade do trabalhador conta-se desde o início do período experimental.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de um tema completamente diferente (antiguidade)."
+    },
+    {
+      "id": "ct-0122",
+      "kind": "reference",
+      "answer": "14 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art. 366.º, n.os 1 e 2). A mesma compensação aplica-se ao despedimento por extinção do posto de trabalho e por inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos corretos."
+    },
+    {
+      "id": "ct-0122",
+      "kind": "number",
+      "answer": "21 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art. 366.º, n.os 1 e 2). A mesma compensação aplica-se ao despedimento por extinção do posto de trabalho e por inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica 21 dias de retribuição por cada ano de antiguidade, enquanto a referência estabelece 14 dias."
+    },
+    {
+      "id": "ct-0122",
+      "kind": "contradicted",
+      "answer": "14 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art. 366.º, n.os 1 e 2). A mesma compensação aplica-se ao despedimento por extinção do posto de trabalho e por inadaptação (arts. 372.º e 379.º, n.º 1). Contudo, 21 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades do trabalhador (ou 240 vezes a retribuição mínima, quando se aplique o primeiro limite) (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao introduzir o valor de 21 dias e encontra-se incompleta."
+    },
+    {
+      "id": "ct-0122",
+      "kind": "other",
+      "answer": "Sim, até ao sétimo dia seguinte à celebração do acordo, por comunicação escrita ao empregador, desde que devolva a totalidade das compensações recebidas. Não pode se o acordo estiver datado e as assinaturas tiverem reconhecimento notarial presencial.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o valor da compensação solicitado, tratando de um tema completamente diferente e irrelevante para a pergunta."
+    },
+    {
+      "id": "ct-0126",
+      "kind": "reference",
+      "answer": "O direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até quatro anos (art. 101.º-C); a trabalhar em horário flexível enquanto se verificar a necessidade de assistência (art. 101.º-D); e a não prestar trabalho suplementar nesse período (art. 101.º-G). Quem opte pelo tempo parcial ou pelo horário flexível não pode ser penalizado na avaliação e na progressão na carreira.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, apresentando todos os direitos, prazos e condições de forma correta."
+    },
+    {
+      "id": "ct-0126",
+      "kind": "number",
+      "answer": "O direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até oito anos (art. 101.º-C); a trabalhar em horário flexível enquanto se verificar a necessidade de assistência (art. 101.º-D); e a não prestar trabalho suplementar nesse período (art. 101.º-G). Quem opte pelo tempo parcial ou pelo horário flexível não pode ser penalizado na avaliação e na progressão na carreira.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo máximo do trabalho a tempo parcial, indicando oito anos em vez de quatro."
+    },
+    {
+      "id": "ct-0126",
+      "kind": "contradicted",
+      "answer": "O direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até quatro anos (art. 101.º-C); a trabalhar em horário flexível enquanto se verificar a necessidade de assistência (art. 101.º-D); e a não prestar trabalho suplementar nesse período (art. 101.º-G). Quem opte pelo tempo parcial ou pelo horário flexível não pode ser penalizado na avaliação e na progressão na carreira. Contudo, o direito a trabalhar a tempo parcial, de modo consecutivo ou interpolado, até oito anos (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao mencionar o direito a tempo parcial por até oito anos, quando a referência estabelece o limite de quatro anos."
+    },
+    {
+      "id": "ct-0126",
+      "kind": "other",
+      "answer": "Sim, pode ser justa causa de despedimento: faltas injustificadas que causem diretamente prejuízos ou riscos graves para a empresa, ou que atinjam, em cada ano civil, cinco seguidas ou dez interpoladas, independentemente de prejuízo ou risco.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta feita e trata de um assunto completamente diferente (justa causa de despedimento por faltas) em relação à referência."
+    },
+    {
+      "id": "ct-0130",
+      "kind": "reference",
+      "answer": "Depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 30 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação. Comunica-a ao trabalhador, às estruturas representativas e à ACT com a antecedência mínima de 15, 30, 60 ou 75 dias, conforme a antiguidade seja inferior a um ano, de um a cinco anos, de cinco a 10 anos, ou de 10 ou mais anos (art. 378.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta contém exatamente todos os elementos jurídicos e prazos presentes na resposta de referência, respondendo integralmente à pergunta."
+    },
+    {
+      "id": "ct-0130",
+      "kind": "number",
+      "answer": "Depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 45 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação. Comunica-a ao trabalhador, às estruturas representativas e à ACT com a antecedência mínima de 15, 30, 60 ou 75 dias, conforme a antiguidade seja inferior a um ano, de um a cinco anos, de cinco a 10 anos, ou de 10 ou mais anos (art. 378.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica incorretamente um prazo de 45 dias para o despedimento, quando a referência estabelece 30 dias."
+    },
+    {
+      "id": "ct-0130",
+      "kind": "contradicted",
+      "answer": "Depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 30 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação. Comunica-a ao trabalhador, às estruturas representativas e à ACT com a antecedência mínima de 15, 30, 60 ou 75 dias, conforme a antiguidade seja inferior a um ano, de um a cinco anos, de cinco a 10 anos, ou de 10 ou mais anos (art. 378.º). Contudo, depois de recebidos os pareceres, ou terminado o prazo para os dar, o empregador tem 45 dias para despedir, sob pena de caducidade, por decisão fundamentada e escrita com o motivo, a confirmação dos requisitos, o montante, a forma, o momento e o lugar do pagamento da compensação e dos créditos, e a data da cessação.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao afirmar que o empregador tem 45 dias para despedir, quando o prazo correto segundo a referência é de 30 dias."
+    },
+    {
+      "id": "ct-0130",
+      "kind": "other",
+      "answer": "Em regra não: o direito a férias é irrenunciável e o gozo não pode ser substituído por compensação, mesmo com acordo (art. 237.º, n.º 3). A exceção é poder renunciar aos dias que excedam 20 dias úteis, sem perder a retribuição e o subsídio, que acumulam com a retribuição desses dias de trabalho (art. 238.º, n.º 5).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta do sistema não responde à pergunta, tratando de direitos a férias em vez de despedimento por inadaptação."
+    },
+    {
+      "id": "ct-0135",
+      "kind": "reference",
+      "answer": "12 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0135",
+      "kind": "number",
+      "answer": "18 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta do sistema indica 18 dias de retribuição por ano em vez dos 12 dias previstos na referência."
+    },
+    {
+      "id": "ct-0135",
+      "kind": "contradicted",
+      "answer": "12 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art. 366.º, n.os 1 e 2, na redação da Lei n.º 69/2013). A mesma compensação aplicava-se à extinção do posto de trabalho e à inadaptação (arts. 372.º e 379.º, n.º 1). Contudo, 18 dias de retribuição base e diuturnidades por cada ano completo de antiguidade, calculada proporcionalmente em caso de fração de ano; a retribuição considerada não podia exceder 20 vezes a retribuição mínima mensal garantida, nem o total 12 vezes a retribuição base mensal e diuturnidades (ou 240 vezes a retribuição mínima, quando se aplicasse o primeiro limite) (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema apresenta um valor contraditório (18 dias) em relação aos 12 dias estabelecidos na resposta de referência."
+    },
+    {
+      "id": "ct-0135",
+      "kind": "other",
+      "answer": "Que teletrabalho é a prestação de trabalho em regime de subordinação jurídica do trabalhador a um empregador, em local não determinado por este, através do recurso a tecnologias de informação e comunicação.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de teletrabalho em vez de compensações por despedimento."
+    },
+    {
+      "id": "ct-0140",
+      "kind": "reference",
+      "answer": "A falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até três dias consecutivos, e o pai também até três dias (art. 38.º-A). A falta para assistência a filho: até 30 dias por ano, ou durante toda a hospitalização, a filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica; até 15 dias por ano a filho com 12 ou mais anos que, sendo maior, faça parte do agregado familiar; acresce um dia por cada filho além do primeiro, e o pai e a mãe não a podem exercer em simultâneo (art. 49.º). E a falta para assistência a neto: até 30 dias consecutivos a seguir ao nascimento de neto que viva com o trabalhador e seja filho de adolescente com menos de 16 anos, e, em substituição dos progenitores, para assistência inadiável a neto menor ou, independentemente da idade, com deficiência ou doença crónica (art. 50.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0140",
+      "kind": "number",
+      "answer": "A falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até seis dias consecutivos, e o pai também até três dias (art. 38.º-A). A falta para assistência a filho: até 30 dias por ano, ou durante toda a hospitalização, a filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica; até 15 dias por ano a filho com 12 ou mais anos que, sendo maior, faça parte do agregado familiar; acresce um dia por cada filho além do primeiro, e o pai e a mãe não a podem exercer em simultâneo (art. 49.º). E a falta para assistência a neto: até 30 dias consecutivos a seguir ao nascimento de neto que viva com o trabalhador e seja filho de adolescente com menos de 16 anos, e, em substituição dos progenitores, para assistência inadiável a neto menor ou, independentemente da idade, com deficiência ou doença crónica (art. 50.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta indica seis dias para a falta por luto gestacional da trabalhadora, contradizendo os três dias previstos na referência."
+    },
+    {
+      "id": "ct-0140",
+      "kind": "contradicted",
+      "answer": "A falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até três dias consecutivos, e o pai também até três dias (art. 38.º-A). A falta para assistência a filho: até 30 dias por ano, ou durante toda a hospitalização, a filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica; até 15 dias por ano a filho com 12 ou mais anos que, sendo maior, faça parte do agregado familiar; acresce um dia por cada filho além do primeiro, e o pai e a mãe não a podem exercer em simultâneo (art. 49.º). E a falta para assistência a neto: até 30 dias consecutivos a seguir ao nascimento de neto que viva com o trabalhador e seja filho de adolescente com menos de 16 anos, e, em substituição dos progenitores, para assistência inadiável a neto menor ou, independentemente da idade, com deficiência ou doença crónica (art. 50.º). Contudo, a falta por luto gestacional: quando não haja lugar a licença por interrupção da gravidez, a trabalhadora pode faltar até seis dias consecutivos, e o pai também até três dias (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao indicar seis dias para a falta por luto gestacional da trabalhadora, quando a referência estabelece três dias."
+    },
+    {
+      "id": "ct-0140",
+      "kind": "other",
+      "answer": "Que, cessando o contrato de trabalho, o trabalhador deve devolver imediatamente ao empregador os instrumentos de trabalho e outros objetos que lhe pertençam, sob pena de responsabilidade civil pelos danos causados.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta e não tem qualquer relação com o conteúdo da referência."
+    },
+    {
+      "id": "ct-0141",
+      "kind": "reference",
+      "answer": "Redução de cinco horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art. 54.º); trabalho a tempo parcial e horário flexível para quem tenha filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica que viva consigo (arts. 55.º e 56.º); dispensa de trabalho em adaptabilidade, banco de horas ou horário concentrado para a trabalhadora grávida, puérpera ou lactante e, na aleitação, para qualquer dos progenitores (art. 58.º); dispensa de trabalho suplementar para a trabalhadora grávida e para quem tenha filho com menos de 12 meses, e durante a amamentação se necessário (art. 59.º); e dispensa de trabalho noturno nos 112 dias antes e depois do parto e, se necessário, no resto da gravidez e na amamentação (art. 60.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os direitos, prazos e condições mencionados."
+    },
+    {
+      "id": "ct-0141",
+      "kind": "number",
+      "answer": "Redução de oito horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art. 54.º); trabalho a tempo parcial e horário flexível para quem tenha filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica que viva consigo (arts. 55.º e 56.º); dispensa de trabalho em adaptabilidade, banco de horas ou horário concentrado para a trabalhadora grávida, puérpera ou lactante e, na aleitação, para qualquer dos progenitores (art. 58.º); dispensa de trabalho suplementar para a trabalhadora grávida e para quem tenha filho com menos de 12 meses, e durante a amamentação se necessário (art. 59.º); e dispensa de trabalho noturno nos 112 dias antes e depois do parto e, se necessário, no resto da gravidez e na amamentação (art. 60.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica uma redução de oito horas em vez das cinco horas previstas na referência para a assistência a filho com deficiência ou doença crónica."
+    },
+    {
+      "id": "ct-0141",
+      "kind": "contradicted",
+      "answer": "Redução de cinco horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art. 54.º); trabalho a tempo parcial e horário flexível para quem tenha filho menor de 12 anos ou, independentemente da idade, com deficiência ou doença crónica que viva consigo (arts. 55.º e 56.º); dispensa de trabalho em adaptabilidade, banco de horas ou horário concentrado para a trabalhadora grávida, puérpera ou lactante e, na aleitação, para qualquer dos progenitores (art. 58.º); dispensa de trabalho suplementar para a trabalhadora grávida e para quem tenha filho com menos de 12 meses, e durante a amamentação se necessário (art. 59.º); e dispensa de trabalho noturno nos 112 dias antes e depois do parto e, se necessário, no resto da gravidez e na amamentação (art. 60.º). Contudo, redução de oito horas do período normal de trabalho semanal, ou outras condições especiais, para assistência a filho com deficiência ou doença crónica com idade não superior a um ano (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao mencionar uma redução de oito horas em vez de cinco e encontra-se incompleta."
+    },
+    {
+      "id": "ct-0141",
+      "kind": "other",
+      "answer": "Que cabe às partes determinar por acordo a atividade para que o trabalhador é contratado, o que pode ser feito por remissão para categoria de instrumento de regulamentação coletiva ou de regulamento interno da empresa; e que, se a atividade envolver negócios jurídicos, o contrato concede ao trabalhador os poderes necessários, salvo se a lei exigir instrumento especial.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o regime da parentalidade nem os direitos relativos aos horários de trabalho, tratando de um tema completamente diferente."
+    },
+    {
+      "id": "ct-0142",
+      "kind": "reference",
+      "answer": "Sim. O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, salvo se atuarem com dolo, com base em declarações ou factos do processo judicial ou contraordenacional de assédio, até à decisão final transitada em julgado (art. 29.º, n.º 6). É abusiva a sanção motivada por ter alegado ser vítima ou ser testemunha de assédio, e presume-se abusivo o despedimento ou outra sanção aplicada até um ano após a denúncia (art. 331.º, n.º 1, alínea d), e n.º 2, alínea b)).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0142",
+      "kind": "yes-no",
+      "answer": "Não. O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, salvo se atuarem com dolo, com base em declarações ou factos do processo judicial ou contraordenacional de assédio, até à decisão final transitada em julgado (art. 29.º, n.º 6). É abusiva a sanção motivada por ter alegado ser vítima ou ser testemunha de assédio, e presume-se abusivo o despedimento ou outra sanção aplicada até um ano após a denúncia (art. 331.º, n.º 1, alínea d), e n.º 2, alínea b)).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta inicia com uma negação ('Não') que contradiz diretamente a referência e o próprio conteúdo jurídico apresentado no restante do texto."
+    },
+    {
+      "id": "ct-0142",
+      "kind": "contradicted",
+      "answer": "Sim. O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, salvo se atuarem com dolo, com base em declarações ou factos do processo judicial ou contraordenacional de assédio, até à decisão final transitada em julgado (art. 29.º, n.º 6). É abusiva a sanção motivada por ter alegado ser vítima ou ser testemunha de assédio, e presume-se abusivo o despedimento ou outra sanção aplicada até um ano após a denúncia (art. 331.º, n.º 1, alínea d), e n.º 2, alínea b)). Contudo, não.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A frase final 'Contudo, não' contradiz diretamente a resposta de referência e o início da própria resposta do sistema."
+    },
+    {
+      "id": "ct-0142",
+      "kind": "other",
+      "answer": "Não. A Lei n.º 23/2012 retirou o 5 de outubro dos feriados obrigatórios, com efeitos a partir de 1 de janeiro de 2013; só voltou a ser feriado obrigatório com a Lei n.º 8/2016, em vigor desde 2 de abril de 2016.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao dizer 'Não' e fornece informações sobre feriados que não têm qualquer relação com a pergunta formulada."
+    },
+    {
+      "id": "ct-0145",
+      "kind": "reference",
+      "answer": "Conforme a modalidade acordada, o trabalhador deixa de estar sujeito aos limites máximos do período normal de trabalho, pode ter um aumento determinado desse período ou cumpre o período acordado; na falta de acordo, aplica-se a primeira (art. 219.º, n.os 1 e 2). A isenção não prejudica o direito ao descanso semanal, obrigatório ou complementar, aos feriados nem ao descanso diário (art. 219.º, n.º 3); este, de onze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art. 214.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0145",
+      "kind": "number",
+      "answer": "Conforme a modalidade acordada, o trabalhador deixa de estar sujeito aos limites máximos do período normal de trabalho, pode ter um aumento determinado desse período ou cumpre o período acordado; na falta de acordo, aplica-se a primeira (art. 219.º, n.os 1 e 2). A isenção não prejudica o direito ao descanso semanal, obrigatório ou complementar, aos feriados nem ao descanso diário (art. 219.º, n.º 3); este, de catorze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art. 214.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o número do descanso diário, indicando catorze horas em vez das onze horas mencionadas na referência."
+    },
+    {
+      "id": "ct-0145",
+      "kind": "contradicted",
+      "answer": "Conforme a modalidade acordada, o trabalhador deixa de estar sujeito aos limites máximos do período normal de trabalho, pode ter um aumento determinado desse período ou cumpre o período acordado; na falta de acordo, aplica-se a primeira (art. 219.º, n.os 1 e 2). A isenção não prejudica o direito ao descanso semanal, obrigatório ou complementar, aos feriados nem ao descanso diário (art. 219.º, n.º 3); este, de onze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art. 214.º). Contudo, 219.º, n.º 3); este, de catorze horas seguidas entre jornadas, só não se aplica, entre outros casos, ao trabalhador isento que ocupe cargo de administração ou de direção ou tenha poder de decisão autónomo, a quem deve ainda assim ser dado um descanso que permita a recuperação (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao mencionar catorze horas de descanso em vez de onze e apresenta um texto incompleto e malformado no final."
+    },
+    {
+      "id": "ct-0145",
+      "kind": "other",
+      "answer": "Sim. A Lei n.º 23/2012 tirou-o da lista do art. 234.º a partir de 1 de agosto de 2012, mas o seu art. 10.º determinou que a eliminação só produzia efeitos a partir de 1 de janeiro de 2013.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de uma alteração legislativa específica em vez de explicar os efeitos da isenção de horário."
+    },
+    {
+      "id": "ct-0146",
+      "kind": "reference",
+      "answer": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 48 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art. 207.º (art. 211.º, n.º 1): por exemplo, trabalhador familiar do empregador, cargos de administração ou de direção, atividades que exigem continuidade do serviço ou acréscimos previsíveis de atividade (art. 207.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0146",
+      "kind": "number",
+      "answer": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 72 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art. 207.º (art. 211.º, n.º 1): por exemplo, trabalhador familiar do empregador, cargos de administração ou de direção, atividades que exigem continuidade do serviço ou acréscimos previsíveis de atividade (art. 207.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica um limite de 72 horas, contradizendo as 48 horas estabelecidas na resposta de referência."
+    },
+    {
+      "id": "ct-0146",
+      "kind": "contradicted",
+      "answer": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 48 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art. 207.º (art. 211.º, n.º 1): por exemplo, trabalhador familiar do empregador, cargos de administração ou de direção, atividades que exigem continuidade do serviço ou acréscimos previsíveis de atividade (art. 207.º, n.º 2). Contudo, a duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 72 horas, num período de referência fixado em instrumento de regulamentação coletiva que não ultrapasse 12 meses ou, na sua falta, de quatro meses, ou de seis meses nos casos do n.º 2 do art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar que a duração média não pode exceder 72 horas, quando o limite estabelecido é de 48 horas."
+    },
+    {
+      "id": "ct-0146",
+      "kind": "other",
+      "answer": "Sim, em regra: o Código definia teletrabalho como a prestação laboral realizada com subordinação jurídica, habitualmente fora da empresa e com recurso a tecnologias de informação e de comunicação. Desde 1 de janeiro de 2022 (Lei n.º 83/2021) basta que seja prestado em local não determinado pelo empregador.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando do conceito de teletrabalho em vez dos limites de duração do trabalho semanal."
+    },
+    {
+      "id": "ct-0147",
+      "kind": "reference",
+      "answer": "Se o empregador impedir culposamente o gozo das férias, o trabalhador tem direito a uma compensação no valor do triplo da retribuição correspondente ao período em falta, que deve ser gozado até 30 de abril do ano civil seguinte (art. 246.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ct-0147",
+      "kind": "other",
+      "answer": "A propriedade dos instrumentos de trabalho tem de ficar definida no acordo de teletrabalho (art. 166.º, n.º 4, al. g)). O empregador é responsável por disponibilizar os equipamentos e sistemas necessários, e o acordo deve dizer se são fornecidos por ele ou adquiridos pelo trabalhador com a sua concordância quanto às características e preços (art. 168.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o tema das férias, tratando de teletrabalho, não respondendo ao que foi perguntado."
+    },
+    {
+      "id": "ct-0154",
+      "kind": "reference",
+      "answer": "Constituem violação do dever de assiduidade e determinam a perda da retribuição do período de ausência, que não conta para a antiguidade. A falta injustificada a um ou meio período normal de trabalho imediatamente antes ou depois de dia ou meio-dia de descanso ou de feriado é infração grave, e a perda de retribuição abrange também esses dias ou meios-dias. Num atraso injustificado superior a 60 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art. 256.º).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ct-0154",
+      "kind": "number",
+      "answer": "Constituem violação do dever de assiduidade e determinam a perda da retribuição do período de ausência, que não conta para a antiguidade. A falta injustificada a um ou meio período normal de trabalho imediatamente antes ou depois de dia ou meio-dia de descanso ou de feriado é infração grave, e a perda de retribuição abrange também esses dias ou meios-dias. Num atraso injustificado superior a 90 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art. 256.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo de atraso necessário para a recusa da prestação durante todo o período de trabalho, indicando 90 minutos em vez de 60."
+    },
+    {
+      "id": "ct-0154",
+      "kind": "contradicted",
+      "answer": "Constituem violação do dever de assiduidade e determinam a perda da retribuição do período de ausência, que não conta para a antiguidade. A falta injustificada a um ou meio período normal de trabalho imediatamente antes ou depois de dia ou meio-dia de descanso ou de feriado é infração grave, e a perda de retribuição abrange também esses dias ou meios-dias. Num atraso injustificado superior a 60 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art. 256.º). Contudo, num atraso injustificado superior a 90 minutos no início do trabalho diário, o empregador pode recusar a prestação durante todo o período normal de trabalho; superior a 30 minutos, durante essa parte (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema introduz um erro numérico (90 minutos em vez de 60) que contradiz a referência e a resposta termina de forma incompleta."
+    },
+    {
+      "id": "ct-0154",
+      "kind": "other",
+      "answer": "A ser indemnizado por todos os danos, patrimoniais e não patrimoniais, e a ser reintegrado sem prejuízo da categoria e antiguidade (art. 389.º), e ainda às retribuições que deixou de receber desde o despedimento até ao trânsito em julgado da decisão, com as deduções previstas na lei (art. 390.º).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda as consequências das faltas injustificadas, tratando em vez disso das consequências de um despedimento ilícito."
+    },
+    {
+      "id": "ct-0155",
+      "kind": "reference",
+      "answer": "Sim, com justa causa, fazendo cessar o contrato de imediato: a prática de assédio pela entidade empregadora ou por outros trabalhadores é violação culposa das garantias do trabalhador (art. 394.º, n.º 2, alínea b)), e o assédio praticado pelo empregador ou seu representante e denunciado à ACT é ofensa à sua integridade, honra ou dignidade (art. 394.º, n.º 2, alínea f)).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os fundamentos jurídicos e prazos corretos."
+    },
+    {
+      "id": "ct-0155",
+      "kind": "yes-no",
+      "answer": "Não, com justa causa, fazendo cessar o contrato de imediato: a prática de assédio pela entidade empregadora ou por outros trabalhadores é violação culposa das garantias do trabalhador (art. 394.º, n.º 2, alínea b)), e o assédio praticado pelo empregador ou seu representante e denunciado à ACT é ofensa à sua integridade, honra ou dignidade (art. 394.º, n.º 2, alínea f)).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta começa com uma negação ('Não') que contradiz diretamente a referência e a lógica do restante do texto apresentado."
+    },
+    {
+      "id": "ct-0155",
+      "kind": "contradicted",
+      "answer": "Sim, com justa causa, fazendo cessar o contrato de imediato: a prática de assédio pela entidade empregadora ou por outros trabalhadores é violação culposa das garantias do trabalhador (art. 394.º, n.º 2, alínea b)), e o assédio praticado pelo empregador ou seu representante e denunciado à ACT é ofensa à sua integridade, honra ou dignidade (art. 394.º, n.º 2, alínea f)). Contudo, não, com justa causa, fazendo cessar o contrato de imediato: a prática de assédio pela entidade empregadora ou por outros trabalhadores é violação culposa das garantias do trabalhador (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar 'não' logo após ter iniciado a resposta corretamente."
+    },
+    {
+      "id": "ct-0155",
+      "kind": "other",
+      "answer": "Que, para efeitos do Código, é trabalhador cuidador aquele a quem tenha sido reconhecido o estatuto de cuidador informal não principal, nos termos da legislação aplicável, mediante apresentação do respetivo comprovativo.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta formulada, tratando de um tema completamente diferente (trabalhador cuidador)."
+    },
+    {
+      "id": "ct-0162",
+      "kind": "reference",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até três dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à de referência, contendo todos os elementos essenciais solicitados."
+    },
+    {
+      "id": "ct-0162",
+      "kind": "number",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até seis dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica seis dias consecutivos em vez dos três dias previstos na resposta de referência."
+    },
+    {
+      "id": "ct-0162",
+      "kind": "contradicted",
+      "answer": "A trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até três dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art. 252.º-B). Contudo, a trabalhadora com dores graves e incapacitantes provocadas por endometriose ou adenomiose durante o período menstrual pode faltar justificadamente, sem perda de qualquer direito, incluindo a retribuição, até seis dias consecutivos por cada mês de prestação de trabalho; a prescrição médica que o ateste, entregue ao empregador, prova o motivo (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao afirmar que o limite é de seis dias em vez de três."
+    },
+    {
+      "id": "ct-0162",
+      "kind": "other",
+      "answer": "Que, para efeitos do Código, é trabalhador cuidador aquele a quem tenha sido reconhecido o estatuto de cuidador informal não principal, nos termos da legislação aplicável, mediante apresentação do respetivo comprovativo.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de um tema completamente diferente (trabalhador cuidador)."
+    },
+    {
+      "id": "ar-0001",
+      "kind": "reference",
+      "answer": "É um meio processual que se destina a efetivar a cessação do arrendamento, qualquer que seja o fim a que este se destina, quando o arrendatário não desocupa o locado na data prevista na lei ou na data fixada por convenção entre as partes (art. 15.º, n.º 1, do NRAU). Com o pedido de despejo pode ser pedido também o pagamento de rendas, encargos ou despesas em dívida, desde que o montante tenha sido comunicado ao arrendatário (n.º 6).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais."
+    },
+    {
+      "id": "ar-0001",
+      "kind": "other",
+      "answer": "15 dias úteis, seguidos ou interpolados, nos 30 dias seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais 10 dias úteis facultativos, em simultâneo com a licença parental inicial da mãe.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de licença parental em vez do procedimento de despejo."
+    },
+    {
+      "id": "ar-0002",
+      "kind": "reference",
+      "answer": "No Balcão do Arrendatário e do Senhorio (BAS), criado junto da Direção-Geral da Administração da Justiça para tramitar o procedimento especial de despejo e a injunção em matéria de arrendamento, com competência em todo o território nacional (art. 15.º-A do NRAU). O requerimento de despejo é apresentado no BAS, em modelo próprio (art. 15.º-B, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos necessários."
+    },
+    {
+      "id": "ar-0002",
+      "kind": "other",
+      "answer": "20 dias úteis, seguidos ou interpolados, nas seis semanas seguintes ao nascimento, cinco dos quais gozados de forma consecutiva logo a seguir; depois disso, mais cinco dias úteis facultativos, em simultâneo com a licença parental inicial da mãe. Desde 1 de maio de 2023 são 28 dias.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de temas de licença parental em vez do local de tramitação do procedimento de despejo."
+    },
+    {
+      "id": "ar-0003",
+      "kind": "reference",
+      "answer": "Qualquer que seja o fim do arrendamento, à cessação do contrato por revogação (acordo das partes), por caducidade pelo decurso do prazo, não sendo o contrato renovável, por oposição à renovação, por denúncia pelo senhorio, por resolução por comunicação (por falta de pagamento de rendas, encargos ou despesas, ou por oposição do arrendatário à realização de obras) e por denúncia pelo arrendatário em resposta à iniciativa do senhorio; cada caso exige os documentos que o art. 15.º, n.º 2, do NRAU indica, a começar pelo contrato de arrendamento. Também se pode recorrer a ele quando se tenha frustrado a comunicação de resolução ao arrendatário (n.º 4).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, apresentando todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ar-0003",
+      "kind": "other",
+      "answer": "50 % pela primeira hora ou fração e 75 % por cada hora ou fração seguinte. Em dia de descanso semanal ou feriado, 100 %. Os acréscimos baixaram para metade com a Lei n.º 23/2012, a partir de 1 de agosto de 2012.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não tem qualquer relação com a pergunta, tratando de horas extraordinárias em vez do procedimento de despejo."
+    },
+    {
+      "id": "ar-0004",
+      "kind": "reference",
+      "answer": "O requerimento tem de se basear nos documentos que o art. 15.º, n.º 2, do NRAU indica para cada forma de cessação, a começar pelo contrato de arrendamento (por exemplo, o contrato escrito com o prazo, na caducidade pelo decurso do prazo), e o procedimento só pode ser usado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC (n.º 5). O requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos quatro anos, salvo contrato mais recente (art. 15.º-C, n.º 1).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ar-0004",
+      "kind": "number",
+      "answer": "O requerimento tem de se basear nos documentos que o art. 15.º, n.º 2, do NRAU indica para cada forma de cessação, a começar pelo contrato de arrendamento (por exemplo, o contrato escrito com o prazo, na caducidade pelo decurso do prazo), e o procedimento só pode ser usado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC (n.º 5). O requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos oito anos, salvo contrato mais recente (art. 15.º-C, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo temporal, indicando oito anos em vez dos quatro anos previstos na resposta de referência."
+    },
+    {
+      "id": "ar-0004",
+      "kind": "contradicted",
+      "answer": "O requerimento tem de se basear nos documentos que o art. 15.º, n.º 2, do NRAU indica para cada forma de cessação, a começar pelo contrato de arrendamento (por exemplo, o contrato escrito com o prazo, na caducidade pelo decurso do prazo), e o procedimento só pode ser usado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC (n.º 5). O requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos quatro anos, salvo contrato mais recente (art. 15.º-C, n.º 1). Contudo, o requerimento é recusado, entre outros casos, se não indicar o fundamento do despejo ou não juntar esses documentos, se não indicar o valor da renda, se não se mostrar paga a taxa ou indicado o apoio judiciário, ou se não se mostrar pago o imposto do selo ou liquidado o IRS ou o IRC pelas rendas dos últimos oito anos, salvo contrato mais recente (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema contradiz a referência ao indicar um prazo de oito anos para a liquidação de impostos/IRS/IRC, quando a referência estabelece quatro anos."
+    },
+    {
+      "id": "ar-0004",
+      "kind": "other",
+      "answer": "Não. Em 2022 todo o trabalho suplementar em dia útil tinha o acréscimo de 25 % na primeira hora e 37,5 % nas seguintes, e 50 % em dia de descanso ou feriado. A distinção a partir das 100 horas anuais só se aplica ao trabalho prestado desde 1 de maio de 2023.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de trabalho suplementar em vez do procedimento de despejo."
+    },
+    {
+      "id": "ar-0005",
+      "kind": "reference",
+      "answer": "Só para deduzir oposição ao requerimento de despejo e nos atos processuais posteriores à distribuição do processo a tribunal, em que as partes têm de se fazer representar por advogado (art. 15.º-S, n.os 3 e 4, do NRAU).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo exatamente o mesmo conteúdo jurídico."
+    },
+    {
+      "id": "ar-0005",
+      "kind": "other",
+      "answer": "90 dias, o da generalidade dos trabalhadores. O período de 180 dias para quem procura o primeiro emprego ou está em desemprego de longa duração só existe desde 1 de outubro de 2019 (Lei n.º 93/2019).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta formulada, tratando de prazos de desemprego em vez da obrigatoriedade de advogado no despejo."
+    },
+    {
+      "id": "ar-0011",
+      "kind": "reference",
+      "answer": "Sim: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há seis meses (n.º 2).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ar-0011",
+      "kind": "number",
+      "answer": "Sim: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há nove meses (n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo necessário para a prova da existência do contrato, indicando nove meses em vez de seis."
+    },
+    {
+      "id": "ar-0011",
+      "kind": "yes-no",
+      "answer": "Não: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há seis meses (n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta começa com 'Não', o que contradiz diretamente a resposta de referência e a fundamentação legal que o próprio sistema apresenta a seguir."
+    },
+    {
+      "id": "ar-0011",
+      "kind": "contradicted",
+      "answer": "Sim: o contrato de arrendamento urbano deve ser celebrado por escrito (art. 1069.º, n.º 1, do Código Civil). Se não for reduzido a escrito por razão que não seja imputável ao arrendatário, este pode provar que o contrato existe por qualquer forma admitida em direito, mostrando que usa o locado sem oposição do senhorio e que paga a renda todos os meses há seis meses (n.º 2). Contudo, não: o contrato de arrendamento urbano deve ser celebrado por escrito (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta é incompleta e apresenta uma contradição direta ao afirmar 'Contudo, não' logo após a explicação correta."
+    },
+    {
+      "id": "ar-0011",
+      "kind": "other",
+      "answer": "Preferencialmente através dos equipamentos e sistemas de comunicação afetos à atividade do trabalhador, segundo procedimentos que ele conheça previamente e que respeitem a sua privacidade; o controlo tem de ser proporcional e transparente, sendo proibido impor a conexão permanente por imagem ou som (art. 169.º-A, n.os 4 e 5). É vedada a captura e utilização de imagem, som, escrita ou histórico, ou outros meios de controlo que afetem a privacidade (art. 170.º, n.º 5).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de controlo de trabalhadores e não de arrendamento urbano."
+    },
+    {
+      "id": "ar-0012",
+      "kind": "reference",
+      "answer": "Só se tivesse duração superior a seis meses: em 2010, o art. 1069.º do Código Civil, na redação da Lei n.º 6/2006, exigia a forma escrita ao contrato de arrendamento urbano com duração superior a seis meses.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência."
+    },
+    {
+      "id": "ar-0012",
+      "kind": "number",
+      "answer": "Só se tivesse duração superior a nove meses: em 2010, o art. 1069.º do Código Civil, na redação da Lei n.º 6/2006, exigia a forma escrita ao contrato de arrendamento urbano com duração superior a seis meses.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema indica incorretamente o prazo de nove meses no início da resposta, contradizendo a referência que estabelece seis meses."
+    },
+    {
+      "id": "ar-0012",
+      "kind": "contradicted",
+      "answer": "Só se tivesse duração superior a seis meses: em 2010, o art. 1069.º do Código Civil, na redação da Lei n.º 6/2006, exigia a forma escrita ao contrato de arrendamento urbano com duração superior a seis meses. Contudo, só se tivesse duração superior a nove meses: em 2010, o art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta contradiz a referência ao introduzir um prazo de nove meses que invalida a conclusão correta de seis meses."
+    },
+    {
+      "id": "ar-0012",
+      "kind": "other",
+      "answer": "Sim. Pode opor-se mediante requerimento em formulário próprio no tribunal competente, no prazo de 60 dias a contar da receção da comunicação de despedimento ou da cessação do contrato, se posterior (art. 387.º, n.º 2). No despedimento coletivo, a ação de impugnação tem de ser intentada no prazo de seis meses a contar da cessação do contrato (art. 388.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de processos de despedimento em vez de requisitos de forma no arrendamento."
+    },
+    {
+      "id": "ar-0014",
+      "kind": "reference",
+      "answer": "A mora igual ou superior a três meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art. 1083.º, n.º 3, do Código Civil); também o é a mora superior a oito dias por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses, se o senhorio tiver avisado o arrendatário por carta registada com aviso de receção, após o terceiro atraso, de que tenciona pôr fim ao contrato (n.os 4 e 6). A resolução por mora de três meses opera por comunicação e fica sem efeito se o arrendatário puser fim à mora no prazo de um mês, o que só pode fazer uma vez por contrato (art. 1084.º, n.os 2 a 4).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ar-0014",
+      "kind": "number",
+      "answer": "A mora igual ou superior a seis meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art. 1083.º, n.º 3, do Código Civil); também o é a mora superior a oito dias por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses, se o senhorio tiver avisado o arrendatário por carta registada com aviso de receção, após o terceiro atraso, de que tenciona pôr fim ao contrato (n.os 4 e 6). A resolução por mora de três meses opera por comunicação e fica sem efeito se o arrendatário puser fim à mora no prazo de um mês, o que só pode fazer uma vez por contrato (art. 1084.º, n.os 2 a 4).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo de mora necessário para a resolução, indicando seis meses quando a referência e a lei estabelecem três meses."
+    },
+    {
+      "id": "ar-0014",
+      "kind": "contradicted",
+      "answer": "A mora igual ou superior a três meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art. 1083.º, n.º 3, do Código Civil); também o é a mora superior a oito dias por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses, se o senhorio tiver avisado o arrendatário por carta registada com aviso de receção, após o terceiro atraso, de que tenciona pôr fim ao contrato (n.os 4 e 6). A resolução por mora de três meses opera por comunicação e fica sem efeito se o arrendatário puser fim à mora no prazo de um mês, o que só pode fazer uma vez por contrato (art. 1084.º, n.os 2 a 4). Contudo, a mora igual ou superior a seis meses no pagamento da renda, encargos ou despesas a cargo do arrendatário torna inexigível ao senhorio a manutenção do arrendamento e é fundamento de resolução (art.",
+      "verdict": "parcial",
+      "as_expected": true,
+      "reason": "O sistema contém o conteúdo essencial e correto da referência, mas termina com uma frase incompleta e uma informação adicional não constante na referência."
+    },
+    {
+      "id": "ar-0014",
+      "kind": "other",
+      "answer": "O contrato de muito curta duração: para acréscimo excecional e substancial de atividade em empresa com ciclo anual irregular, como a atividade sazonal agrícola ou turística, com duração não superior a 35 dias, não sujeito a forma escrita mas comunicado à segurança social; entre o mesmo trabalhador e empregador não pode exceder 70 dias de trabalho por ano civil, e se violar estas regras considera-se celebrado por seis meses.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não aborda o tema do arrendamento nem a questão das rendas em atraso, tratando de contratos de trabalho de curta duração."
+    },
+    {
+      "id": "ar-0015",
+      "kind": "reference",
+      "answer": "É o arrendamento conjunto de uma parte urbana e de uma parte rústica. É havido por urbano quando essa seja a vontade dos contratantes; na dúvida, atende-se ao fim principal do contrato e, depois, à renda que atribuíram a cada parte, e, se esses critérios faltarem ou não bastarem, o arrendamento tem-se por urbano (art. 1066.º do Código Civil).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todo o conteúdo jurídico necessário."
+    },
+    {
+      "id": "ar-0015",
+      "kind": "other",
+      "answer": "Define despedimento coletivo: a cessação de contratos promovida pelo empregador, simultânea ou sucessivamente no período de três meses, abrangendo pelo menos dois trabalhadores em micro ou pequena empresa, ou cinco em média ou grande empresa, fundada no encerramento de secções ou estrutura equivalente ou em redução de pessoal por motivos de mercado, estruturais ou tecnológicos.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde à pergunta, tratando de despedimento coletivo em vez de arrendamento misto."
+    },
+    {
+      "id": "ar-0019",
+      "kind": "reference",
+      "answer": "O destino do arrendamento é decidido por acordo dos cônjuges, que podem optar pela transmissão ou pela concentração do arrendamento a favor de um deles; na falta de acordo, decide o tribunal, tendo em conta a necessidade de cada um, os interesses dos filhos e outros fatores relevantes. A transferência ou a concentração acordada e homologada, ou a decisão judicial, é notificada oficiosamente ao senhorio (art. 1105.º do Código Civil).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ar-0019",
+      "kind": "other",
+      "answer": "Com acréscimo de 50 % na primeira hora ou fração e 75 % nas seguintes em dia útil, e de 100 % em dia de descanso semanal ou feriado.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de acréscimos de remuneração e não do destino do arrendamento."
+    },
+    {
+      "id": "ar-0022",
+      "kind": "reference",
+      "answer": "Como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em quinze dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art. 1038.º do Código Civil).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais sem contradições."
+    },
+    {
+      "id": "ar-0022",
+      "kind": "number",
+      "answer": "Como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em vinte dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art. 1038.º do Código Civil).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O prazo para comunicar a cedência está incorreto (20 dias em vez de 15 dias)."
+    },
+    {
+      "id": "ar-0022",
+      "kind": "contradicted",
+      "answer": "Como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em quinze dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art. 1038.º do Código Civil). Contudo, como locatário, o inquilino tem de pagar a renda; facultar ao senhorio o exame do imóvel; não o aplicar a fim diverso daquele a que se destina; não fazer dele uma utilização imprudente; tolerar as reparações urgentes e as obras ordenadas pela autoridade pública; não proporcionar a outrem o seu gozo, por cessão da posição, sublocação ou comodato, salvo se a lei o permitir ou o senhorio o autorizar; comunicar ao senhorio, em vinte dias, essa cedência quando permitida ou autorizada; avisar logo o senhorio de vícios, perigos ou direitos que terceiros se arroguem, quando ele os ignore; e restituir o imóvel no fim do contrato (art.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema apresenta um prazo incorreto para a comunicação da cedência, indicando vinte dias em vez de quinze dias."
+    },
+    {
+      "id": "ar-0022",
+      "kind": "other",
+      "answer": "Em regra não. Mas quando as faltas determinam perda de retribuição, o trabalhador pode substituí-la por renúncia a dias de férias em igual número, por declaração expressa ao empregador, desde que goze pelo menos 20 dias úteis de férias (art. 257.º, n.º 1, al. a), com o art. 238.º, n.º 5); o subsídio de férias não é reduzido e o empregador não se pode opor.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de temas de direito do trabalho em vez de obrigações do inquilino."
+    },
+    {
+      "id": "ar-0023",
+      "kind": "reference",
+      "answer": "Depende do fundamento. Com base nas causas do n.º 2 do art. 1083.º do Código Civil (por exemplo, a violação de regras de sossego ou de boa vizinhança, ou o uso do prédio para fim diverso), a resolução é decretada nos termos da lei de processo, isto é, pelo tribunal (art. 1084.º, n.º 1). Fundada em mora igual ou superior a três meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art. 1083.º, n.º 3), ou em atrasos repetidos (n.º 4), opera por comunicação ao arrendatário em que se invoque fundamentadamente a obrigação incumprida (art. 1084.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, apresentando todos os fundamentos e condições corretamente."
+    },
+    {
+      "id": "ar-0023",
+      "kind": "number",
+      "answer": "Depende do fundamento. Com base nas causas do n.º 2 do art. 1083.º do Código Civil (por exemplo, a violação de regras de sossego ou de boa vizinhança, ou o uso do prédio para fim diverso), a resolução é decretada nos termos da lei de processo, isto é, pelo tribunal (art. 1084.º, n.º 1). Fundada em mora igual ou superior a seis meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art. 1083.º, n.º 3), ou em atrasos repetidos (n.º 4), opera por comunicação ao arrendatário em que se invoque fundamentadamente a obrigação incumprida (art. 1084.º, n.º 2).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "O sistema erra o prazo de mora necessário para a resolução por comunicação, indicando seis meses em vez de três meses."
+    },
+    {
+      "id": "ar-0023",
+      "kind": "contradicted",
+      "answer": "Depende do fundamento. Com base nas causas do n.º 2 do art. 1083.º do Código Civil (por exemplo, a violação de regras de sossego ou de boa vizinhança, ou o uso do prédio para fim diverso), a resolução é decretada nos termos da lei de processo, isto é, pelo tribunal (art. 1084.º, n.º 1). Fundada em mora igual ou superior a três meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art. 1083.º, n.º 3), ou em atrasos repetidos (n.º 4), opera por comunicação ao arrendatário em que se invoque fundamentadamente a obrigação incumprida (art. 1084.º, n.º 2). Contudo, fundada em mora igual ou superior a seis meses no pagamento da renda, encargos ou despesas, ou em oposição do arrendatário a obra ordenada por autoridade pública (art.",
+      "verdict": "parcial",
+      "as_expected": true,
+      "reason": "A resposta contém a informação essencial correta, mas está incompleta devido a um truncamento e apresenta um erro de prazo na parte final."
+    },
+    {
+      "id": "ar-0023",
+      "kind": "other",
+      "answer": "A falta do título profissional determina a nulidade do contrato (art. 117.º, n.º 1), mas o contrato produz efeitos como válido em relação ao tempo em que foi executado (art. 122.º, n.º 1).",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta não responde ao que foi perguntado, tratando de nulidade por falta de título profissional em vez de resolução do contrato."
+    },
+    {
+      "id": "ar-0028",
+      "kind": "reference",
+      "answer": "Se as rendas estiverem em correspondência com os meses do calendário gregoriano, a primeira vence-se no momento da celebração do contrato e cada uma das restantes no 1.º dia útil do mês imediatamente anterior àquele a que diga respeito (art. 1075.º, n.º 2, do Código Civil): a renda de julho paga-se em junho.",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos jurídicos necessários."
+    },
+    {
+      "id": "ar-0028",
+      "kind": "other",
+      "answer": "Que o trabalhador em teletrabalho tem os mesmos direitos e deveres dos demais trabalhadores da empresa com a mesma categoria ou função idêntica, nomeadamente quanto a formação, promoção na carreira, limites da duração do trabalho, períodos de descanso e férias pagas, segurança e saúde no trabalho, reparação de acidentes de trabalho e doenças profissionais e acesso a informação das estruturas representativas.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta do sistema é totalmente irrelevante, tratando de direitos do teletrabalho e não respondendo à pergunta sobre o vencimento da renda."
+    },
+    {
+      "id": "ar-0032",
+      "kind": "reference",
+      "answer": "A ação de despejo destina-se a fazer cessar o arrendamento sempre que a lei imponha o recurso à via judicial (art. 14.º, n.º 1, do NRAU). É o caso da resolução pelo senhorio fundada num incumprimento que, pela sua gravidade ou consequências, torne inexigível a manutenção do arrendamento, como a violação de regras de higiene, sossego ou boa vizinhança, o uso do prédio para fim diverso ou o não uso do locado por mais de um ano (art. 1083.º, n.º 2, do Código Civil): essa resolução é decretada nos termos da lei de processo (art. 1084.º, n.º 1). A resolução por mora no pagamento da renda (n.os 3 e 4 do art. 1083.º) opera por comunicação ao arrendatário (art. 1084.º, n.º 2).",
+      "verdict": "correta",
+      "as_expected": true,
+      "reason": "A resposta do sistema é idêntica à resposta de referência, contendo todos os elementos essenciais e corretos."
+    },
+    {
+      "id": "ar-0032",
+      "kind": "other",
+      "answer": "Por acordo entre empregador e trabalhador. Na falta de acordo, marca-as o empregador, ouvidos os representantes dos trabalhadores, sem que possam começar em dia de descanso semanal do trabalhador; em pequena, média ou grande empresa, só entre 1 de maio e 31 de outubro, salvo convenção coletiva ou parecer dos representantes que admita outra época.",
+      "verdict": "errada",
+      "as_expected": true,
+      "reason": "A resposta trata de direito do trabalho (períodos de férias) e não responde à pergunta sobre arrendamento."
+    }
+  ]
+}

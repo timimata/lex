@@ -1,7 +1,7 @@
 # 0003. Start with the Código do Trabalho only
 
 Date: 2026-09-29
-Status: accepted
+Status: accepted; carried out, tenancy added by ADR 0017 (amended 2026-10-08)
 
 ## Context
 
@@ -21,3 +21,10 @@ come in Phase 6, once ingestion, benchmark, system and demo work for one.
 - ACT's public guidance maps directly onto this corpus, which makes sourcing questions easier.
 - Questions that need another diploma (e.g. labour law pointing to the Código Civil) are
   `unanswerable` until Phase 6.
+
+## Amendment, 2026-10-08: tenancy came in Phase 6
+
+As planned here, other diplomas came once the Código do Trabalho worked end to end: the Código
+Civil's articles on leases and the NRAU joined the corpus on 2026-10-01
+([ADR 0017](0017-tenancy.md)). Questions on them are answerable since then, and `validate` names
+any earlier `unanswerable` item that speaks of tenancy for a person to review.

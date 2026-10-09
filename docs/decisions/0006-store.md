@@ -1,7 +1,7 @@
 # 0006. Postgres with pg_search and pgvector, in the ParadeDB image
 
 Date: 2026-09-29
-Status: accepted
+Status: accepted; amended 2026-10-08 (every diploma; the demo holds none of it)
 
 ## Context
 
@@ -42,3 +42,12 @@ one place and can be combined in one SQL query.
 - The image is about 1.4 GB, which CI pulls on every run.
 - Hosting for the public demo (Phase 4) needs a Postgres provider that offers pg_search, or the
   demo runs this same image; decided in Phase 4.
+
+## Amendment, 2026-10-08: every diploma, and a demo without Postgres
+
+`python -m lex.store load` replaces the table's contents with every diploma's versions
+(`codes.py` lists them), not the Código do Trabalho's alone. The public demo runs no Postgres
+([ADR 0014](0014-serverless-demo.md)): it holds the corpus in memory, which since 2026-10-08
+refuses what this store's constraints refuse (`Corpus.check`) and fingerprints the corpus as this
+store does (`lex.domain.corpus_fingerprint`). This store remains the reference system's and the
+baselines'.

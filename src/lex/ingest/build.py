@@ -58,6 +58,9 @@ class Report:
     missing_current: list[str] = field(default_factory=list)  # articles with no version stored
     text_mismatches: list[str] = field(default_factory=list)
     rulings: dict[str, list[str]] = field(default_factory=dict)
+    # A date read by hand from a diploma that the DR's note for the same article contradicts: the
+    # note's is stored, and the build is refused until a correction (codes.py) says which holds.
+    disagreements: list[str] = field(default_factory=list)
     # Articles whose effects another diploma defers or suspends, in part or whole: their
     # versions start when the DR says the change entered into force, so these are listed.
     remarks: dict[str, list[str]] = field(default_factory=dict)
@@ -173,7 +176,7 @@ def build(
         # incomplete, and it is listed so no temporal item relies on it.
         dated: list[tuple[dt.date, str, str, str, str, dt.date]] = []
         for heading, text, by, source_url, fetched in steps:
-            start = _start_of(by, number, notes, by_diploma, report.resolved, code)
+            start = _start_of(by, number, notes, by_diploma, report.resolved, code, report)
             if start is None:
                 report.problems.append(f"{number}: no entry-into-force date for {by}")
                 report.incomplete_history.append(number)
@@ -207,7 +210,50 @@ def build(
                 )
             )
     report.versions = len(versions)
-    return versions, report
+    return attach_notes(versions, reference, code), report
+
+
+_NOTED_ON = re.compile(r"de (\d{4}-\d{2}-\d{2})")
+
+
+def attach_notes(
+    versions: list[ArticleVersion], reference: dict[str, dr.Article], code: Code
+) -> list[ArticleVersion]:
+    """Each of the DR's notes on an article's effects kept with the version it concerns: a
+    Constitutional Court ruling with the version in force the day it was published; another
+    diploma's word on the effects of a change ("Artigo 9.º, Lei n.º 90/2019 ... Entra em vigor
+    com o Orçamento do Estado") with the version that diploma introduced, or, if none, the one in
+    force on the note's date. Verbatim, whitespace collapsed."""
+    by_article: dict[str, list[int]] = defaultdict(list)
+    for n, v in enumerate(versions):
+        by_article[v.article].append(n)
+    notes: dict[int, list[str]] = defaultdict(list)
+    for number, ref in reference.items():
+        for kind, found in (("ruling", ref.rulings), ("remark", ref.remarks)):
+            for note in found:
+                text = " ".join(note.split())
+                dated = _NOTED_ON.search(text)
+                day = dt.date.fromisoformat(dated.group(1)) if dated else None
+                target = None
+                if kind == "remark":
+                    label = text.split(", ", 1)[1].split(" - ", 1)[0] if ", " in text else ""
+                    try:
+                        by = diploma_id(label)
+                    except ValueError:
+                        by = ""
+                    target = next(
+                        (n for n in by_article[number] if versions[n].introduced_by == by), None
+                    )
+                if target is None and day is not None:
+                    target = next(
+                        (n for n in by_article[number] if versions[n].in_force_on(day)), None
+                    )
+                if target is not None:
+                    notes[target].append(text)
+    return [
+        v.model_copy(update={"notes": notes[n]}) if n in notes else v
+        for n, v in enumerate(versions)
+    ]
 
 
 def _start_of(
@@ -217,9 +263,10 @@ def _start_of(
     by_diploma: dict[str, dt.date],
     resolved: list[str],
     code: Code = CT_CODE,
+    report: "Report | None" = None,
 ) -> dt.date | None:
     """When the version of `article` introduced by `by` entered into force (rules in the module
-    docstring)."""
+    docstring). A hand-read date the DR's note contradicts is recorded in `report`."""
     if (by, article) in code.corrections:
         corrected, why = code.corrections[(by, article)]
         resolved.append(f"{article}: {by} dated {corrected}, corrected: {why}")
@@ -229,12 +276,17 @@ def _start_of(
         return code.in_force
     noted = notes.get(by)
     if noted is not None and by != code.diploma:
+        hand = read.get((by, article))
+        if hand is not None and hand != noted and report is not None:
+            message = f"{article}: {by} read by hand as {hand}, the DR's note says {noted}"
+            report.disagreements.append(message)
+            report.problems.append(f"{message}; a correction in codes.py must say which holds")
         return noted
     if (by, article) in read:
         start: dt.date | None = read[(by, article)]
         rule = "read from the diploma's entry-into-force article"
     elif by in code.rectifies:
-        start = _start_of(code.rectifies[by], article, notes, by_diploma, resolved, code)
+        start = _start_of(code.rectifies[by], article, notes, by_diploma, resolved, code, report)
         rule = f"as {code.rectifies[by]}, which it rectifies"
     else:
         start = by_diploma.get(by)

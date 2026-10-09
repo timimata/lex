@@ -14,6 +14,8 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
+from lex import atomic
+
 USER_AGENT = "lex-pt/0.0.1 (research on question answering over Portuguese legislation)"
 MIN_INTERVAL_S = 2.0
 BACKOFF_S = (30.0, 60.0, 120.0)
@@ -50,11 +52,11 @@ class Fetcher:
 
         body = self._download(url, accept)
 
-        # The metadata is written last, so an interrupted write never counts as cached.
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
-        body_path.write_bytes(body)
+        # The metadata is written last, and each file whole or not at all, so an interrupted
+        # write never counts as cached.
+        atomic.write_bytes(body_path, body)
         today = dt.date.today()
-        meta_path.write_text(json.dumps({"url": url, "fetched": today.isoformat()}), "utf-8")
+        atomic.write_text(meta_path, json.dumps({"url": url, "fetched": today.isoformat()}))
         return Page(url, body, today)
 
     def _download(self, url: str, accept: str | None) -> bytes:

@@ -9,9 +9,12 @@ import hashlib
 import json
 import os
 import time
+import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
+
+from lex import atomic
 
 GEMINI_OPENAI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 DEFAULT_MODEL = "gemini-3.1-flash-lite"
@@ -36,7 +39,11 @@ class Completion:
 # USD per million tokens on the paid tier, input and output (thinking is billed as output), from
 # ai.google.dev/gemini-api/docs/pricing, read 2026-10-06. The demo runs on the free tier, so
 # this is what its answers would cost, not what they cost.
-PRICES = {"gemini-3.1-flash-lite": (0.25, 1.50)}
+PRICES = {
+    "gemini-3.1-flash-lite": (0.25, 1.50),
+    # Gemini Embedding 2: text input; read 2026-10-08. Gemma 4 has no paid tier, so no price.
+    "gemini-embedding-2": (0.20, 0.0),
+}
 
 
 def usd(tokens: dict[str, int], model: str) -> float | None:
@@ -59,6 +66,31 @@ def spent(completions: list[Completion]) -> dict[str, int]:
         "thinking_tokens": sum(c.thinking_tokens or 0 for c in completions),
         "thinking_unrecorded": sum(c.thinking_tokens is None for c in completions),
     }
+
+
+LOCAL_HOSTS = ("127.0.0.1", "localhost", "::1")
+
+
+# Models Google serves on the free tier only: "Not available" under the paid tier on
+# ai.google.dev/gemini-api/docs/pricing, read 2026-10-08. A paid key does not change their terms.
+FREE_ONLY = ("gemma-",)
+
+
+def endpoint(base_url: str, model: str = "") -> dict[str, str]:
+    """Where a model's requests go and on which terms (ADR 0016, amended): the URL, and the
+    tier of the key in `.env` (LLM_KEY_TIER, "free" unless it says "paid"), "free" whatever the
+    key for a model with no paid tier, or "local" for a server on this machine, from which
+    nothing leaves."""
+    host = urllib.parse.urlsplit(base_url).hostname or ""
+    if not base_url or host in LOCAL_HOSTS:  # no URL: a model in this process (tests)
+        return {"url": base_url, "tier": "local"}
+    paid = os.environ.get("LLM_KEY_TIER", "").strip().lower() == "paid"
+    tier = "paid" if paid and not model.startswith(FREE_ONLY) else "free"
+    return (
+        {"url": base_url, "tier": tier, "model": model}
+        if model
+        else {"url": base_url, "tier": tier}
+    )
 
 
 class Llm(Protocol):
@@ -88,6 +120,7 @@ class OpenAiCompatible:
         self.overload_waits = overload_waits
         self.quick_failure = quick_failure
         self.system_as_user = system_as_user
+        self.base_url = base_url
         self.name = model
         self.params = dict(DEFAULT_PARAMS if params is None else params)
         # A local server ignores the key but the client insists on one.
@@ -162,17 +195,23 @@ class Cached:
     """Answers a repeated (model, params, prompt) from disk, so re-running an eval is free and
     gives the same answers. Counts what the run cost, cached answers included."""
 
-    def __init__(self, llm: Llm, directory: Path, repeat: int = 0) -> None:
+    def __init__(self, llm: Llm, directory: Path, repeat: int = 0, sample: str = "") -> None:
         self.llm = llm
         # A repeat (1, 2, ...) asks every prompt again, a fresh sample kept apart from the first:
         # what two runs of the same system differ by is the noise any comparison stands on.
         self.repeat = repeat
+        # A named sample ("fresh-2026-10-08") asks every prompt again too, without renaming the
+        # system: how a milestone gets answers made that day, which a re-run of it reuses.
+        self.sample = sample
         self.name = llm.name
         self.params = llm.params
+        self.base_url: str = getattr(llm, "base_url", "")
         self.directory = directory
         self.calls = 0
         self.cached = 0
         self.completions: list[Completion] = []
+        self.made: list[str] = []  # when each response used was made, cached ones included
+        self.broken = 0  # cache entries that no longer read, set aside and asked again
 
     def key(self, system: str, user: str) -> str:
         request: dict[str, object] = {
@@ -183,14 +222,16 @@ class Cached:
         }
         if self.repeat:
             request["repeat"] = self.repeat
+        if self.sample:
+            request["sample"] = self.sample
         return hashlib.sha256(json.dumps(request, sort_keys=True).encode()).hexdigest()
 
     def complete(self, system: str, user: str) -> Completion:
         key = self.key(system, user)
         path = self.directory / key[:2] / f"{key}.json"
         self.calls += 1
-        if path.exists():
-            record = json.loads(path.read_text(encoding="utf-8"))
+        record = self._read(path)
+        if record is not None:
             completion = Completion(**record["completion"])
             self.cached += 1
         else:
@@ -203,10 +244,38 @@ class Cached:
                 "completion": completion.__dict__,
                 "made_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
             }
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")
+            atomic.write_text(path, json.dumps(record, ensure_ascii=False, indent=1))
         self.completions.append(completion)
+        self.made.append(str(record.get("made_at", "")))
         return completion
+
+    def _read(self, path: Path) -> dict[str, Any] | None:
+        """The cached record, or None to ask the model: a missing entry, or one that no longer
+        reads (written before writes were atomic), which is set aside unread and counted."""
+        if not path.exists():
+            return None
+        try:
+            record: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+            Completion(**record["completion"])
+        except (ValueError, KeyError, TypeError):
+            atomic.set_aside(path)
+            self.broken += 1
+            return None
+        return record
 
     def usage(self) -> dict[str, int]:
         return {**spent(self.completions), "cached": self.cached}
+
+    def dates(self) -> dict[str, Any]:
+        """How many responses the run used, how many came from the cache, and when the oldest
+        and newest were made: the cache key has no date, so a model its provider changed under
+        the same name would answer from the past unseen (ROADMAP, Phase 9)."""
+        made = sorted(m for m in self.made if m)
+        return {
+            "calls": self.calls,
+            "cached": self.cached,
+            "broken": self.broken,
+            "sample": self.sample or None,
+            "made_from": made[0] if made else None,
+            "made_until": made[-1] if made else None,
+        }

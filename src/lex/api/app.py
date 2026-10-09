@@ -24,45 +24,88 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from lex.domain import Answer, System
+# The disclaimer and Lisbon's date live in lex.domain, which the MCP server shares without FastAPI.
+from lex.domain import DISCLAIMER, LISBON, Answer, System, lisbon_today
 from lex.generation import llm
 from lex.store.memory import excerpt
 
-DISCLAIMER = (
-    "Os textos consolidados não têm valor legal: só faz fé a publicação no Diário da República. "
-    "O Lex não é aconselhamento jurídico."
-)
 # From this day the corpus has every tenancy article's history (ADR 0017); the Código do
 # Trabalho starts later, on 2009-02-17, and a question about it before then finds no article.
 FIRST_DAY = dt.date(2006, 6, 27)
-LISBON = ZoneInfo("Europe/Lisbon")
-UNAVAILABLE = "O Lex não conseguiu responder agora. Tente mais tarde."
-DAILY_LIMIT = (
-    "O limite diário gratuito do modelo foi atingido; renova por volta das 8h, hora de Lisboa. "
-    "Até lá, o separador Artigos continua a funcionar."
-)
-MINUTE_LIMIT = "Há demasiados pedidos ao modelo neste minuto. Tente outra vez dentro de um minuto."
-OVERLOADED = (
-    "O modelo está sobrecarregado neste momento, um problema passageiro do fornecedor. "
-    "Tente outra vez dentro de instantes."
-)
-TOO_SLOW = "O modelo demorou demasiado a responder. Tente outra vez."
+# Google's free quota counts days in the Pacific: it renews at midnight there, 08:00 or 07:00 in
+# Lisbon as the two switch to summer time on different days. The gate counts the same days.
+QUOTA_ZONE = ZoneInfo("America/Los_Angeles")
+# Every error the page may show, by a code it words in its own language (web/src/i18n.ts,
+# `errors`); here in Portuguese, for any other client. `{hour}`: when the day's quota renews.
+ERRORS = {
+    "future_date": "A data não pode ser futura: a lei desse dia não é conhecida.",
+    "before_corpus": (
+        "O Lex guarda a lei do arrendamento desde 27/06/2006 e o Código do Trabalho desde "
+        "17/02/2009, quando entrou em vigor."
+    ),
+    "day_cap": "O Lex já respondeu a todas as perguntas que pode hoje. Volte depois das {hour}.",
+    "visitor_hour": "Fez muitas perguntas na última hora. Tente de novo mais tarde.",
+    "quota_day": (
+        "O limite diário gratuito do modelo foi atingido; renova às {hour}, hora de Lisboa. "
+        "Até lá, o separador Artigos continua a funcionar."
+    ),
+    "quota_minute": (
+        "Há demasiados pedidos ao modelo neste minuto. Tente outra vez dentro de um minuto."
+    ),
+    "overloaded": (
+        "O modelo está sobrecarregado neste momento, um problema passageiro do fornecedor. "
+        "Tente outra vez dentro de instantes."
+    ),
+    "too_slow": "O modelo demorou demasiado a responder. Tente outra vez.",
+    "unavailable": "O Lex não conseguiu responder agora. Tente mais tarde.",
+    "no_articles": "Artigos indisponíveis.",
+    "no_article": "Artigo não encontrado.",
+    "no_search": "Pesquisa indisponível.",
+    "no_changes": "Alterações indisponíveis.",
+    "bad_period": "A data inicial tem de ser anterior à final.",
+}
+
+
+# Sent with every response, the page's and the API's: here, and written into vercel.json for
+# the files Vercel's CDN serves (vercel/assemble.py). The page loads nothing from elsewhere and
+# runs no inline script; its icon is a data: URI, and Preact sets styles from script.
+SECURITY_HEADERS = {
+    "Content-Security-Policy": (
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; "
+        "base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    ),
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Frame-Options": "DENY",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+}
+
+
+def renews(now: dt.datetime | None = None) -> str:
+    """When the next quota day starts, as Lisbon's clock shows it: "08:00"."""
+    here = (now or dt.datetime.now(dt.UTC)).astimezone(QUOTA_ZONE)
+    midnight = dt.datetime.combine(here.date() + dt.timedelta(days=1), dt.time(), QUOTA_ZONE)
+    return f"{midnight.astimezone(LISBON):%H:%M}"
+
+
+def refuse(status: int, code: str, hour: str = "") -> HTTPException:
+    """An error the page can word in either language: its code in X-Lex-Error, the hour the
+    quota renews in X-Lex-Renews, and the Portuguese text as the detail."""
+    headers = {"X-Lex-Error": code, **({"X-Lex-Renews": hour} if hour else {})}
+    return HTTPException(status, ERRORS[code].format(hour=hour), headers=headers)
+
+
 # The page's own paths besides /, which it routes on the client (web/src/App.tsx): each is served
 # the page itself, so a link to the results or to an article opens on that view.
 PAGES = ("/artigos", "/alteracoes", "/resultados", "/sobre")
 
 
 def unavailable(error: Exception) -> str:
-    """What a visitor is told when the model or the embeddings fail, by the kind of failure. The
-    client's errors carry the HTTP status, and Gemini names the quota it hit (...PerDay...)."""
-    status = getattr(error, "status_code", None)
-    if status == 429:
-        return DAILY_LIMIT if "PerDay" in str(error) else MINUTE_LIMIT
-    if isinstance(status, int) and status >= 500:
-        return OVERLOADED
-    if "Timeout" in type(error).__name__:
-        return TOO_SLOW
-    return UNAVAILABLE
+    """The code of what a visitor is told when the model or the embeddings fail, by the kind of
+    failure. The client's errors carry the HTTP status, and Gemini names the quota it hit
+    (...PerDay...)."""
+    return {"timeout": "too_slow", "other": "unavailable"}.get(failure(error), failure(error))
 
 
 def failure(error: Exception) -> str:
@@ -121,11 +164,6 @@ class Usage:
             "usd_at_paid_prices": None if cost is None else round(cost, 6),
             "model": self.model,
         }
-
-
-def lisbon_today(now: dt.datetime | None = None) -> dt.date:
-    """The date in Lisbon at `now` (a timezone-aware instant, the current one by default)."""
-    return (now or dt.datetime.now(dt.UTC)).astimezone(LISBON).date()
 
 
 class Question(BaseModel):
@@ -233,13 +271,14 @@ class ArticleView(BaseModel):
     text: str | None
     source_url: str | None
     versions: list[Period]
+    notes: list[str] = []  # the DR's notes on the version's effects (deferred, suspended, ruled on)
     disclaimer: str = DISCLAIMER
 
 
 @dataclass(frozen=True)
 class Limits:
     per_visitor_per_hour: int = 20
-    per_day: int = 500  # all visitors together; keep it under the model's free-tier quota
+    per_day: int = 400  # all visitors together, under the free-tier quotas (ADR 0020)
     cached_answers: int = 1000
 
 
@@ -257,17 +296,17 @@ class Gate:
         self.used_today = 0
 
     def admit(self, visitor: str) -> str | None:
-        """None if the visitor may ask now, else why not (in PT-PT, shown on the page)."""
+        """None if the visitor may ask now, else why not, as an error code (ERRORS)."""
         now, today = self.clock(), self.today()
         if today != self.day:
             self.day, self.used_today = today, 0
         if self.used_today >= self.limits.per_day:
-            return "O Lex já respondeu a todas as perguntas que pode hoje. Volte amanhã."
+            return "day_cap"
         times = self.recent[visitor]
         while times and now - times[0] >= 3600:
             times.popleft()
         if len(times) >= self.limits.per_visitor_per_hour:
-            return "Fez muitas perguntas na última hora. Tente de novo mais tarde."
+            return "visitor_hour"
         times.append(now)
         self.used_today += 1
         return None
@@ -284,13 +323,17 @@ def cache_key(question: str, as_of: dt.date) -> tuple[str, dt.date]:
     return " ".join(question.split()).lower(), as_of
 
 
-def visitor(request: Request) -> str:
-    """The client's address, from headers the platform sets rather than the client: Vercel's
-    x-real-ip, else the last X-Forwarded-For entry, which the nearest proxy added (the first can be
-    anything the client sent), else the connection's own address."""
+def visitor(request: Request, behind_proxy: bool) -> str:
+    """The client's address. Behind a proxy that sets them (Vercel's), from its headers:
+    x-real-ip, else the last X-Forwarded-For entry, which the nearest proxy added (the first can
+    be anything the client sent). Anywhere else a client can send those headers itself, to dodge
+    the per-visitor limit, so only the connection's own address counts."""
+    connection = request.client.host if request.client else "unknown"
+    if not behind_proxy:
+        return connection
     real = request.headers.get("x-real-ip", "").strip()
     forwarded = [a.strip() for a in request.headers.get("x-forwarded-for", "").split(",")]
-    return real or forwarded[-1] or (request.client.host if request.client else "unknown")
+    return real or forwarded[-1] or connection
 
 
 def leaderboard(directory: Path) -> list[dict[str, Any]]:
@@ -338,15 +381,26 @@ def create_app(
     today: Callable[[], dt.date] = lambda: lisbon_today(),
     clock: Callable[[], float] = time.monotonic,
     serial: bool = True,
+    quota_day: Callable[[], dt.date] = lambda: dt.datetime.now(QUOTA_ZONE).date(),
+    behind_proxy: bool = False,
+    now: Callable[[], dt.datetime] = lambda: dt.datetime.now(dt.UTC),
+    build: Mapping[str, Any] | None = None,
 ) -> FastAPI:
     """`serial` answers one question at a time, for systems whose parts are not safe to share
     between threads (a Postgres connection, local models); the serverless demo's are. `preload`
     seeds the answer cache, with answers made at deploy for the page's examples."""
     app = FastAPI(title="Lex", description=DISCLAIMER)
+
+    @app.middleware("http")
+    async def secured(request: Request, call_next: Callable[[Request], Any]) -> Response:
+        response: Response = await call_next(request)
+        response.headers.update(SECURITY_HEADERS)
+        return response
+
     limits = limits or Limits()
     state = threading.Lock()  # the gate and the answer cache
     one_at_a_time = threading.Lock()
-    gate = Gate(limits, clock, today)
+    gate = Gate(limits, clock, quota_day)  # its day is the quota's, not Lisbon's
     priced = next((m for m in llm.PRICES if m in system.name), "")
     usage = Usage(priced, lambda: dt.datetime.now(dt.UTC))
     answers: OrderedDict[tuple[str, dt.date], Answer] = OrderedDict(
@@ -359,23 +413,29 @@ def create_app(
         with one_at_a_time:
             return system.answer(question, as_of)
 
+    # When this instance started: a probe that finds it younger than its own requests met a
+    # cold start (lex.probe). `build`: the commit and corpus deployed (vercel/assemble.py).
+    started_at = now().isoformat(timespec="seconds")
+
     @app.get("/api/health")
-    def health() -> dict[str, str]:
-        return {"status": "ok", "system": system.name, "today": today().isoformat()}
+    def health() -> dict[str, Any]:
+        return {
+            "status": "ok",
+            "system": system.name,
+            "today": today().isoformat(),
+            "started_at": started_at,
+            "build": dict(build) if build else None,
+        }
 
     @app.post("/api/answer")
     def answer(question: Question, request: Request) -> Reply:
         as_of = question.as_of or today()
         if as_of > today():
-            raise HTTPException(422, "A data não pode ser futura: a lei desse dia não é conhecida.")
+            raise refuse(422, "future_date")
         if as_of < FIRST_DAY:
-            raise HTTPException(
-                422,
-                "O Lex guarda a lei do arrendamento desde 27/06/2006 e o Código do Trabalho desde "
-                "17/02/2009, quando entrou em vigor.",
-            )
+            raise refuse(422, "before_corpus")
         key = cache_key(question.question, as_of)
-        who = visitor(request)
+        who = visitor(request, behind_proxy)
         with state:
             result = answers.get(key)
             if result is not None:
@@ -392,16 +452,17 @@ def create_app(
             refusal = gate.admit(who)
         if refusal:
             usage.record("limited")
-            raise HTTPException(429, refusal)
+            raise refuse(429, refusal, renews(now()))
         started = time.perf_counter()
         try:
-            result = run(question.question, as_of)
+            # The model's reason for a refusal cites nothing: never shown, never kept here.
+            result = run(question.question, as_of).model_copy(update={"reason": ""})
         except Exception as error:  # the model's quota or service; the visitor sees why
             print(f"answer failed: {type(error).__name__}: {error}", flush=True)
             usage.record(f"failed_{failure(error)}")
             with state:
                 gate.refund(who)
-            raise HTTPException(503, unavailable(error)) from error
+            raise refuse(503, unavailable(error), renews(now())) from error
         with state:
             answers[key] = result
             if len(answers) > limits.cached_answers:
@@ -425,11 +486,11 @@ def create_app(
     @app.get("/api/articles/{diploma}/{article}")
     def article(diploma: str, article: str, as_of: dt.date | None = None) -> ArticleView:
         if library is None:
-            raise HTTPException(404, "Artigos indisponíveis.")
+            raise refuse(404, "no_articles")
         day = as_of or today()
         versions = library(diploma, article)
         if not versions:
-            raise HTTPException(404, "Artigo não encontrado.")
+            raise refuse(404, "no_article")
         current = next(
             (
                 v
@@ -445,6 +506,7 @@ def create_app(
             heading=current.heading if current else None,
             text=current.text if current else None,
             source_url=current.source_url if current else None,
+            notes=list(getattr(current, "notes", [])),  # a version that keeps none: none
             versions=[
                 Period(valid_from=v.valid_from, valid_to=v.valid_to, introduced_by=v.introduced_by)
                 for v in versions
@@ -457,7 +519,7 @@ def create_app(
     ) -> list[Hit]:
         """Browse the corpus by words, with no model and no quota; `diploma` keeps one."""
         if find is None:
-            raise HTTPException(404, "Pesquisa indisponível.")
+            raise refuse(404, "no_search")
         k = max(1, min(k, 50))
         found = [
             f for f in find(q[:200], as_of or today(), 200) if diploma in (None, "", f.diploma)
@@ -481,10 +543,10 @@ def create_app(
         """What changed in a diploma after `since` and by `until` (today if left out), grouped
         by the diploma that changed it and the day it took effect; no model, no quota."""
         if changes is None:
-            raise HTTPException(404, "Alterações indisponíveis.")
+            raise refuse(404, "no_changes")
         end = until or today()
         if not since < end:
-            raise HTTPException(422, "A data inicial tem de ser anterior à final.")
+            raise refuse(422, "bad_period")
         groups: dict[tuple[str, dt.date], list[ChangedArticle]] = {}
         for version, kind in changes(diploma, since, end):
             key = (version.introduced_by, version.valid_from)

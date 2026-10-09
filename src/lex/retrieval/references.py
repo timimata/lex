@@ -36,6 +36,19 @@ _IN_CORPUS = (
         ),
     ),
 )
+# The laws that approved a code, named in place of it: "artigo 238.º da Lei n.º 7/2009", "artigo
+# 1069.º do DL n.º 47344/66". Lei n.º 7/2009 has articles of its own, 1.º to 14.º, on transition
+# and revocation, whose numbers collide with the Code's (ADR 0005): those stay elsewhere.
+_APPROVED_BY = (
+    (CT, re.compile(rf"{_BETWEEN}Lei\s+n\.?º\s*7/2009\b", re.IGNORECASE), 14),
+    (
+        CC,
+        re.compile(
+            rf"{_BETWEEN}(?:Decreto-Lei|DL)\s+n\.?º\s*47\s?344(?:/(?:66|1966))?\b", re.IGNORECASE
+        ),
+        0,
+    ),
+)
 _ELSEWHERE = re.compile(
     rf"{_BETWEEN}(?:Lei\b|Decreto|DL\b|Portaria|Código\s|Constituição|CRP\b|CPT\b|"
     r"Regulamento|Diretiva|Directiva)",
@@ -65,12 +78,16 @@ MAX_RANGE = 20  # "artigos 344.º a 346.º" names 345.º too; a longer span is k
 _TOKEN = re.compile(rf"(?P<number>{_NUMBER})|(?P<joiner>,|\be\b|\ba\b)", re.IGNORECASE)
 
 
-def _diploma_after(rest: str) -> tuple[bool, str | None]:
-    """Whether the reference stays in the corpus, and the diploma it names, if one."""
+def _diploma_after(rest: str) -> tuple[bool, str | None, int]:
+    """Whether the reference stays in the corpus, the diploma it names, if one, and the last
+    article number that belongs to the approving law itself rather than to the code."""
     for diploma, named in _IN_CORPUS:
         if named.match(rest):
-            return True, diploma
-    return not _ELSEWHERE.match(rest), None
+            return True, diploma, 0
+    for diploma, named, own in _APPROVED_BY:
+        if named.match(rest):
+            return True, diploma, own
+    return not _ELSEWHERE.match(rest), None, 0
 
 
 def find_references(text: str) -> list[Reference]:
@@ -83,7 +100,7 @@ def find_references(text: str) -> list[Reference]:
             found.append(reference)
 
     for match in _REFERENCE.finditer(text):
-        kept, diploma = _diploma_after(text[match.end() :])
+        kept, diploma, own = _diploma_after(text[match.end() :])
         if not kept:
             continue
         previous, joiner = None, None
@@ -92,6 +109,8 @@ def find_references(text: str) -> list[Reference]:
                 joiner = token.group("joiner").lower()
                 continue
             article = normalise_article(token.group("number"))
+            if int(article.split("-")[0]) <= own:
+                continue  # the approving law's own article, not the code's
             if joiner == "a" and previous and previous.isdigit() and article.isdigit():
                 start, end = int(previous), int(article)
                 if 0 < end - start <= MAX_RANGE:

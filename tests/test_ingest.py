@@ -366,3 +366,45 @@ def test_an_undated_version_cuts_the_history_instead_of_stretching_the_one_befor
         ("lei-27-2014", dt.date(2014, 6, 1), None)
     ]
     assert report.incomplete_history == ["368"] and report.missing_current == []
+
+
+def test_the_drs_notes_go_with_the_versions_they_concern() -> None:
+    import datetime as dt
+
+    from lex.ingest import dr
+    from lex.ingest.build import attach_notes
+    from lex.ingest.codes import CT
+    from lex.store.models import ArticleVersion
+
+    def version(start: str, end: str | None, by: str) -> ArticleVersion:
+        return ArticleVersion(
+            diploma="lei-7-2009",
+            article="368",
+            heading="H",
+            path=[],
+            text=f"Texto de {by}.",
+            valid_from=dt.date.fromisoformat(start),
+            valid_to=dt.date.fromisoformat(end) if end else None,
+            introduced_by=by,
+            source_url="u",
+            fetched=dt.date(2026, 9, 29),
+        )
+
+    versions = [
+        version("2009-02-17", "2012-08-01", "lei-7-2009"),
+        version("2012-08-01", "2014-06-01", "lei-23-2012"),
+        version("2014-06-01", None, "lei-27-2014"),
+    ]
+    ruling = (
+        "Acórdão do Tribunal Constitucional n.º 602/2013 - Diário da República n.º 206/2013, "
+        "Série I de 2013-10-24 Declarada a inconstitucionalidade"
+    )
+    remark = (
+        "Artigo 9.º, Lei n.º 27/2014 - Diário da República n.º 87/2014, Série I de 2014-05-08 "
+        "Produz efeitos mais tarde."
+    )
+    reference = {"368": dr.Article("368", "H", "", (), (), (ruling,), (remark,))}
+    noted = attach_notes(versions, reference, CT)
+    # The ruling with the version in force the day it was published; the remark with the
+    # version its diploma introduced.
+    assert [v.notes for v in noted] == [[], [ruling], [remark]]

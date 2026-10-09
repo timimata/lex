@@ -3,7 +3,9 @@ distance in pgvector among the versions in force on the date asked about (ADR 00
 
 import datetime as dt
 import hashlib
+import json
 import time
+import urllib.request
 from typing import Protocol
 
 import psycopg
@@ -78,6 +80,8 @@ class ApiEmbedder:
         self.query_format = query_format
         self.document_format = document_format
         self.model = model
+        self.base_url = base_url
+        self.api_key = api_key
         self.dimensions = dimensions
         titled = document_format == GEMINI_DOCUMENT
         self.name = f"{model}@{dimensions}" + ("+titled" if titled else "")
@@ -108,6 +112,22 @@ class ApiEmbedder:
                 norm = sum(x * x for x in item.embedding) ** 0.5 or 1.0
                 vectors.append([x / norm for x in item.embedding])
         return vectors
+
+
+def count_tokens(embedder: "ApiEmbedder", text: str) -> int | None:
+    """How many input tokens the model bills for a text: Google's countTokens, as the
+    OpenAI-compatible endpoint reports no usage for embeddings (checked 2026-10-08). None
+    elsewhere, or if it fails."""
+    if not embedder.base_url.startswith(GEMINI_OPENAI_URL.split("/openai/")[0]):
+        return None
+    url = f"{GEMINI_OPENAI_URL.split('/openai/')[0]}/models/{embedder.model}:countTokens"
+    body = json.dumps({"contents": [{"parts": [{"text": text}]}]}).encode()
+    headers = {"Content-Type": "application/json", "x-goog-api-key": embedder.api_key}
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, body, headers), timeout=30) as r:
+            return int(json.loads(r.read())["totalTokens"])
+    except (OSError, ValueError, KeyError):
+        return None
 
 
 def document(heading: str, text: str, format: str = PLAIN_DOCUMENT) -> str:

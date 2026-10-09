@@ -130,3 +130,36 @@ def test_a_spent_quota_keeps_the_chunks_already_embedded(tmp_path: Path) -> None
     tomorrow = Limited(left=10)
     CachedEmbedder(tomorrow, tmp_path).encode(texts)
     assert tomorrow.seen == ["artigo 4"]  # the first four were kept
+
+
+def test_a_run_counts_what_it_embedded_and_prices_its_tokens(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from lex.eval.__main__ import embedding_cost
+    from lex.retrieval import cache
+
+    class Billed(Toy):
+        name = "gemini-embedding-2@768"
+
+    embedder = CachedEmbedder(Billed(), tmp_path)
+    embedder.encode(["corpus inteiro"])
+    embedder.used.clear()  # as a run does once the corpus is built
+    embedder.encode(["pergunta um", "pergunta dois"])
+    assert embedder.used == ["pergunta um", "pergunta dois"]
+    assert embedder.tokens(embedder.used) is None  # no provider to count them: not priced
+
+    counted: list[str] = []
+
+    def by_provider(base: object, text: str) -> int:
+        counted.append(text)
+        return 10
+
+    monkeypatch.setattr(cache, "count_tokens", by_provider)
+    monkeypatch.setattr(cache, "ApiEmbedder", Billed)
+    assert embedding_cost(embedder, questions=2) == {
+        "texts": 2,
+        "tokens": 20,
+        "usd": 20 * 0.20 / 1_000_000,
+        "usd_per_question": 10 * 0.20 / 1_000_000,
+    }
+    assert embedder.tokens(["pergunta um"]) == 10 and len(counted) == 2  # counted once, kept

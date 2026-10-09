@@ -2,7 +2,8 @@
   "split": "dev",
   "bench": {
     "items": 92,
-    "sha": "7fbb529e5bb3"
+    "sha": "7fbb529e5bb3",
+    "scored": "1db8e49a4869"
   },
   "system": "dense-gemini-embedding-2-titled+refs",
   "config": {

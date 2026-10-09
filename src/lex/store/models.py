@@ -23,6 +23,9 @@ class ArticleVersion(BaseModel):
     introduced_by: str = Field(pattern=DIPLOMA_PATTERN)
     source_url: str
     fetched: dt.date
+    # What the DR notes on the version beside its text: another diploma deferring, suspending or
+    # starting its effects, or a Constitutional Court ruling on it, verbatim (ROADMAP, Phase 11).
+    notes: list[str] = []
 
     def in_force_on(self, day: dt.date) -> bool:
         return self.valid_from <= day and (self.valid_to is None or day < self.valid_to)

@@ -97,9 +97,12 @@ def demo_app(
     results: Path,
     static: Path | None,
     answers: Path | None = None,
+    build: Path | None = None,
 ) -> FastAPI:
-    """The public demo: the demo's system, the article library and search, the leaderboard."""
+    """The public demo: the demo's system, the article library and search, the leaderboard;
+    `build` names what was deployed (vercel/assemble.py writes it)."""
     corpus = Corpus.load(*versions)
+    deployed = json.loads(build.read_text(encoding="utf-8")) if build and build.exists() else None
     return create_app(
         demo_system(corpus, vectors),
         library=corpus.versions_of,
@@ -110,6 +113,9 @@ def demo_app(
         static=static,
         preload=load_answers(answers),
         serial=False,  # nothing in it is shared unsafely between threads
+        # Vercel sets VERCEL=1 in its functions, and the visitor's address in x-real-ip.
+        behind_proxy=os.environ.get("VERCEL") == "1",
+        build=deployed,
     )
 
 

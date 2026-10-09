@@ -16,9 +16,10 @@ ahead of the current phase. Reply to Tiago in European Portuguese.
   runs, whose prompts contain test questions.
 - No copy of a test item exists outside `test.jsonl`: drafts are deleted after `assign`, and
   review sheets keep test items as ids (`lex.bench.splits.split_for` tells which).
-- Nobody picks an item's split. It is a hash of the item's main article, its first `must_cite`
-  (or of its id if it cites nothing), so items about the same article share a split and a dev
-  item never gives away a test answer ([ADR 0009](docs/decisions/0009-split-by-main-article.md)).
+- Nobody picks an item's split. It is a hash of the item's group: its main article, its first
+  `must_cite` (or its id if it cites nothing), with every item linked to it by a main article or
+  an ACT FAQ entry, so a dev item never gives away a test answer
+  ([ADR 0009](docs/decisions/0009-split-by-main-article.md), amended 2026-10-08).
   New items go to `incoming.jsonl` and `python -m lex.bench assign` moves them.
 - Questions are never invented, by a person or an LLM. Every item comes from a public source with
   a URL. Synthetic questions (e.g. for fine-tuning) live outside `bench/` and never enter it.
@@ -68,9 +69,12 @@ ahead of the current phase. Reply to Tiago in European Portuguese.
   in `mcp_server.py` and `vercel/index.py`, which are wiring too.
 - No orchestration frameworks (LangChain, LlamaIndex) in retrieval or generation; write the few
   lines. LangGraph is allowed in the agent phase only, and only if the benchmark shows it helps.
-- A dependency is added when code needs it, pinned to an exact version, with a comment saying why.
+- A dependency is added when code needs it, pinned to an exact version, with a comment saying why;
+  then `uv lock`, which pins everything else ([ADR 0019](docs/decisions/0019-lockfile.md)), and,
+  if the demo needs it, `vercel/requirements.txt` exported from the lock (CI checks it).
 - LLM calls made during eval go through a disk cache keyed on (model, prompt, params), so re-runs
-  are free and reproducible. Seeds are fixed.
+  are free and give the same answers. No seed is sent: the Gemini API documents none (ADR 0011),
+  so a fresh sample can differ, and `--repeat` measures by how much.
 - Secrets live in `.env` (never committed); `.env.example` lists every variable.
 - Parsers (reference parser, article splitter, version resolver) are tested against real text
   saved in `tests/fixtures/`.
@@ -87,32 +91,39 @@ ahead of the current phase. Reply to Tiago in European Portuguese.
 
 ## Commands
 ```bash
-pip install -e ".[dev,llm,api]"   # add ingest and dense for fetching and the real models
+uv sync --locked --extra dev --extra llm --extra api   # as CI installs; add ingest, dense, mcp
+uv export --locked --extra llm --extra api --no-dev --no-hashes --no-emit-project --no-header -o vercel/requirements.txt
 ruff check . && ruff format --check .
 mypy
 pytest
 python -m lex.bench validate    # schema, split and duplicate checks; prints counts only
 python -m lex.bench assign      # moves incoming.jsonl items to their split
+python -m lex.bench card        # the dataset card's counts, from the files (validate checks them)
+python -m lex.bench review ID --by NAME   # a legal reviewer's sign-off: a person, never a model
 python -m lex.bench snapshot    # the public mirror: every tracked file but test (ADR 0016)
 cd build/public && git add -A && git commit -m "Lex: snapshot of private commit <sha>" && git push
 hf upload timimata/lex build/hf . --repo-type dataset   # the dev split, after a snapshot
 python -m lex.ingest ct --offline   # rebuild article versions from data/raw (no network)
 python -m lex.ingest code nrau --offline   # or cc: tenancy (ADR 0017); codes.py lists them
+python -m lex.bench index           # after an ingestion: corpus/index.jsonl, what CI checks against
 docker compose up -d --wait         # the store; tests that need it skip without it
 python -m lex.store load            # replace the store's contents with the ingestion output
 python -m lex.store show 238 --as-of 2011-06-01
 python -m lex.ingest spot-check 20 --offline   # versions vs the DR's history view; --code KEY
 python -m lex.eval retrieval bm25   # dev by default; --split test only at milestones
 python -m lex.eval answers          # the reference system on dev; needs LLM_API_KEY in .env
+python -m lex.eval answers --fresh  # asks model and judge again: milestones answer from no cache
 python -m lex.api                   # the reference system over HTTP, on 127.0.0.1:8000
 python -m lex.api --demo            # the deployed demo's system (ADR 0014), no Postgres
 python -m lex.eval label SYSTEM     # hand-label a system's dev answers (a person, never a model)
 python -m lex.eval judge SYSTEM     # judge dev answers, measure agreement with the labels
 python -m lex.eval judge-check      # or measure the judge on known-answer dev cases
 python -m lex.eval check-results    # results/ adds up and test runs share a split (CI runs it)
+python -m lex.eval report --write   # the README's results tables, from results/test/
 python -m lex.eval latency URL      # time the deployed demo; spends its quota
 python -m lex.eval regress          # the demo's system on dev against its committed run
 python -m lex.probe URL             # the deployed demo from outside; no quota (CI, every 6 h)
+python -m lex.probe URL --live --record probe.jsonl   # one real answer; keeps the timings
 python -m lex.mcp_server            # the code as MCP tools, over stdio
 python web/e2e.py                   # the page in Chromium, scripted answers, no quota
 python vercel/assemble.py && cd build/vercel && npx vercel deploy --prod   # deploy the demo

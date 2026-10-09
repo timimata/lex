@@ -10,7 +10,8 @@ from lex.domain import Answer, Citation
 pytest.importorskip("fastapi")
 from fastapi.testclient import TestClient
 
-from lex.api.app import DISCLAIMER, LISBON, Limits, create_app, leaderboard, lisbon_today
+from lex.api.app import Limits, create_app, leaderboard
+from lex.domain import DISCLAIMER, LISBON, lisbon_today
 
 TODAY = dt.date(2026, 9, 30)
 
@@ -56,7 +57,12 @@ class Clock:
         return self.now
 
 
-def client(system: Echo, limits: Limits | None = None, clock: Clock | None = None) -> TestClient:
+def client(
+    system: Echo,
+    limits: Limits | None = None,
+    clock: Clock | None = None,
+    behind_proxy: bool = True,  # as on Vercel, which sets x-real-ip and X-Forwarded-For
+) -> TestClient:
     app = create_app(
         system,
         library=library,
@@ -64,6 +70,8 @@ def client(system: Echo, limits: Limits | None = None, clock: Clock | None = Non
         limits=limits,
         today=lambda: TODAY,
         clock=clock or Clock(),
+        quota_day=lambda: TODAY,
+        behind_proxy=behind_proxy,
     )
     return TestClient(app)
 
@@ -81,6 +89,9 @@ def test_an_answer_comes_dated_cited_and_with_the_disclaimer() -> None:
             "text": "Resposta.",
             "citations": [{"diploma": "lei-7-2009", "article": "238"}],
             "refused": False,
+            "given": [],
+            "cited_versions": [],
+            "reason": "",
             "timings": {},
             "requests": [],
             "tokens": {},
@@ -155,11 +166,14 @@ def test_an_article_shows_the_version_in_force_and_its_timeline() -> None:
 def test_the_leaderboard_and_health_are_served() -> None:
     api = client(Echo())
     assert api.get("/api/leaderboard").json() == [{"system": "s", "task": "answers"}]
-    assert api.get("/api/health").json() == {
+    health = api.get("/api/health").json()
+    assert {k: health[k] for k in ("status", "system", "today", "build")} == {
         "status": "ok",
         "system": "echo",
         "today": "2026-09-30",
+        "build": None,  # what was deployed, where vercel/assemble.py wrote it
     }
+    assert health["started_at"]  # when the instance started: a probe reads cold starts from it
     assert api.post("/api/answer", json={"question": ""}).status_code == 422
 
 
@@ -226,6 +240,16 @@ def test_a_client_cannot_pick_its_own_address_to_dodge_the_limit() -> None:
     def ask(n: int, spoofed: str) -> int:
         # The proxy appends the real address last; whatever comes first, the client wrote.
         headers = {"x-forwarded-for": f"{spoofed}, 203.0.113.7"}
+        return api.post("/api/answer", json={"question": f"P{n}?"}, headers=headers).status_code
+
+    assert [ask(1, "1.1.1.1"), ask(2, "2.2.2.2")] == [200, 429]
+
+
+def test_away_from_a_proxy_the_address_headers_count_for_nothing() -> None:
+    api = client(Echo(), Limits(per_visitor_per_hour=1, per_day=10), behind_proxy=False)
+
+    def ask(n: int, claimed: str) -> int:
+        headers = {"x-real-ip": claimed}  # anyone can send this where no proxy sets it
         return api.post("/api/answer", json={"question": f"P{n}?"}, headers=headers).status_code
 
     assert [ask(1, "1.1.1.1"), ask(2, "2.2.2.2")] == [200, 429]
@@ -430,3 +454,62 @@ def test_changes_are_grouped_by_the_law_and_day_that_made_them() -> None:
         "/api/changes", params={"diploma": "x", "since": "2020-01-01", "until": "2019-01-01"}
     )
     assert bad.status_code == 422
+
+
+def test_an_answer_past_the_agents_budget_fails_is_refunded_and_not_kept() -> None:
+    from lex.generation.agent import BudgetTimeout
+
+    class Slow(Echo):
+        def answer(self, question: str, as_of: dt.date) -> Answer:
+            super().answer(question, as_of)
+            if len(self.asked) == 1:
+                raise BudgetTimeout("past the 9.0 s budget")
+            return super().answer(question, as_of)
+
+    system = Slow()
+    api = client(system, Limits(per_visitor_per_hour=1, per_day=10))
+    first = api.post("/api/answer", json={"question": "Quantos dias de férias?"})
+    assert first.status_code == 503 and "demorou demasiado" in first.json()["detail"]
+    # The admission came back, and the failure was not kept as an answer: asked again, afresh.
+    again = api.post("/api/answer", json={"question": "Quantos dias de férias?"})
+    assert again.status_code == 200 and not again.json()["cached"]
+    assert api.get("/api/usage").json()["counts"]["failed_timeout"] == 1
+
+
+def test_errors_carry_a_code_the_page_words_and_the_hour_the_quota_renews() -> None:
+    import datetime as dt
+
+    from lex.api.app import renews
+
+    # Midnight in the Pacific is 08:00 in Lisbon in summer, and 07:00 in the week of early
+    # November when only Lisbon is back on winter time.
+    assert renews(dt.datetime(2026, 7, 1, 12, tzinfo=dt.UTC)) == "08:00"
+    assert renews(dt.datetime(2026, 10, 27, 12, tzinfo=dt.UTC)) == "07:00"
+
+    api = client(Echo(), Limits(per_visitor_per_hour=10, per_day=1))
+    api.post("/api/answer", json={"question": "Primeira?"})
+    spent = api.post("/api/answer", json={"question": "Segunda?"})
+    assert spent.status_code == 429 and spent.headers["X-Lex-Error"] == "day_cap"
+    assert spent.headers["X-Lex-Renews"] in spent.json()["detail"]
+    future = api.post("/api/answer", json={"question": "Futuro?", "as_of": "2999-01-01"})
+    assert future.headers["X-Lex-Error"] == "future_date"
+
+
+def test_every_response_carries_the_security_headers() -> None:
+    from lex.api.app import SECURITY_HEADERS
+
+    api = client(Echo())
+    for path in ("/api/health", "/api/articles/lei-7-2009/238", "/nada"):
+        response = api.get(path)
+        assert {k: response.headers[k] for k in SECURITY_HEADERS} == SECURITY_HEADERS
+    assert "frame-ancestors 'none'" in SECURITY_HEADERS["Content-Security-Policy"]
+
+
+def test_a_refusals_own_reason_never_reaches_a_visitor() -> None:
+    class Refusing(Echo):
+        def answer(self, question: str, as_of: dt.date) -> Answer:
+            return Answer(text="Não encontrei base.", refused=True, reason="Texto livre do modelo.")
+
+    reply = client(Refusing()).post("/api/answer", json={"question": "Isto?"}).json()
+    assert reply["answer"]["refused"] and reply["answer"]["reason"] == ""
+    assert "Texto livre" not in json.dumps(reply, ensure_ascii=False)

@@ -1,7 +1,7 @@
 # 0007. BGE-M3 for the first dense baseline
 
 Date: 2026-09-29
-Status: accepted
+Status: accepted for the baseline; amended 2026-10-08 (the revisit it planned)
 
 ## Context
 
@@ -39,3 +39,11 @@ is now in the test split, which no other file may quote (CLAUDE.md), so the chec
 - Loading the model takes about two minutes the first time (a ~2 GB download) and seconds after.
 - Revisit when dev has at least 50 answerable items: compare BGE-M3 with a Portuguese-specific
   encoder, and with the model fine-tuned in Phase 5.
+
+## Amendment, 2026-10-08: the revisit, and the demo's embeddings
+
+This ADR planned to compare BGE-M3 with a Portuguese encoder, and with a fine-tuned model, once
+dev had 50 answerable items; dev has 68 and neither comparison was made. What happened instead:
+the demo embeds with Gemini Embedding 2 ([ADR 0014](0014-serverless-demo.md)), ahead of BGE-M3
+with the reranker on test v3 (recall@1 0.81 against 0.76), and fine-tuning waits among Phase 7's
+options. BGE-M3 stays the dense baseline and the reference system's retriever.

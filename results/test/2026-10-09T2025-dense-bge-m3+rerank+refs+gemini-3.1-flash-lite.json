@@ -1,0 +1,1589 @@
+{
+  "split": "test",
+  "bench": {
+    "items": 96,
+    "sha": "5bebebcbf0d2",
+    "scored": "49bb84b5aec7"
+  },
+  "system": "dense-bge-m3+rerank+refs+gemini-3.1-flash-lite",
+  "config": {
+    "model": "BAAI/bge-m3@5617a9f",
+    "reranker": "BAAI/bge-reranker-v2-m3@953dc6f",
+    "rerank_depth": 20,
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 5,
+    "format": "answer",
+    "prompts": "5b4e8d25e706",
+    "corpus": {
+      "fingerprint": "70cec90cf104d3fc1e3c2a9f21aa8d2760ef0d83058a3001a21938e8faa49cc6",
+      "versions": {
+        "dl-47344-1966": 147,
+        "lei-6-2006": 177,
+        "lei-7-2009": 889
+      }
+    },
+    "endpoints": {
+      "answers": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemini-3.1-flash-lite"
+      },
+      "judge": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemma-4-26b-a4b-it"
+      }
+    },
+    "justified_by": {
+      "file": "dense-bge-m3+rerank+refs+gemini-3.1-flash-lite.json",
+      "commit": "ed24c2f2a61f9ef1c693e8e560bd0bc8cdd13b61",
+      "run_at": "2026-10-09T15:16:10+01:00",
+      "prompts": "5b4e8d25e706"
+    },
+    "repeat": 0,
+    "usage": {
+      "calls": 96,
+      "prompt_tokens": 216858,
+      "completion_tokens": 8809,
+      "thinking_tokens": 17869,
+      "thinking_unrecorded": 0,
+      "cached": 0
+    },
+    "cost": {
+      "usd_per_million": {
+        "input": 0.25,
+        "output": 1.5
+      },
+      "usd": 0.094231,
+      "usd_per_question": 0.000982,
+      "lower_bound": false
+    },
+    "counts": {
+      "malformed": 0,
+      "uncited": 0,
+      "dropped_citations": 0,
+      "dropped_sentences": 0
+    },
+    "cache": {
+      "answers": {
+        "calls": 96,
+        "cached": 0,
+        "broken": 0,
+        "sample": "fresh-2026-10-09",
+        "made_from": "2026-10-09T18:34:25+01:00",
+        "made_until": "2026-10-09T19:11:55+01:00"
+      },
+      "judge": {
+        "calls": 72,
+        "cached": 0,
+        "broken": 0,
+        "sample": "fresh-2026-10-09",
+        "made_from": "2026-10-09T19:12:05+01:00",
+        "made_until": "2026-10-09T20:25:42+01:00"
+      }
+    },
+    "costs": {
+      "answers": {
+        "usd_per_million": {
+          "input": 0.25,
+          "output": 1.5
+        },
+        "usd": 0.094231,
+        "usd_per_question": 0.000982,
+        "lower_bound": false
+      },
+      "usd_per_question": 0.000982,
+      "judge": {
+        "usage": {
+          "calls": 216,
+          "prompt_tokens": 109446,
+          "completion_tokens": 10131,
+          "thinking_tokens": 190908
+        },
+        "usd": null,
+        "priced": false
+      }
+    },
+    "judge": {
+      "model": "gemma-4-26b-a4b-it",
+      "prompt": "a4aecc7ccf8a",
+      "params": {
+        "temperature": 0
+      },
+      "measured_on_dev": {
+        "known_answer_checks": {
+          "reference": {
+            "as_expected": 81,
+            "cases": 81
+          },
+          "altered": {
+            "as_expected": 57,
+            "cases": 57
+          },
+          "lenient": {
+            "as_expected": 129,
+            "cases": 132
+          }
+        }
+      },
+      "samples": 3,
+      "disagreed": 0,
+      "unparsed": 0,
+      "unparsed_ids": [],
+      "retried_ids": []
+    }
+  },
+  "commit": "9e1e6a4e93dd47d5eb7cbdf737adcc57082d27e3",
+  "uncommitted_changes": false,
+  "source": "5a1429c0736378c1",
+  "environment": {
+    "python": "3.14.4",
+    "lock": "e1667378475a0f82"
+  },
+  "run_at": "2026-10-09T20:25:59+01:00",
+  "summary": {
+    "answerable": {
+      "items": 76,
+      "refused": 0.05263157894736842,
+      "cited": 72,
+      "citation_precision": 0.8983796296296297,
+      "citation_recall": 0.8828947368421052,
+      "given_recall": 0.8960526315789473,
+      "unsupported": 1,
+      "version_right": 1.0
+    },
+    "composite": {
+      "items": 13,
+      "refused": 0.0,
+      "cited": 13,
+      "citation_precision": 0.7948717948717949,
+      "citation_recall": 0.7692307692307693,
+      "given_recall": 0.7692307692307693,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "explicit_reference": {
+      "items": 8,
+      "refused": 0.0,
+      "cited": 8,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "given_recall": 1.0,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "simple": {
+      "items": 41,
+      "refused": 0.04878048780487805,
+      "cited": 39,
+      "citation_precision": 0.9128205128205129,
+      "citation_recall": 0.926829268292683,
+      "given_recall": 0.926829268292683,
+      "unsupported": 1,
+      "version_right": 1.0
+    },
+    "temporal": {
+      "items": 14,
+      "refused": 0.14285714285714285,
+      "cited": 12,
+      "citation_precision": 0.8958333333333334,
+      "citation_recall": 0.7928571428571428,
+      "given_recall": 0.8642857142857142,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "unanswerable": {
+      "items": 20,
+      "refused": 0.75,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null,
+      "given_recall": null,
+      "unsupported": 0,
+      "version_right": null
+    },
+    "correctness": {
+      "answerable": {
+        "items": 76,
+        "correta": 0.75,
+        "parcial": 0.14473684210526316,
+        "errada": 0.10526315789473684
+      },
+      "composite": {
+        "items": 13,
+        "correta": 0.5384615384615384,
+        "parcial": 0.38461538461538464,
+        "errada": 0.07692307692307693
+      },
+      "explicit_reference": {
+        "items": 8,
+        "correta": 1.0,
+        "parcial": 0.0,
+        "errada": 0.0
+      },
+      "simple": {
+        "items": 41,
+        "correta": 0.7804878048780488,
+        "parcial": 0.12195121951219512,
+        "errada": 0.0975609756097561
+      },
+      "temporal": {
+        "items": 14,
+        "correta": 0.7142857142857143,
+        "parcial": 0.07142857142857142,
+        "errada": 0.21428571428571427
+      }
+    }
+  },
+  "items": [
+    {
+      "id": "ct-0007",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0013",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0016",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0017",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0018",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0020",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0021",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0023",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0025",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.6,
+      "recall": 0.0,
+      "given_recall": 0.0,
+      "version_right": 1.0,
+      "verdict": "errada",
+      "verdicts": [
+        "errada",
+        "errada",
+        "errada"
+      ]
+    },
+    {
+      "id": "ct-0026",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0028",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0030",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0031",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "errada",
+      "verdicts": [
+        "errada",
+        "errada",
+        "errada"
+      ]
+    },
+    {
+      "id": "ct-0032",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0037",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0040",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0046",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0047",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0048",
+      "type": "temporal",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0049",
+      "type": "temporal",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
+      "verdict": "errada",
+      "verdicts": []
+    },
+    {
+      "id": "ct-0051",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0052",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0060",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0063",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0066",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0067",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0068",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0072",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0074",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0075",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0076",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0078",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0080",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0083",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0084",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0085",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0087",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0090",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0092",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0093",
+      "type": "simple",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 0.0,
+      "version_right": null,
+      "verdict": "errada",
+      "verdicts": []
+    },
+    {
+      "id": "ct-0094",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0095",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0096",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0098",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0102",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0107",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0108",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0109",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0114",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0117",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0119",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.75,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0123",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0124",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0125",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.75,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0128",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0129",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0132",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0133",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0134",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.6,
+      "given_recall": 0.6,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0136",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0137",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0138",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0139",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ct-0143",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.75,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0144",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.25,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "errada",
+      "verdicts": [
+        "errada",
+        "errada",
+        "errada"
+      ]
+    },
+    {
+      "id": "ct-0148",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0149",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0150",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0151",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0152",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0156",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ct-0157",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0158",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0160",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ct-0161",
+      "type": "temporal",
+      "refused": false,
+      "precision": 0.25,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "errada",
+      "verdicts": [
+        "errada",
+        "errada",
+        "errada"
+      ]
+    },
+    {
+      "id": "ar-0006",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ar-0007",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ar-0008",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0009",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ar-0010",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ar-0013",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0016",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.3333333333333333,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "verdict": "parcial",
+      "verdicts": [
+        "parcial",
+        "parcial",
+        "parcial"
+      ]
+    },
+    {
+      "id": "ar-0017",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0018",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0024",
+      "type": "simple",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 0.0,
+      "version_right": null,
+      "verdict": "errada",
+      "verdicts": []
+    },
+    {
+      "id": "ar-0025",
+      "type": "temporal",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 0.0,
+      "version_right": null,
+      "verdict": "errada",
+      "verdicts": []
+    },
+    {
+      "id": "ar-0026",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0027",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0029",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0030",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0031",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0033",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0034",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "verdict": "correta",
+      "verdicts": [
+        "correta",
+        "correta",
+        "correta"
+      ]
+    },
+    {
+      "id": "ar-0041",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ar-0042",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    },
+    {
+      "id": "ar-0043",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "verdict": null,
+      "verdicts": []
+    }
+  ]
+}

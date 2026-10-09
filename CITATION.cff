@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: >-
+  If you use Lex, please cite it as below. For the benchmark itself, the dataset card
+  (bench/DATASET_CARD.md) gives its citation and licence (CC BY 4.0).
+type: software
+title: "Lex: an open benchmark for question answering over Portuguese legislation"
+abstract: >-
+  An open benchmark of dated questions on Portuguese labour and tenancy law, each with the
+  article versions a correct answer must cite, and an open-source reference system measured
+  against it.
+authors:
+  - family-names: Machado
+    given-names: Tiago
+version: 0.4.0
+license: MIT
+repository-code: "https://github.com/timimata/lex"
+keywords:
+  - legal question answering
+  - benchmark
+  - retrieval-augmented generation
+  - Portuguese legislation

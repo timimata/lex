@@ -1,7 +1,7 @@
 # 0010. BGE-reranker-v2-m3 over the dense retriever's top 20
 
 Date: 2026-09-30
-Status: accepted
+Status: accepted for the reference system; amended 2026-10-08 (not in the demo)
 
 ## Context
 
@@ -29,3 +29,11 @@ the test split, which no other file may quote (CLAUDE.md), so the check was remo
   answer still see them whole.
 - About 20 cross-encoder passes per question on CPU: seconds per question, acceptable for the
   benchmark and the demo, to be watched for the API.
+
+## Amendment, 2026-10-08: the demo has no reranker
+
+This ADR found the reranker's cost acceptable "for the benchmark and the demo". The demo never ran
+it: a Hugging Face Space could not hold it beside the other models ([ADR 0013](0013-demo-hosting.md))
+and the serverless demo has no model server ([ADR 0014](0014-serverless-demo.md)). It reranks in
+the reference system only; on test v3 that system's retrieval (recall@1 0.76, recall@10 0.94)
+trails the demo's, which has none (0.81, 0.99).

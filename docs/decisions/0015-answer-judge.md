@@ -2,7 +2,8 @@
 
 Date: 2026-09-30
 Status: accepted; amended 2026-10-01 (known-answer checks while there are no hand
-labels; the judge is Gemma 4 26B A4B, as Gemini 3.8 Flash allows 20 requests a day)
+labels; the judge is Gemma 4 26B A4B, as Gemini 3.8 Flash allows 20 requests a day) and
+2026-10-08 (checks on today's dev only; cases for leniency)
 
 ## Context
 
@@ -73,3 +74,21 @@ altered dev case took 9 s and found the error (`gemma-4-31b-it` took 70 s). On t
 takes neither system instructions nor a reasoning effort: the instructions open the user's
 message, and its reasoning block (`<thought>...</thought>`) is skipped when the verdict is read.
 The prompt and the bar are unchanged; no check had finished before the change.
+
+## Amendment, 2026-10-08: checks on today's dev, and cases for leniency
+
+The check of record (`results/dev/judge-check.json`) ran on benchmark v2's dev, and nothing
+held it to the dev of the day: `answers --judge` compared the judge's model and prompt, never
+the split. Its cases show that the judge catches a right answer made wrong in one place; none
+shows that it refuses a wrong answer that still sounds right.
+
+- A measurement of the judge (hand labels or the known-answer checks) counts only on the dev
+  version it ran on, by `bench.scored`; on another, `answers --judge` refuses until the judge is
+  measured again.
+- Two kinds of case join the check, built by code (`lex.eval.judge.known_cases`):
+  `contradicted`, the reference answer whole followed by "Contudo," and its first sentence with
+  a quantity changed or its yes or no turned over, which must not be judged `correta`; and
+  `other`, the reference answer of another item, halfway round the list and sharing no article
+  with this one, which answers another question and must be judged `errada`.
+- Together they are the `lenient` group, which must reach the same bar as the others, 90%: set
+  and committed before they first ran.

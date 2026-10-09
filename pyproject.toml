@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lex"
-version = "0.0.1"
+version = "0.4.0"  # 0.<benchmark version>.<release> (ADR 0021); CITATION.cff says the same
 description = "An open benchmark for question answering over Portuguese legislation, with a reference system measured against it."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -32,6 +32,7 @@ dev = [
     "mypy==2.3.1",
     "pytest==9.1.1",
     "ruff==0.16.9",
+    "uv==0.12.23",  # locks every dependency in uv.lock and installs from it (ADR 0019)
 ]
 
 [tool.hatch.build.targets.wheel]

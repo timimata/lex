@@ -1,5 +1,7 @@
 // The API's shapes (src/lex/api/app.py) and the calls the page makes.
 
+import { STRINGS } from "./i18n";
+
 export interface Citation {
   diploma: string;
   article: string;
@@ -37,6 +39,7 @@ export interface ArticleView {
   text: string | null;
   source_url: string | null;
   versions: Period[];
+  notes?: string[]; // the DR's notes on the version's effects: deferred, suspended, ruled on
 }
 
 export type Row = Record<string, number | null>;
@@ -61,17 +64,25 @@ export interface Run {
   judge: Judged | null;
 }
 
+// The page's language, as App sets it on <html>: errors are worded in it.
+const words = () => STRINGS[document.documentElement.lang.startsWith("en") ? "en" : "pt"];
+
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
   if (!response.ok) {
-    let message = `Erro ${response.status}.`;
-    try {
-      const body = await response.json();
-      if (typeof body.detail === "string") message = body.detail;
-      else if (Array.isArray(body.detail))
-        message = "Pedido inválido: a pergunta tem de ter entre 3 e 1000 caracteres, e a data tem de ser válida.";
-    } catch {
-      // not JSON: keep the status
+    const { errors } = words();
+    // The API names each error by a code (X-Lex-Error), and when the quota renews.
+    const code = response.headers.get("X-Lex-Error");
+    const hour = response.headers.get("X-Lex-Renews") ?? "";
+    let message = code && errors[code] ? errors[code].replace("{hour}", hour) : `Erro ${response.status}.`;
+    if (!code) {
+      try {
+        const body = await response.json();
+        if (typeof body.detail === "string") message = body.detail;
+        else if (Array.isArray(body.detail)) message = errors.invalid;
+      } catch {
+        // not JSON: keep the status
+      }
     }
     throw new Error(message);
   }

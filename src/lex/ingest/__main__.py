@@ -90,13 +90,22 @@ def ingest_code(code: Code, offline: bool) -> int:
 def run_spot_check(n: int, seed: int, out: Path | None, code: Code, offline: bool) -> int:
     """The ingestion output against the DR's history view, read in memory (no Postgres)."""
     corpus = Corpus.load(DATA / "processed" / code.key / "versions.jsonl")
+    built = json.loads((DATA / "processed" / code.key / "report.json").read_text("utf-8"))
+    always = spot_check.rule_dated(built["resolved"])  # the dates read by rule, every one
     checks, drawn_from = spot_check.run(
-        corpus.versions, n, seed, DATA / "raw" / "dr", corpus.article_at, code, offline=offline
+        corpus.versions,
+        n,
+        seed,
+        DATA / "raw" / "dr",
+        corpus.article_at,
+        code,
+        offline=offline,
+        always=always,
     )
     name = "phase1-spot-check.md" if code.key == "ct" else f"{code.key}-spot-check.md"
     out = out or DOCS / "checks" / name
     out.parent.mkdir(parents=True, exist_ok=True)
-    report = spot_check.report(checks, n, seed, drawn_from, code)
+    report = spot_check.report(checks, n, seed, drawn_from, code, len(always))
     out.write_text(report, encoding="utf-8", newline="\n")
     results = [c.result for c in checks]
     print({r: results.count(r) for r in sorted(set(results))})
@@ -119,14 +128,26 @@ def ingest_act_faq(offline: bool) -> int:
     return 0
 
 
-def check_updates() -> int:
+def check_updates(with_dr: bool) -> int:
     """Exit 1 when the PGDL lists, for any diploma of the corpus, an amendment the corpus was
-    built without. One request per diploma, MIN_INTERVAL_S apart."""
+    built without, or an act of a kind it cannot read; with `with_dr`, also when the DR's own
+    list of amending acts, the reference (ADR 0005), has one the corpus was built without. One
+    request per diploma and source, MIN_INTERVAL_S apart."""
     outdated = 0
     for n, code in enumerate(CODES.values()):
         if n:
             time.sleep(MIN_INTERVAL_S)
-        current = amendments.parse(amendments.fetch(code))
+        page = amendments.fetch(code)
+        if strange := amendments.unknown(page):
+            outdated += 1
+            print(f"the PGDL lists, for the {code.name}, acts the check cannot read: {strange}")
+        if with_dr:
+            text = dr.render(code.dr_url)  # afresh: the cache keeps the corpus's own render
+            known = amendments.known(amendments.dr_known_path(code))
+            if new_on_dr := amendments.new_since(amendments.dr_acts(text), known):
+                outdated += 1
+                print(f"the DR lists, for the {code.name}, acts the corpus lacks: {new_on_dr}")
+        current = amendments.parse(page)
         new = amendments.new_since(current, amendments.known(amendments.known_path(code)))
         if new:
             outdated += 1
@@ -158,7 +179,8 @@ def main(argv: list[str] | None = None) -> int:
     sc.add_argument("--code", choices=sorted(CODES), default="ct")
     sc.add_argument("--out", type=Path, help="default docs/checks/<code>-spot-check.md")
     sc.add_argument("--offline", action="store_true", help="use the raw cache only")
-    commands.add_parser("check-updates", help="has a diploma been amended since the corpus?")
+    updates = commands.add_parser("check-updates", help="amended since the corpus was built?")
+    updates.add_argument("--dr", action="store_true", help="the DR's list too (renders the page)")
     args = parser.parse_args(argv)
     load_dotenv(ROOT / ".env")
     if args.command == "ct":
@@ -168,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "act-faq":
         return ingest_act_faq(args.offline)
     if args.command == "check-updates":
-        return check_updates()
+        return check_updates(args.dr)
     return run_spot_check(args.n, args.seed, args.out, CODES[args.code], args.offline)
 
 

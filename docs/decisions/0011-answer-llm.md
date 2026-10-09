@@ -1,8 +1,9 @@
 # 0011. Gemini 3.1 Flash-Lite through an OpenAI-compatible endpoint, for answers
 
 Date: 2026-09-30
-Status: accepted. On 2026-09-30 the key's project had no prepaid credits (HTTP 402); a local
-model is measured meanwhile ([ADR 0012](0012-local-answer-model.md)).
+Status: accepted; amended 2026-10-08 (the key, the judge, the format, the terms). On 2026-09-30
+the key's project had no prepaid credits (HTTP 402); a local model was measured meanwhile
+([ADR 0012](0012-local-answer-model.md)).
 
 ## Context
 
@@ -49,7 +50,59 @@ change of URL and model name.
   be quantised too. Its speed and quality are not measured yet.
 - On the free tier, benchmark questions and the retrieved articles reach Google and may be used
   for training. Both are public already (the questions come from public pages, the articles from
-  the DR); the reference answers are never sent. A paid key avoids this, and is worth it before
+  the DR); the reference answers are not sent by the answers themselves, but the judge (ADR
+  0015) sends them, test included: ADR 0016, amended 2026-10-08, lists what leaves the machine
+  and requires a paid key for test runs. A paid key avoids this, and is worth it before
   the benchmark is published (Phase 6).
 - A different model changes the cache key and gets its own dev run. A model changed by its
   provider under an unchanged name would not, so each cached response keeps the date it was made.
+
+## Amendment, 2026-10-08: what changed since
+
+- The model has answered through a free-tier key since 2026-09-30 ([ADR 0012](0012-local-answer-model.md),
+  "Measured since"); the 402 no longer applies.
+- "No LLM judge yet": an LLM judge has scored correctness since 2026-10-01
+  ([ADR 0015](0015-answer-judge.md)), measured on known-answer cases.
+- The reply is no longer one answer with a list of citations: the demo answers a citation per
+  sentence ([ADR 0014](0014-serverless-demo.md), amended) with the agent's prompt
+  ([ADR 0018](0018-agent.md)); the format here is the reference system's default.
+- The paid key this ADR thought worth having before publication was not used: the benchmark was
+  published with test runs made on the free tier. Since 2026-10-08 test runs reach outside models
+  on a paid key only ([ADR 0016](0016-licences-and-hidden-test.md), amended), and the judge, which
+  Google serves on the free tier alone, needs another home before a judged test run.
+- Temperature is still the provider's default; whether to set it is measured and decided in
+  Phase 10 of the roadmap (decided below).
+
+## Amendment, 2026-10-08: temperature
+
+Read on 2026-10-08: Google's guide to Gemini 3 "strongly recommend[s] keeping the temperature
+parameter at its default value of 1.0", and warns that a lower one "may lead to unexpected
+behavior, such as looping or degraded performance"
+([ai.google.dev](https://ai.google.dev/gemini-api/docs/gemini-3)); Gemma 4's model card
+recommends temperature 1.0, top_p 0.95 and top_k 64 "across all use cases"
+([Hugging Face](https://huggingface.co/google/gemma-4-26b-a4b-it)).
+
+Measured on the demo's dev answers, the answers from the cache so that only the judge varies
+(ROADMAP 10.3 and 10.5):
+
+| Judge | Samples that disagree | Judged correct | Known-answer checks (references, altered, lenient) |
+|---|---|---|---|
+| Provider's default (`results/dev/archive/...+judge-3-provider.json`, `judge-check-provider.json`) | 8 of 67 | 49 of 68 | 68 of 68, 48 of 48, 110 of 110 |
+| Temperature 0 (`results/dev/...+judge-3.json`, `judge-check.json`) | 0 of 67 | 49 of 68 | 68 of 68, 48 of 48, 110 of 110 |
+
+At temperature 0, three verdicts differ from the default's median, each by one step.
+
+- **The judge sends temperature 0** (`lex.eval.gates.JUDGE_PARAMS`; `JUDGE_PARAMS` in `.env`
+  overrides it, `{}` for the provider's default). Measured, it removes the judge's own noise and
+  keeps every known-answer case, against the model card's general advice: a judge is asked for a
+  verdict, not prose. A judge with other parameters is another judge, with its own known-answer
+  check (`judge-check-<params>.json`). A local server's default temperature is its own, so a
+  judge moved there (ADR 0016) still sends 0 explicitly.
+- **The answer model keeps the provider's default**, 1.0 for Gemini 3, sent as nothing: Google
+  advises against lower values for these models, and not measured lower here, as the dev runs
+  that would test it are spent against the free tier's 500 requests a day. The run-to-run noise
+  measured with `--repeat` (8 of 68 verdicts, ADR 0018) is the model's with the judge's in it;
+  with the judge at 0, a repeat now measures the model's alone.
+- Every run records what it sent: `llm_params` for the answer model (no temperature: the
+  provider's default) and `judge.params` for the judge. The test runs of v3 were judged at the
+  provider's default; the milestone's are judged at 0.

@@ -21,6 +21,8 @@ class Source(BaseModel):
     url: HttpUrl
     title: str = Field(min_length=1)
     retrieved: dt.date
+    # When the page last changed, where it says: an ACT FAQ entry's own date (ADR 0008).
+    modified: dt.date | None = None
 
 
 class Item(BaseModel):
@@ -38,7 +40,9 @@ class Item(BaseModel):
     # the benchmark: a person's name, or the model that did it (e.g. "claude-opus-5.5").
     reviewed_by: str = Field(min_length=1)
     status: Literal["draft", "validated"] = "draft"
+    # The legal reviewer who signed the item off, and when (`python -m lex.bench review`).
     validated_by: str | None = None
+    validated_on: dt.date | None = None
     notes: str = ""
 
     @model_validator(mode="after")
@@ -50,8 +54,8 @@ class Item(BaseModel):
             raise ValueError("an answerable item needs at least one must_cite")
         if set(self.must_cite) & set(self.may_cite):
             raise ValueError("a citation is must_cite or may_cite, not both")
-        if self.status == "validated" and not self.validated_by:
-            raise ValueError("a validated item names who validated it")
+        if self.status == "validated" and not (self.validated_by and self.validated_on):
+            raise ValueError("a validated item names who validated it, and when")
         # bench/README.md: a temporal item asks about an earlier date; any other is about the
         # day it was written, which is the day its source was read.
         if self.type == "temporal" and not self.as_of < self.source.retrieved:

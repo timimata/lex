@@ -67,7 +67,8 @@ neighbouring articles cited on when a contract lapses, and adds a related articl
 answers; both formats make 4 citations outside the labels out of 47. Answering what the Code does
 not cover is the worse error, and a citation on every sentence is what the project's rule asks of
 an answer ("no citation, no claim"). `LEX_ANSWER_FORMAT=answer` brings the old format back.
-- `space/` stays as the container image for any host that runs Docker.
+- `space/` stays as the container image for any host that runs Docker. (Removed 2026-10-08: it
+  still loaded Postgres for a demo that no longer reads it, and no longer started.)
 
 ## Amendment, 2026-10-02: questions in the model's own query format
 
