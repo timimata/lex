@@ -86,17 +86,24 @@ def _split(text: str) -> tuple[str, str, str] | None:
     return text[:start], text[start : end + len(END)], text[end + len(END) :]
 
 
+# The lines that count test items, which the public mirror cannot recount: it has no test
+# split (ADR 0016), so there they are left out of the comparison, as `VERBATIM` is without the
+# FAQ. The private repository's CI, which has both, checks every line.
+TEST_LINES = ("Dev has ", "Validated by a legal reviewer")
+
+
 def is_current(path: Path = CARD, data_dir: Path = DATA_DIR, faq: Path = FAQ) -> bool:
-    """Whether the card's block is what the files give; without the FAQ (CI), its one line
-    from the FAQ is left out of the comparison."""
+    """Whether the card's block is what the files give, leaving out the lines that need a file
+    this checkout lacks: the FAQ (CI) or the test split (the public mirror)."""
     parts = _split(path.read_text(encoding="utf-8"))
     if parts is None:
         return False
-    if faq.exists():
-        return parts[1] == block(data_dir, faq)
+    unknown = (() if faq.exists() else (VERBATIM,)) + (
+        () if (data_dir / "test.jsonl").exists() else TEST_LINES
+    )
 
     def without(text: str) -> list[str]:
-        return [line for line in text.splitlines() if not line.startswith(VERBATIM)]
+        return [line for line in text.splitlines() if not line.startswith(unknown)]
 
     return without(parts[1]) == without(block(data_dir, faq))
 

@@ -163,3 +163,14 @@ def test_a_run_counts_what_it_embedded_and_prices_its_tokens(
         "usd_per_question": 10 * 0.20 / 1_000_000,
     }
     assert embedder.tokens(["pergunta um"]) == 10 and len(counted) == 2  # counted once, kept
+
+
+def test_the_version_follows_the_libraries_that_compute_vectors(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from lex.retrieval import cache
+
+    monkeypatch.setattr(cache, "_libraries", lambda: {"torch": "2.14.0"})
+    before = cache.version({"model": "a"}, "store")
+    monkeypatch.setattr(cache, "_libraries", lambda: {"torch": "2.14.1"})
+    assert cache.version({"model": "a"}, "store") != before

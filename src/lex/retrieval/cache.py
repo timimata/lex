@@ -8,6 +8,7 @@ it holds no copy of a test item.
 
 import datetime as dt
 import hashlib
+import importlib.metadata
 import json
 from pathlib import Path
 from typing import Any
@@ -24,11 +25,27 @@ CODE = [
 ]
 
 
+# The libraries a local model's vectors and scores come from: an update to one can move a
+# ranking, so it is part of the key (an update comes with a dev run that ranks afresh).
+LIBRARIES = ("numpy", "sentence-transformers", "torch", "transformers")
+
+
+def _libraries() -> dict[str, str]:
+    found = {}
+    for name in LIBRARIES:
+        try:
+            found[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            continue  # not installed: nothing of it can have made the ranking
+    return found
+
+
 def version(config: dict[str, Any], store: str) -> str:
     """What a cached ranking depends on besides the query: the retriever's configuration (model
-    ids and revisions), the retrieval code and the store's contents (its fingerprint)."""
+    ids and revisions), the retrieval code, the store's contents (its fingerprint) and the
+    versions of the libraries that compute vectors and scores."""
     code = hashlib.sha256(b"".join(p.read_bytes() for p in CODE)).hexdigest()
-    state = {"config": config, "code": code, "store": store}
+    state = {"config": config, "code": code, "store": store, "libraries": _libraries()}
     return hashlib.sha256(json.dumps(state, sort_keys=True).encode()).hexdigest()
 
 

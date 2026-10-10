@@ -942,7 +942,7 @@ run; its changes reach test with Phase 10's milestone. What waits: a deploy, whi
 security headers, the error codes, the build in `/api/health`, and lets the probe's live check
 and cold start be measured (items 8, 9, 12).
 
-## Phase 12: Documentation, community and publication
+## Phase 12: Documentation, community and publication (done 2026-10-10)
 
 What the project says about itself should come from what it measured, carry a version, and say
 how others can take part. The phase ends with a technical report.
@@ -985,7 +985,8 @@ how others can take part. The phase ends with a technical report.
    dataset's revision, give the code a version that moves with its releases, add `CITATION.cff`,
    and generate the card's counts (12.1). *Exit:* the tags exist on the mirror and the dataset;
    `CITATION.cff` validates; the counts are generated.
-   **Done 2026-10-08, but the tags:** [ADR 0021](decisions/0021-versions.md) sets the scheme:
+   **Done 2026-10-08; tagged 2026-10-09** (`bench-v3`, `bench-v4` and `v0.4.0` on the mirror,
+   `bench-v3` and `bench-v4` on the Hugging Face dataset): [ADR 0021](decisions/0021-versions.md) sets the scheme:
    the benchmark moves to `vN` when a split's `scored` hash changes, and the code is `0.N.P`, N
    the benchmark its published numbers are on. The code is 0.3.0 (`pyproject.toml` and
    `CITATION.cff`, which cffconvert validates against schema 1.2.0; a test holds the two equal
@@ -1002,7 +1003,7 @@ how others can take part. The phase ends with a technical report.
    endpoint, so ADR 0016's table (9.2) says on what terms. *Exit:* a system scored on dev from a
    file, by the documented steps; an HTTP system scored in a test; the guide and the templates on
    the mirror.
-   **Done 2026-10-08, but publishing the mirror:** CONTRIBUTING.md and two issue templates;
+   **Done 2026-10-08; on the mirror since 2026-10-09:** CONTRIBUTING.md and two issue templates;
    `lex.eval.outside` scores a file (`answers --from`) or an endpoint (`answers --http`) as any
    system, versions included (`Answer.cited_versions`), judged if asked; an endpoint on test
    needs `--operator-agrees`. The demo's dev answers written to a file and scored by the
@@ -1053,6 +1054,10 @@ how others can take part. The phase ends with a technical report.
 **Exit:** the mirror and the dataset published as a tagged version, with the README and the card
 generated from `results/`; the report drafted.
 
+**Exit met 2026-10-10:** the mirror (`timimata/lex`) and the dataset published with benchmark
+v4's tags, the README's tables and the card's counts generated and checked in CI, and the
+report drafted from v4's runs.
+
 ## Open
 
 What waits on no phase, or on someone other than the code:
@@ -1082,8 +1087,8 @@ Each becomes an ADR when its phase starts.
 | ~~Demo hosting~~ (ADRs 0013, 0014) | 4 |
 | ~~Code and dataset licences; whether test stays hidden~~ (ADR 0016) | before the repo goes public |
 | ~~What leaves the machine: a paid key or a local judge for test runs~~ (ADR 0016, amended 2026-10-09: the free tier) | 9 |
-| Pairs across splits: re-split as benchmark v4, or keep and report (ADR 0009, amended) | 9 |
-| Temperature for answers and the judge (ADR 0011, amended) | 10 |
+| ~~Pairs across splits: re-split as benchmark v4, or keep and report~~ (ADR 0009, amended: re-split, v4) | 9 |
+| ~~Temperature for answers and the judge~~ (ADR 0011, amended: the judge at 0) | 10 |
 | ~~The lockfile's tool~~ (ADR 0019) | 10 |
-| Effects, suspensions and rulings as notes on versions (ADRs 0002 and 0005, amended) | 11 |
+| ~~Effects, suspensions and rulings as notes on versions~~ (ADRs 0002 and 0005, amended) | 11 |
 | ~~The demo's budgets in one place~~ (ADR 0020) | 12 |

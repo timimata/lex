@@ -480,6 +480,27 @@ def test_the_cards_faq_line_is_left_out_where_the_faq_is_not(tmp_path: Path) -> 
     assert card.is_current(card_path, tmp_path, tmp_path / "absent.jsonl")  # CI
 
 
+def test_the_cards_test_counts_are_left_out_where_the_test_split_is_not(tmp_path: Path) -> None:
+    dev_item = next(
+        make(id=f"ct-{n:04d}", must_cite=[{"diploma": "lei-7-2009", "article": str(n)}])
+        for n in range(1, 500)
+        if split_for(
+            Item.model_validate(make(must_cite=[{"diploma": "lei-7-2009", "article": str(n)}]))
+        )
+        == "dev"
+    )
+    write(tmp_path / "dev.jsonl", [dev_item])
+    write(tmp_path / "test.jsonl", [make(id="zz-9001")])
+    card_path = tmp_path / "card.md"
+    card_path.write_text(f"{card.START}\n{card.END}\n", encoding="utf-8")
+    absent = tmp_path / "absent.jsonl"
+    card.refresh(card_path, tmp_path, absent)
+    (tmp_path / "test.jsonl").unlink()  # the public mirror
+    assert card.is_current(card_path, tmp_path, absent)
+    write(tmp_path / "dev.jsonl", [dev_item, make(id="ct-0999")])  # a dev count still counts
+    assert not card.is_current(card_path, tmp_path, absent)
+
+
 def test_the_mirror_leaves_out_the_test_split_and_dependabot() -> None:
     from lex.bench.snapshot import tracked
 
