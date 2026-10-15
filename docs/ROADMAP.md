@@ -408,7 +408,10 @@ README and the leaderboard report v1; v0's test runs are kept in `results/test/v
 Chosen by what the numbers and job ads say:
 - fine-tuned embeddings (was Phase 5): Gemini Embedding 2 already finds the right article in the
   top 5 for 0.95 of dev questions, and 40 dev items cannot tell a small gain from noise, so it
-  waits for benchmark v1; it also needs a GPU this machine cannot give PyTorch;
+  waits for benchmark v1; it also needs a GPU this machine cannot give PyTorch. **Measured
+  2026-10-15 on v4's dev, on the CPU ([ADR 0024](decisions/0024-fine-tuned-embeddings.md)):**
+  no gain beyond the noise behind the reranker (recall@5 0.87 against 0.86, p = 1.00);
+  dropped;
 - ~~an agent for `composite` questions~~: built without a framework (`--format agent`) and not
   kept ([ADR 0018](decisions/0018-agent.md)). On dev v2 the model never asked for more (0
   searches and 0 reads in 168 answers), yet its prompt scored 0.74 correct in both of two runs
@@ -1080,13 +1083,15 @@ someone other than the code:
 - ~~Where the judge runs on test, and a billed key~~: decided 2026-10-09, Tiago accepts the
   free tier for test runs; the judge stays Gemma 4 on Google's API, at temperature 0 (ADR 0016,
   amended 2026-10-09).
-- **Phase 7's options:** tracing is done (ADR 0023). Fine-tuned embeddings are written and
-  tested but not run: no synthetic questions, no model, no dev number (ADR 0024, proposed).
+- **Phase 7's options:** tracing is done (ADR 0023). Fine-tuned embeddings were measured on
+  dev and dropped: no gain beyond the noise (ADR 0024).
   The comparison with Lia waits on a person asking it the 20 questions of
   `docs/comparison/lia.jsonl` (ADR 0022). A local answer model on a Raspberry Pi: its speed
   not measured.
-- **Composite questions:** the per-type rows show them as where answers are lost; giving the
-  agent more articles (`--k 10`) on dev is the experiment named, not run.
+- **Composite questions:** the per-type rows show them as where answers are lost. Giving the
+  agent 10 articles instead of 5 was measured on dev on 2026-10-15: 0.75 correct against
+  0.72 (12 against 9 items, p = 0.66), composite 0.54 against 0.46 (p = 0.73), within the
+  noise; k stays 5 (ADR 0018, amended).
 - **Art. 127.º, 2015 to 2017:** the spot check of 2026-10-08 found its paragraphs 5 to 7
   numbered one way by the PGDL and another by the DR. Decided 2026-10-10: no one reads Lei n.º
   120/2015; ADR 0005 keeps the DR's text. `codes.py` can now take a version's text from the DR

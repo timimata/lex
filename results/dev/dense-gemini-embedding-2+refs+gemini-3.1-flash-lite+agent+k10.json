@@ -1,0 +1,4612 @@
+{
+  "split": "dev",
+  "bench": {
+    "items": 105,
+    "sha": "03105a887554",
+    "scored": "8031d645e931"
+  },
+  "system": "dense-gemini-embedding-2+refs+gemini-3.1-flash-lite+agent+k10",
+  "config": {
+    "model": "gemini-embedding-2@768",
+    "store": "memory",
+    "query": "task: question answering | query: {}",
+    "document": "{heading}\n{text}",
+    "references": "ADR 0004 parser",
+    "task": "answers",
+    "llm": "gemini-3.1-flash-lite",
+    "llm_params": {
+      "reasoning_effort": "low"
+    },
+    "k": 10,
+    "format": "agent",
+    "prompts": "c995cc9374f7",
+    "corpus": {
+      "fingerprint": "70cec90cf104d3fc1e3c2a9f21aa8d2760ef0d83058a3001a21938e8faa49cc6",
+      "versions": {
+        "dl-47344-1966": 147,
+        "lei-6-2006": 177,
+        "lei-7-2009": 889
+      }
+    },
+    "endpoints": {
+      "embeddings": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemini-embedding-2"
+      },
+      "answers": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemini-3.1-flash-lite"
+      },
+      "judge": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "tier": "free",
+        "model": "gemma-4-26b-a4b-it"
+      }
+    },
+    "justified_by": null,
+    "repeat": 0,
+    "usage": {
+      "calls": 108,
+      "prompt_tokens": 388966,
+      "completion_tokens": 16407,
+      "thinking_tokens": 39248,
+      "thinking_unrecorded": 0,
+      "cached": 108
+    },
+    "cost": {
+      "usd_per_million": {
+        "input": 0.25,
+        "output": 1.5
+      },
+      "usd": 0.180724,
+      "usd_per_question": 0.001721,
+      "lower_bound": false
+    },
+    "counts": {
+      "malformed": 0,
+      "uncited": 3,
+      "dropped_citations": 0,
+      "dropped_sentences": 11,
+      "searches": 3,
+      "reads": 0,
+      "added": 9,
+      "over_budget": 0
+    },
+    "cache": {
+      "answers": {
+        "calls": 108,
+        "cached": 108,
+        "broken": 0,
+        "sample": null,
+        "made_from": "2026-10-15T13:40:18+01:00",
+        "made_until": "2026-10-15T13:47:45+01:00"
+      },
+      "judge": {
+        "calls": 77,
+        "cached": 74,
+        "broken": 0,
+        "sample": null,
+        "made_from": "2026-10-08T14:18:45+01:00",
+        "made_until": "2026-10-15T18:45:27+01:00"
+      }
+    },
+    "costs": {
+      "answers": {
+        "usd_per_million": {
+          "input": 0.25,
+          "output": 1.5
+        },
+        "usd": 0.180724,
+        "usd_per_question": 0.001721,
+        "lower_bound": false
+      },
+      "embeddings": {
+        "texts": 0,
+        "tokens": 0,
+        "usd": 0.0,
+        "usd_per_question": 0.0
+      },
+      "usd_per_question": 0.001721,
+      "judge": {
+        "usage": {
+          "calls": 77,
+          "prompt_tokens": 43589,
+          "completion_tokens": 3623,
+          "thinking_tokens": 85385
+        },
+        "usd": null,
+        "priced": false
+      }
+    },
+    "judge": {
+      "model": "gemma-4-26b-a4b-it",
+      "prompt": "a4aecc7ccf8a",
+      "params": {
+        "temperature": 0
+      },
+      "measured_on_dev": {
+        "known_answer_checks": {
+          "reference": {
+            "as_expected": 81,
+            "cases": 81
+          },
+          "altered": {
+            "as_expected": 57,
+            "cases": 57
+          },
+          "lenient": {
+            "as_expected": 129,
+            "cases": 132
+          }
+        }
+      },
+      "samples": 1,
+      "disagreed": 0,
+      "unparsed": 0,
+      "unparsed_ids": [],
+      "retried_ids": []
+    }
+  },
+  "commit": "40b02fdc22a3b14cd5254eea701857aa14b0b450",
+  "uncommitted_changes": false,
+  "source": "186d6a2d10761bc9",
+  "environment": {
+    "python": "3.14.4",
+    "lock": "e0f7c192143c431b"
+  },
+  "run_at": "2026-10-15T18:45:27+01:00",
+  "summary": {
+    "answerable": {
+      "items": 81,
+      "refused": 0.04938271604938271,
+      "cited": 77,
+      "citation_precision": 0.8984848484848486,
+      "citation_recall": 0.8703703703703703,
+      "given_recall": 0.9444444444444444,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "composite": {
+      "items": 24,
+      "refused": 0.041666666666666664,
+      "cited": 23,
+      "citation_precision": 0.8434782608695651,
+      "citation_recall": 0.6875,
+      "given_recall": 0.8263888888888888,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "explicit_reference": {
+      "items": 9,
+      "refused": 0.0,
+      "cited": 9,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "given_recall": 1.0,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "simple": {
+      "items": 35,
+      "refused": 0.02857142857142857,
+      "cited": 34,
+      "citation_precision": 0.8759803921568627,
+      "citation_recall": 0.9714285714285714,
+      "given_recall": 1.0,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "temporal": {
+      "items": 13,
+      "refused": 0.15384615384615385,
+      "cited": 11,
+      "citation_precision": 1.0,
+      "citation_recall": 0.8461538461538461,
+      "given_recall": 0.9743589743589743,
+      "unsupported": 0,
+      "version_right": 1.0
+    },
+    "unanswerable": {
+      "items": 24,
+      "refused": 0.8333333333333334,
+      "cited": 0,
+      "citation_precision": null,
+      "citation_recall": null,
+      "given_recall": null,
+      "unsupported": 0,
+      "version_right": null
+    },
+    "correctness": {
+      "answerable": {
+        "items": 81,
+        "correta": 0.7530864197530864,
+        "parcial": 0.16049382716049382,
+        "errada": 0.08641975308641975
+      },
+      "composite": {
+        "items": 24,
+        "correta": 0.5416666666666666,
+        "parcial": 0.3333333333333333,
+        "errada": 0.125
+      },
+      "explicit_reference": {
+        "items": 9,
+        "correta": 1.0,
+        "parcial": 0.0,
+        "errada": 0.0
+      },
+      "simple": {
+        "items": 35,
+        "correta": 0.8285714285714286,
+        "parcial": 0.14285714285714285,
+        "errada": 0.02857142857142857
+      },
+      "temporal": {
+        "items": 13,
+        "correta": 0.7692307692307693,
+        "parcial": 0.0,
+        "errada": 0.23076923076923078
+      }
+    }
+  },
+  "items": [
+    {
+      "id": "ct-0004",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/244",
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/244",
+        "lei-7-2009/251"
+      ],
+      "allowed": [
+        "lei-7-2009/249",
+        "lei-7-2009/253",
+        "lei-7-2009/254"
+      ],
+      "text": "O gozo das férias suspende-se quando o trabalhador esteja temporariamente impedido por facto que não lhe seja imputável, desde que haja comunicação ao empregador. (art. 244.º do CT) O falecimento de um progenitor (parente no 1.º grau na linha reta) confere ao trabalhador o direito a faltar justificadamente até cinco dias consecutivos. (art. 251.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 244.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3218,
+        "completion_tokens": 145,
+        "thinking_tokens": 158,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta explica corretamente a suspensão das férias por facto não imputável e menciona o regime de faltas por falecimento aplicável ao caso.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/243@2009-02-17",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/306@2009-02-17",
+        "lei-7-2009/42@2023-05-01",
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/238@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0005",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/244"
+      ],
+      "expected": [
+        "lei-7-2009/244"
+      ],
+      "allowed": [],
+      "text": "O gozo das férias não se inicia ou suspende-se quando o trabalhador esteja temporariamente impedido por doença ou outro facto que não lhe seja imputável, desde que o trabalhador comunique esse impedimento ao empregador. (art. 244.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 244.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4682,
+        "completion_tokens": 79,
+        "thinking_tokens": 90,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico, prazos e condições da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/545@2009-02-17",
+        "lei-7-2009/354@2023-05-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/309@2009-02-17",
+        "lei-7-2009/129@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0006",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/263"
+      ],
+      "expected": [
+        "lei-7-2009/263"
+      ],
+      "allowed": [],
+      "text": "O subsídio de Natal deve ser pago até ao dia 15 de dezembro de cada ano. (art. 263.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 263.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2943,
+        "completion_tokens": 51,
+        "thinking_tokens": 151,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta o prazo correto conforme solicitado na pergunta e indicado na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/263@2009-02-17",
+        "lei-7-2009/264@2012-08-01",
+        "lei-7-2009/306@2009-02-17",
+        "lei-7-2009/278@2023-05-01",
+        "lei-6-2006/46@2012-11-12",
+        "lei-7-2009/160@2019-10-01",
+        "lei-7-2009/262@2009-02-17",
+        "lei-7-2009/260@2009-02-17",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/242@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0008",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/214"
+      ],
+      "expected": [
+        "lei-7-2009/214"
+      ],
+      "allowed": [],
+      "text": "O trabalhador tem direito a um período de descanso de, pelo menos, onze horas seguidas entre dois períodos diários de trabalho consecutivos. (art. 214.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 214.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3234,
+        "completion_tokens": 77,
+        "thinking_tokens": 137,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém a informação essencial e correta presente na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/214@2009-02-17",
+        "lei-7-2009/78@2009-02-17",
+        "lei-7-2009/213@2012-08-01",
+        "lei-7-2009/233@2009-02-17",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/77@2009-02-17",
+        "lei-7-2009/199@2009-02-17",
+        "lei-7-2009/221@2009-02-17",
+        "lei-7-2009/79@2009-02-17",
+        "lei-7-2009/200@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0009",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [
+        "lei-7-2009/273"
+      ],
+      "expected": [],
+      "allowed": [],
+      "text": "Os artigos facultados não definem o valor específico do salário mínimo nacional, estabelecendo apenas que este é determinado anualmente por legislação específica. (art. 273.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 273.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3715,
+        "completion_tokens": 80,
+        "thinking_tokens": 119,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/273@2009-02-17",
+        "lei-7-2009/274@2009-02-17",
+        "lei-7-2009/275@2009-02-17",
+        "lei-7-2009/271@2009-02-17",
+        "lei-7-2009/270@2009-02-17",
+        "lei-7-2009/366-A@2012-08-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/320@2009-02-17",
+        "lei-6-2006/24@2006-06-27",
+        "lei-7-2009/276@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0010",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 29/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3798,
+        "completion_tokens": 147,
+        "thinking_tokens": 96,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/72@2009-02-17",
+        "lei-7-2009/222@2009-02-17",
+        "lei-7-2009/225@2009-02-17",
+        "lei-7-2009/19@2009-02-17",
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/87@2019-10-01",
+        "lei-7-2009/186@2023-05-01",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/281@2009-02-17",
+        "lei-7-2009/54@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm qualquer norma que estabeleça uma periodicidade para exames de saúde baseada na idade do trabalhador."
+    },
+    {
+      "id": "ct-0019",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3052,
+        "completion_tokens": 143,
+        "thinking_tokens": 156,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/130@2009-02-17",
+        "lei-7-2009/131@2019-10-01",
+        "lei-7-2009/134@2009-02-17",
+        "lei-7-2009/132@2009-02-17",
+        "lei-7-2009/61@2009-02-17",
+        "lei-7-2009/302@2009-02-17",
+        "lei-7-2009/133@2009-02-17",
+        "lei-7-2009/187@2009-02-17",
+        "lei-7-2009/67@2009-02-17",
+        "lei-7-2009/30@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não mencionam regras ou condições relativas ao acesso a financiamento público por parte de entidades formadoras."
+    },
+    {
+      "id": "ct-0022",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/242"
+      ],
+      "expected": [
+        "lei-7-2009/242"
+      ],
+      "allowed": [],
+      "text": "Sim, o empregador pode encerrar a empresa ou estabelecimento, total ou parcialmente, para férias dos trabalhadores, desde que seja compatível com a natureza da atividade. (art. 242.º do CT) O encerramento pode ocorrer até 15 dias consecutivos entre 1 de maio e 31 de outubro, ou por períodos mais longos em condições específicas previstas na lei. (art. 242.º do CT) Adicionalmente, é possível encerrar durante cinco dias úteis nas férias escolares do Natal ou em dias intercalados entre um feriado (terça ou quinta-feira) e um dia de descanso semanal. (art. 242.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 242.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3239,
+        "completion_tokens": 173,
+        "thinking_tokens": 135,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência sem apresentar contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/243@2009-02-17",
+        "lei-7-2009/311@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/247@2009-02-17",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/244@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0024",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/234"
+      ],
+      "expected": [
+        "lei-7-2009/234"
+      ],
+      "allowed": [],
+      "text": "São feriados obrigatórios os dias 1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, Corpo de Deus, 10 de junho, 15 de agosto, 5 de outubro, 1 de novembro, e 1, 8 e 25 de dezembro. (art. 234.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 234.º (versão em vigor desde 02/04/2016)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2947,
+        "completion_tokens": 106,
+        "thinking_tokens": 152,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente todos os feriados listados na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/234@2016-04-02",
+        "lei-7-2009/235@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/269@2023-05-01",
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/240@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0027",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/112"
+      ],
+      "expected": [
+        "lei-7-2009/112"
+      ],
+      "allowed": [],
+      "text": "Sim, a antiguidade do trabalhador conta-se desde o início do período experimental. (art. 112.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 112.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3468,
+        "completion_tokens": 77,
+        "thinking_tokens": 718,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente a mesma informação jurídica da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/113@2009-02-17",
+        "lei-7-2009/112@2023-05-01",
+        "lei-7-2009/111@2023-05-01",
+        "lei-7-2009/114@2023-05-01",
+        "lei-7-2009/162@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/239@2009-02-17",
+        "lei-7-2009/295@2009-02-17",
+        "lei-7-2009/146@2009-02-17",
+        "lei-7-2009/145@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0029",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/350"
+      ],
+      "expected": [
+        "lei-7-2009/350"
+      ],
+      "allowed": [],
+      "text": "Sim, o trabalhador pode fazer cessar o acordo de revogação mediante comunicação escrita dirigida ao empregador até ao sétimo dia seguinte à data da celebração. (art. 350.º do CT) Esta cessação apenas é eficaz se, simultaneamente, o trabalhador entregar ou puser à disposição do empregador a totalidade das compensações recebidas. (art. 350.º do CT) Caso não possa assegurar a receção da comunicação no prazo, deve remetê-la por carta registada com aviso de receção no dia útil seguinte ao fim do prazo. (art. 350.º do CT) O direito de cessação não se aplica se o acordo tiver assinatura com reconhecimento notarial presencial. (art. 350.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 350.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2389,
+        "completion_tokens": 198,
+        "thinking_tokens": 155,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência (prazo, forma, condição de devolução e exceção do reconhecimento notarial) sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/350@2009-02-17",
+        "lei-7-2009/397@2009-02-17",
+        "lei-7-2009/349@2017-10-01",
+        "lei-7-2009/402@2009-02-17",
+        "dl-47344-1966/1082@2006-06-27",
+        "lei-7-2009/365@2009-02-17",
+        "lei-7-2009/167@2022-01-01",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/344@2023-05-01",
+        "lei-7-2009/137@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0033",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/351",
+        "lei-7-2009/403"
+      ],
+      "expected": [
+        "lei-7-2009/351"
+      ],
+      "allowed": [
+        "lei-7-2009/256"
+      ],
+      "text": "Sim, constitui justa causa de despedimento a falta injustificada ao trabalho que determine prejuízos ou riscos graves para a empresa, ou quando o número total de faltas injustificadas atinja cinco seguidas ou dez interpoladas em cada ano civil. (art. 351.º do CT) Adicionalmente, a ausência prolongada do serviço sem comunicação do motivo, durante pelo menos 10 dias úteis seguidos, presume-se abandono do trabalho, o que vale como denúncia do contrato. (art. 403.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 351.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 403.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3109,
+        "completion_tokens": 143,
+        "thinking_tokens": 101,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e a informação adicional não contradiz a mesma.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/351@2009-02-17",
+        "lei-7-2009/256@2012-08-01",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/403@2009-02-17",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/248@2009-02-17",
+        "lei-7-2009/255@2023-05-01",
+        "lei-7-2009/387@2009-02-17",
+        "lei-7-2009/338@2009-02-17",
+        "lei-7-2009/354@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0034",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/237",
+        "lei-7-2009/238"
+      ],
+      "expected": [
+        "lei-7-2009/237",
+        "lei-7-2009/238"
+      ],
+      "allowed": [],
+      "text": "O direito a férias é irrenunciável e o seu gozo não pode ser substituído, mesmo com acordo, por qualquer compensação, económica ou outra. (art. 237.º do CT) Contudo, o trabalhador pode renunciar ao gozo de dias de férias que excedam 20 dias úteis. (art. 238.º do CT) Esta renúncia não implica a redução da retribuição nem do subsídio de férias, valores que são cumuláveis com a retribuição do trabalho prestado nesses dias. (art. 238.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 237.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 238.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3240,
+        "completion_tokens": 155,
+        "thinking_tokens": 888,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, abordando a regra geral e a exceção de forma precisa.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/247@2009-02-17",
+        "lei-7-2009/264@2012-08-01",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/239@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0035",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/165"
+      ],
+      "expected": [
+        "lei-7-2009/165"
+      ],
+      "allowed": [],
+      "text": "O n.º 1 do artigo 165.º define o teletrabalho como a prestação de trabalho em regime de subordinação jurídica, em local não determinado pelo empregador, utilizando tecnologias de informação e comunicação. (art. 165.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 165.º (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5101,
+        "completion_tokens": 80,
+        "thinking_tokens": 125,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência sem apresentar erros ou contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/165@2022-01-01",
+        "lei-7-2009/164@2012-08-01",
+        "lei-7-2009/168@2023-05-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/207@2023-05-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/309@2009-02-17",
+        "lei-7-2009/166-A@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0036",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/342"
+      ],
+      "expected": [
+        "lei-7-2009/342"
+      ],
+      "allowed": [],
+      "text": "O artigo 342.º do Código do Trabalho estabelece que, ao cessar o contrato de trabalho, o trabalhador deve devolver imediatamente ao empregador os instrumentos de trabalho e quaisquer outros objetos que lhe pertençam. (art. 342.º do CT) O incumprimento desta obrigação sujeita o trabalhador à responsabilidade civil pelos danos causados. (art. 342.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 342.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4578,
+        "completion_tokens": 113,
+        "thinking_tokens": 155,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e os mesmos elementos essenciais da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/342@2009-02-17",
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/396@2018-03-20",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/360@2023-05-01",
+        "lei-7-2009/394@2019-10-01",
+        "lei-7-2009/63@2023-05-01",
+        "lei-7-2009/353@2009-02-17",
+        "lei-7-2009/357@2012-08-01",
+        "lei-7-2009/344@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0038",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/115"
+      ],
+      "expected": [
+        "lei-7-2009/115"
+      ],
+      "allowed": [],
+      "text": "O artigo 115.º estabelece que a atividade para a qual o trabalhador é contratado deve ser determinada por acordo entre as partes. (art. 115.º do CT) Essa determinação pode ser feita por remissão para a categoria prevista em instrumentos de regulamentação coletiva de trabalho ou em regulamento interno da empresa. (art. 115.º do CT) Caso a atividade envolva a prática de negócios jurídicos, considera-se que o contrato de trabalho confere ao trabalhador os poderes necessários, salvo se a lei exigir um instrumento especial. (art. 115.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 115.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5859,
+        "completion_tokens": 203,
+        "thinking_tokens": 922,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência, sem apresentar erros ou contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/115@2009-02-17",
+        "lei-7-2009/197@2009-02-17",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/132@2009-02-17",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/207@2023-05-01",
+        "lei-7-2009/213@2012-08-01",
+        "lei-7-2009/40@2023-05-01",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/241@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0039",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [
+        "lei-7-2009/336"
+      ],
+      "expected": [],
+      "allowed": [],
+      "text": "O Fundo de Garantia Salarial assegura o pagamento de créditos laborais que o empregador não possa pagar devido a insolvência ou situação económica difícil, nos termos de legislação específica. (art. 336.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 336.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2757,
+        "completion_tokens": 117,
+        "thinking_tokens": 130,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/336@2009-02-17",
+        "lei-7-2009/191@2023-05-01",
+        "lei-7-2009/333@2009-02-17",
+        "lei-7-2009/280@2009-02-17",
+        "lei-7-2009/337@2023-05-01",
+        "lei-7-2009/190@2013-10-01",
+        "lei-7-2009/132@2009-02-17",
+        "lei-7-2009/334@2009-02-17",
+        "lei-7-2009/134@2009-02-17",
+        "lei-7-2009/325@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0043",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/234"
+      ],
+      "expected": [
+        "lei-7-2009/234"
+      ],
+      "allowed": [
+        "lei-23-2012/10"
+      ],
+      "text": "Os feriados obrigatórios são o 1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, 10 de junho, 15 de agosto, 8 e 25 de dezembro, não constando o dia 5 de outubro nessa lista. (art. 234.º do CT)\n\nFontes (lei em vigor a 05/10/2014):\n- Código do Trabalho, art. 234.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2959,
+        "completion_tokens": 100,
+        "thinking_tokens": 99,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta afirma corretamente que o dia 5 de outubro não era feriado obrigatório na data indicada, apresentando a lista correta para o período.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/234@2012-08-01",
+        "lei-7-2009/235@2009-02-17",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/269@2012-08-01",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/229@2012-08-01",
+        "lei-7-2009/405@2009-02-17",
+        "lei-7-2009/511@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0044",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/234"
+      ],
+      "expected": [
+        "lei-7-2009/234"
+      ],
+      "allowed": [
+        "lei-23-2012/10"
+      ],
+      "text": "O dia 5 de outubro não se encontra na lista de feriados obrigatórios previstos na lei. (art. 234.º do CT) Os feriados obrigatórios são apenas o 1 de janeiro, Sexta-Feira Santa, Domingo de Páscoa, 25 de abril, 1 de maio, 10 de junho, 15 de agosto, 8 e 25 de dezembro. (art. 234.º do CT)\n\nFontes (lei em vigor a 05/10/2012):\n- Código do Trabalho, art. 234.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3084,
+        "completion_tokens": 125,
+        "thinking_tokens": 923,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "A resposta contradiz a referência ao afirmar que o dia não era feriado, ignorando a regra de transição que mantinha o feriado em vigor até 1 de janeiro de 2013.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/234@2012-08-01",
+        "lei-7-2009/235@2009-02-17",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/236@2009-02-17",
+        "lei-7-2009/269@2012-08-01",
+        "lei-7-2009/511@2009-02-17",
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/409@2009-02-17",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/405@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0045",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/165"
+      ],
+      "expected": [
+        "lei-7-2009/165"
+      ],
+      "allowed": [],
+      "text": "Sim, considera-se teletrabalho a prestação laboral que é realizada, habitualmente, fora da empresa. (art. 165.º do CT) Esta modalidade implica ainda que o trabalho seja prestado com subordinação jurídica e através do recurso a tecnologias de informação e de comunicação. (art. 165.º do CT)\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 165.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3092,
+        "completion_tokens": 98,
+        "thinking_tokens": 620,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da definição de teletrabalho em vigor na data solicitada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/165@2009-02-17",
+        "lei-7-2009/166@2015-09-06",
+        "lei-7-2009/167@2009-02-17",
+        "lei-7-2009/170@2009-02-17",
+        "lei-7-2009/169@2009-02-17",
+        "lei-7-2009/168@2009-02-17",
+        "lei-7-2009/171@2009-02-17",
+        "lei-7-2009/193@2009-02-17",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/303@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0050",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/166"
+      ],
+      "expected": [
+        "lei-7-2009/166",
+        "lei-7-2009/168"
+      ],
+      "allowed": [],
+      "text": "O acordo de teletrabalho deve definir a propriedade dos instrumentos de trabalho, bem como o responsável pela respetiva instalação e manutenção. (art. 166.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 166.º (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4516,
+        "completion_tokens": 58,
+        "thinking_tokens": 140,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente que a propriedade dos instrumentos de trabalho deve ser definida no acordo de teletrabalho, conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/168@2023-05-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/167@2022-01-01",
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/171@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/165@2022-01-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0053",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/389",
+        "lei-7-2009/390",
+        "lei-7-2009/391",
+        "lei-7-2009/393"
+      ],
+      "expected": [
+        "lei-7-2009/389",
+        "lei-7-2009/390"
+      ],
+      "allowed": [],
+      "text": "Se o despedimento for declarado ilícito, o trabalhador tem direito a ser reintegrado no estabelecimento da empresa, mantendo a sua categoria e antiguidade (CT 389). (art. 389.º do CT) O trabalhador tem direito a receber uma indemnização por todos os danos patrimoniais e não patrimoniais causados (CT 389). (art. 389.º do CT) Tem ainda direito às retribuições que deixou de receber desde o despedimento até ao trânsito em julgado da decisão do tribunal, deduzidas de certos valores como o subsídio de desemprego ou importâncias recebidas com a cessação do contrato (CT 390). (art. 390.º do CT) Em substituição da reintegração, o trabalhador pode optar por uma indemnização, cujo valor é fixado pelo tribunal entre 15 e 45 dias de retribuição base e diuturnidades por cada ano de antiguidade, com o mínimo de três meses (CT 391). (art. 391.º do CT) No caso de contratos a termo, o trabalhador tem direito a indemnização pelos danos patrimoniais e não patrimoniais, não inferior às retribuições que deixou de auferir até ao termo do contrato ou trânsito em julgado, podendo ser reintegrado se o termo ocorrer após a decisão judicial (CT 393). (art. 393.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 389.º (versão em vigor desde 01/08/2012)\n- Código do Trabalho, art. 390.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 391.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 393.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2617,
+        "completion_tokens": 452,
+        "thinking_tokens": 128,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta informações complementares corretas sem contradizer o conteúdo jurídico.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/389@2012-08-01",
+        "lei-7-2009/381@2009-02-17",
+        "lei-7-2009/399@2009-02-17",
+        "lei-7-2009/386@2009-02-17",
+        "lei-7-2009/393@2009-02-17",
+        "lei-7-2009/391@2009-02-17",
+        "lei-7-2009/387@2009-02-17",
+        "lei-7-2009/392@2009-02-17",
+        "lei-7-2009/384@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0054",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/394"
+      ],
+      "expected": [
+        "lei-7-2009/394",
+        "lei-7-2009/396"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode resolver o contrato com justa causa se o empregador faltar culposamente ao pagamento pontual da retribuição, violar garantias legais ou convencionais (incluindo assédio), aplicar sanção abusiva, não garantir condições de segurança e saúde, ou lesar culposamente interesses patrimoniais sérios do trabalhador. (art. 394.º do CT) Constitui igualmente justa causa a ofensa à integridade física ou moral, liberdade, honra ou dignidade do trabalhador, punível por lei, praticada pelo empregador ou seu representante. (art. 394.º do CT) Podem também fundamentar a resolução a necessidade de cumprimento de obrigação legal incompatível com a continuação do contrato, a alteração substancial e duradoura das condições de trabalho, a falta não culposa de pagamento pontual da retribuição ou a transmissão da empresa sob condições específicas. (art. 394.º do CT) A falta de pagamento pontual da retribuição considera-se culposa quando se prolongue por 60 dias ou quando o empregador declare por escrito a previsão de não pagamento até ao final desse prazo. (art. 394.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 394.º (versão em vigor desde 01/10/2019)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2868,
+        "completion_tokens": 295,
+        "thinking_tokens": 100,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "O sistema identifica todos os fundamentos de justa causa listados na referência e acrescenta detalhes complementares sem apresentar erros ou contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/394@2019-10-01",
+        "lei-7-2009/351@2009-02-17",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/340@2009-02-17",
+        "lei-7-2009/399@2009-02-17",
+        "lei-7-2009/401@2023-05-01",
+        "lei-7-2009/365@2009-02-17",
+        "lei-7-2009/400@2023-05-01",
+        "lei-7-2009/323@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0055",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/101-A"
+      ],
+      "expected": [
+        "lei-7-2009/101-A"
+      ],
+      "allowed": [],
+      "text": "O artigo 101.º-A define que, para efeitos do Código do Trabalho, considera-se trabalhador cuidador a pessoa a quem foi reconhecido o estatuto de cuidador informal não principal, nos termos da legislação aplicável. (art. 101.º-A do CT) Este estatuto deve ser comprovado mediante a apresentação do respetivo documento. (art. 101.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 101.º-A (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 6033,
+        "completion_tokens": 160,
+        "thinking_tokens": 618,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo a definição, o tipo de cuidador e a necessidade de comprovação, sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/101-A@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/40@2023-05-01",
+        "lei-7-2009/46-A@2019-09-09",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/108@2023-05-01",
+        "lei-7-2009/109@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0056",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/43"
+      ],
+      "expected": [
+        "lei-7-2009/43"
+      ],
+      "allowed": [],
+      "text": "O pai tem direito a uma licença parental obrigatória de 15 dias úteis após o nascimento do filho. (art. 43.º do CT) Este período deve ser gozado nos 30 dias seguintes ao nascimento, sendo que cinco desses dias têm de ser gozados de modo consecutivo imediatamente a seguir ao nascimento. (art. 43.º do CT)\n\nFontes (lei em vigor a 01/06/2018):\n- Código do Trabalho, art. 43.º (versão em vigor desde 06/09/2015)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3722,
+        "completion_tokens": 148,
+        "thinking_tokens": 856,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta identifica corretamente o número de dias de licença obrigatória e as condições de gozo solicitadas na pergunta.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/43@2015-09-06",
+        "lei-7-2009/40@2015-09-06",
+        "lei-7-2009/39@2009-02-17",
+        "lei-7-2009/41@2009-02-17",
+        "lei-7-2009/51@2009-02-17",
+        "lei-7-2009/33@2009-02-17",
+        "lei-7-2009/42@2009-02-17",
+        "lei-7-2009/35@2009-02-17",
+        "lei-7-2009/52@2009-02-17",
+        "lei-7-2009/46@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0057",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/43"
+      ],
+      "expected": [
+        "lei-7-2009/43"
+      ],
+      "allowed": [],
+      "text": "O pai tem a obrigatoriedade de gozar 20 dias úteis de licença parental após o nascimento da criança, sendo cinco destes gozados de modo consecutivo imediatamente após o nascimento. (art. 43.º do CT)\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 43.º (versão em vigor desde 01/04/2020)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4362,
+        "completion_tokens": 71,
+        "thinking_tokens": 120,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta identifica corretamente o número de dias de licença obrigatória solicitado na pergunta, respeitando as condições de gozo.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/43@2020-04-01",
+        "lei-7-2009/40@2020-04-01",
+        "lei-7-2009/35@2020-04-01",
+        "lei-7-2009/42@2020-04-01",
+        "lei-7-2009/33@2009-02-17",
+        "lei-7-2009/39@2009-02-17",
+        "lei-7-2009/41@2009-02-17",
+        "lei-7-2009/52@2009-02-17",
+        "lei-7-2009/51@2009-02-17",
+        "lei-7-2009/46@2019-10-04"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0058",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/268"
+      ],
+      "expected": [
+        "lei-7-2009/268"
+      ],
+      "allowed": [],
+      "text": "O trabalho suplementar prestado em dia útil é pago com um acréscimo de 50% pela primeira hora ou fração desta e de 75% por cada hora ou fração subsequente. (art. 268.º do CT)\n\nFontes (lei em vigor a 01/06/2011):\n- Código do Trabalho, art. 268.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3893,
+        "completion_tokens": 73,
+        "thinking_tokens": 104,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta corretamente os percentuais de acréscimo para o trabalho suplementar em dia útil conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/268@2009-02-17",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/229@2009-02-17",
+        "lei-7-2009/226@2009-02-17",
+        "lei-7-2009/231@2009-02-17",
+        "lei-7-2009/230@2009-02-17",
+        "lei-7-2009/266@2009-02-17",
+        "lei-7-2009/227@2009-02-17",
+        "lei-7-2009/208@2009-02-17",
+        "lei-7-2009/265@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0059",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/268"
+      ],
+      "expected": [
+        "lei-7-2009/268"
+      ],
+      "allowed": [],
+      "text": "A lei não prevê um acréscimo maior no valor do pagamento de trabalho suplementar pelo facto de este ultrapassar as 100 horas anuais, estabelecendo apenas valores fixos de acréscimo consoante o dia da semana ou a natureza do período em que é prestado. (art. 268.º do CT)\n\nFontes (lei em vigor a 01/06/2022):\n- Código do Trabalho, art. 268.º (versão em vigor desde 01/10/2019)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3500,
+        "completion_tokens": 93,
+        "thinking_tokens": 110,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema confirma corretamente que não existia um acréscimo superior por ultrapassar as 100 horas anuais em 2022.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/268@2019-10-01",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/231@2009-02-17",
+        "lei-7-2009/227@2009-02-17",
+        "lei-7-2009/208@2012-08-01",
+        "lei-7-2009/230@2012-08-01",
+        "lei-7-2009/266@2009-02-17",
+        "lei-7-2009/88@2009-02-17",
+        "lei-7-2009/59@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0061",
+      "type": "temporal",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
+      "cited": [],
+      "expected": [
+        "lei-7-2009/112"
+      ],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/06/2018, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3366,
+        "completion_tokens": 86,
+        "thinking_tokens": 791,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/112@2009-02-17",
+        "lei-7-2009/113@2009-02-17",
+        "lei-7-2009/111@2009-02-17",
+        "lei-7-2009/114@2009-02-17",
+        "lei-7-2009/148@2009-02-17",
+        "lei-7-2009/147@2009-02-17",
+        "lei-7-2009/142@2012-08-01",
+        "lei-7-2009/181@2009-02-17",
+        "lei-7-2009/159@2009-02-17",
+        "lei-7-2009/69@2012-09-03"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0062",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/169-A",
+        "lei-7-2009/170"
+      ],
+      "expected": [
+        "lei-7-2009/169-A",
+        "lei-7-2009/170"
+      ],
+      "allowed": [],
+      "text": "No teletrabalho, o empregador deve exercer os poderes de direção e controlo preferencialmente através dos sistemas de comunicação e informação afetos à atividade do trabalhador, segundo procedimentos previamente conhecidos por este e respeitadores da sua privacidade. (art. 169.º-A do CT) O controlo da prestação de trabalho deve seguir os princípios da proporcionalidade e transparência, sendo proibido impor a conexão permanente por som ou imagem. (art. 169.º-A do CT) O empregador deve respeitar a privacidade do trabalhador, o horário de trabalho e os tempos de descanso e repouso. (art. 170.º do CT) É vedada a captura de som, imagem, escrita ou histórico, ou outros meios de controlo que afetem o direito à privacidade. (art. 170.º do CT) A visita ao domicílio do trabalhador, para efeitos de controlo da atividade ou instrumentos de trabalho, requer aviso prévio de 24 horas, concordância do trabalhador e deve ocorrer na sua presença durante o horário de trabalho acordado. (art. 170.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 169.º-A (versão em vigor desde 01/01/2022)\n- Código do Trabalho, art. 170.º (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4262,
+        "completion_tokens": 281,
+        "thinking_tokens": 114,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e não apresenta contradições, podendo incluir informações adicionais pertinentes.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/171@2022-01-01",
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/97@2009-02-17",
+        "lei-7-2009/169-B@2022-01-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/165@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0065",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/387",
+        "lei-7-2009/386",
+        "lei-7-2009/388"
+      ],
+      "expected": [
+        "lei-7-2009/387",
+        "lei-7-2009/388"
+      ],
+      "allowed": [],
+      "text": "Sim, o trabalhador pode opor-se ao despedimento mediante a apresentação de requerimento em formulário próprio junto do tribunal competente, no prazo de 60 dias após a receção da comunicação do despedimento ou da cessação do contrato, se esta for posterior. (art. 387.º do CT) O trabalhador tem ainda a faculdade de requerer a suspensão preventiva do despedimento no prazo de cinco dias úteis a contar da receção da comunicação. (art. 386.º do CT) No caso específico de despedimento coletivo, a ação de impugnação deve ser intentada no prazo de seis meses contados da data da cessação do contrato. (art. 388.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 387.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 386.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 388.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2516,
+        "completion_tokens": 244,
+        "thinking_tokens": 139,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta informação adicional que não contradiz o conteúdo jurídico.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/387@2009-02-17",
+        "lei-7-2009/386@2009-02-17",
+        "lei-7-2009/398@2009-02-17",
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/388@2009-02-17",
+        "lei-7-2009/355@2009-02-17",
+        "lei-7-2009/389@2012-08-01",
+        "lei-7-2009/381@2009-02-17",
+        "lei-7-2009/377@2012-08-01",
+        "lei-7-2009/369@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0069",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/142"
+      ],
+      "expected": [
+        "lei-7-2009/142"
+      ],
+      "allowed": [],
+      "text": "O artigo 142.º regula os contratos de trabalho de muito curta duração, com um limite máximo de 35 dias, destinados a enfrentar acréscimos excecionais de atividade, como no setor agrícola ou do turismo. (art. 142.º do CT) Estes contratos não exigem forma escrita, mas o empregador deve comunicar a sua celebração e o local de trabalho à segurança social através de formulário eletrónico. (art. 142.º do CT) A duração total destes contratos celebrados entre o mesmo trabalhador e empregador não pode exceder 70 dias por ano civil. (art. 142.º do CT) A violação destas regras implica que o contrato seja considerado celebrado pelo prazo de seis meses, contabilizando-se a duração de contratos anteriores. (art. 142.º do CT) A omissão do dever de comunicação previsto neste artigo constitui uma contraordenação leve. (art. 142.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 142.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4487,
+        "completion_tokens": 310,
+        "thinking_tokens": 1082,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo prazos, condições e consequências da violação, sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/142@2023-05-01",
+        "lei-7-2009/148@2019-10-01",
+        "lei-7-2009/175@2009-02-17",
+        "lei-7-2009/147@2009-02-17",
+        "lei-7-2009/345@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/461@2023-05-01",
+        "lei-7-2009/143@2023-05-01",
+        "lei-7-2009/60@2009-02-17",
+        "lei-7-2009/419@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0070",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/359"
+      ],
+      "expected": [
+        "lei-7-2009/359"
+      ],
+      "allowed": [],
+      "text": "O n.º 1 do artigo 359.º do Código do Trabalho define o despedimento coletivo como a cessação de contratos de trabalho, promovida pelo empregador, de forma simultânea ou sucessiva num período de três meses, que abranja, pelo menos, dois ou cinco trabalhadores, consoante se trate, respetivamente, de microempresa ou pequena empresa, ou de média ou grande empresa, fundamentada no encerramento de secções ou na redução do número de trabalhadores por motivos de mercado, estruturais ou tecnológicos. (art. 359.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 359.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4095,
+        "completion_tokens": 145,
+        "thinking_tokens": 106,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo prazos, número de trabalhadores por tipo de empresa e os motivos previstos na lei.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/359@2009-02-17",
+        "lei-7-2009/358@2012-08-01",
+        "lei-7-2009/560@2012-08-01",
+        "lei-7-2009/357@2012-08-01",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/382@2009-02-17",
+        "lei-7-2009/367@2009-02-17",
+        "lei-7-2009/202@2009-02-17",
+        "lei-7-2009/190@2013-10-01",
+        "lei-7-2009/360@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0071",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3153,
+        "completion_tokens": 49,
+        "thinking_tokens": 760,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/85@2019-10-01",
+        "lei-7-2009/86@2019-10-01",
+        "lei-7-2009/84@2009-02-17",
+        "lei-7-2009/275@2009-02-17",
+        "lei-7-2009/87@2019-10-01",
+        "lei-7-2009/417@2009-02-17",
+        "lei-7-2009/88@2009-02-17",
+        "lei-7-2009/24@2023-05-01",
+        "lei-7-2009/380@2009-02-17",
+        "lei-7-2009/32@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não estabelecem qualquer percentagem mínima ou quota de trabalhadores com deficiência que as empresas devam contratar."
+    },
+    {
+      "id": "ct-0073",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [
+        "pesquisar «agência privada de colocação definição Código do Trabalho»: CT 173, CT 11, CT 181"
+      ],
+      "tokens": {
+        "calls": 2,
+        "prompt_tokens": 5227,
+        "completion_tokens": 57,
+        "thinking_tokens": 1688,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/288@2009-02-17",
+        "lei-7-2009/172@2009-02-17",
+        "lei-7-2009/188@2009-02-17",
+        "lei-7-2009/184@2009-02-17",
+        "lei-7-2009/366-A@2012-08-01",
+        "lei-7-2009/138@2009-02-17",
+        "lei-7-2009/190@2013-10-01",
+        "lei-7-2009/318@2009-02-17",
+        "lei-7-2009/161@2012-08-01",
+        "lei-7-2009/8@2009-02-17",
+        "lei-7-2009/173@2023-05-01",
+        "lei-7-2009/11@2009-02-17",
+        "lei-7-2009/181@2019-10-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm a definição de agência privada de colocação."
+    },
+    {
+      "id": "ct-0077",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/268"
+      ],
+      "expected": [
+        "lei-7-2009/268"
+      ],
+      "allowed": [],
+      "text": "O trabalho suplementar que exceda as 100 horas anuais é remunerado com um acréscimo de 50 % pela primeira hora ou fração, e 75 % por hora ou fração subsequente, quando prestado em dia útil. (art. 268.º do CT) Em dia de descanso semanal, obrigatório ou complementar, ou em feriado, o trabalho suplementar superior a 100 horas anuais é pago com um acréscimo de 100 % por cada hora ou fração. (art. 268.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 268.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3748,
+        "completion_tokens": 149,
+        "thinking_tokens": 105,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/268@2023-05-01",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/231@2009-02-17",
+        "lei-7-2009/227@2009-02-17",
+        "lei-7-2009/265@2009-02-17",
+        "lei-7-2009/208@2012-08-01",
+        "lei-7-2009/230@2012-08-01",
+        "lei-7-2009/266@2009-02-17",
+        "lei-7-2009/229@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0079",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/257",
+        "lei-7-2009/238"
+      ],
+      "expected": [
+        "lei-7-2009/257",
+        "lei-7-2009/238"
+      ],
+      "allowed": [],
+      "text": "A perda de retribuição por faltas pode ser substituída pela renúncia a dias de férias, desde que o trabalhador renuncie apenas aos dias que excedam 20 dias úteis de férias. (arts. 257.º e 238.º do CT) O trabalhador deve comunicar expressamente ao empregador esta intenção de substituir a perda de retribuição por dias de férias. (art. 257.º do CT) Esta substituição não implica a redução do subsídio de férias correspondente ao período de férias vencido. (art. 257.º do CT) O empregador não pode opor-se a este pedido do trabalhador. (art. 257.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 257.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 238.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3194,
+        "completion_tokens": 267,
+        "thinking_tokens": 101,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "O sistema omite a resposta direta à pergunta (a regra geral de que as faltas não são descontadas nas férias), focando-se apenas na explicação da exceção.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/239@2009-02-17",
+        "lei-7-2009/256@2012-08-01",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/92@2009-02-17",
+        "lei-7-2009/257@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0081",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/117"
+      ],
+      "expected": [
+        "lei-7-2009/117",
+        "lei-7-2009/122"
+      ],
+      "allowed": [],
+      "text": "Sempre que uma atividade exija legalmente um título profissional, a sua falta determina a nulidade do contrato de trabalho. (art. 117.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 117.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2826,
+        "completion_tokens": 56,
+        "thinking_tokens": 91,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta menciona a nulidade do contrato, mas omite que este produz efeitos como válido em relação ao tempo em que foi executado.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/117@2009-02-17",
+        "lei-7-2009/93@2009-02-17",
+        "lei-7-2009/192@2023-05-01",
+        "lei-7-2009/134@2009-02-17",
+        "lei-7-2009/69@2012-09-03",
+        "lei-7-2009/184@2009-02-17",
+        "lei-7-2009/173@2023-05-01",
+        "lei-7-2009/116@2009-02-17",
+        "lei-7-2009/118@2009-02-17",
+        "lei-7-2009/174@2016-09-22"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0082",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/169"
+      ],
+      "expected": [
+        "lei-7-2009/169"
+      ],
+      "allowed": [],
+      "text": "O n.º 1 do artigo 169.º do Código do Trabalho determina que o trabalhador em regime de teletrabalho tem os mesmos direitos e deveres dos restantes trabalhadores da empresa com a mesma categoria ou função idêntica, incluindo formação, promoção, limites de duração do trabalho, períodos de descanso, férias, segurança, saúde e acesso a informação das estruturas representativas. (art. 169.º do CT) Este preceito garante ao trabalhador em teletrabalho o direito a receber, no mínimo, a retribuição equivalente à de um trabalhador em regime presencial com categoria e função idênticas. (art. 169.º do CT) O trabalhador tem ainda o direito de participar presencialmente em reuniões sindicais ou de trabalhadores nas instalações da empresa, mediante convocação legal, e de integrar o número de trabalhadores da empresa para efeitos de estruturas de representação coletiva. (art. 169.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 169.º (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5222,
+        "completion_tokens": 236,
+        "thinking_tokens": 125,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta o conteúdo essencial do n.º 1 e acrescenta informações adicionais do mesmo artigo sem contradizer a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/165@2022-01-01",
+        "lei-7-2009/164@2012-08-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/168@2023-05-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/67@2009-02-17",
+        "lei-7-2009/71@2009-02-17",
+        "lei-7-2009/40@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0086",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/241"
+      ],
+      "expected": [
+        "lei-7-2009/241"
+      ],
+      "allowed": [],
+      "text": "O período de férias é marcado por acordo entre o empregador e o trabalhador. (art. 241.º do CT) Na falta de acordo, o empregador marca as férias, devendo ouvir a comissão de trabalhadores ou, na sua falta, a comissão intersindical ou a comissão sindical representativa do trabalhador. (art. 241.º do CT) Ao marcar as férias, o empregador não pode definir o seu início num dia de descanso semanal do trabalhador. (art. 241.º do CT) O empregador deve elaborar o mapa de férias até 15 de abril de cada ano e mantê-lo afixado nos locais de trabalho até 31 de outubro. (art. 241.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 241.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3287,
+        "completion_tokens": 197,
+        "thinking_tokens": 97,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "Falta mencionar a restrição de que as férias devem ser marcadas entre 1 de maio e 31 de outubro.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/242@2012-08-01",
+        "lei-7-2009/239@2009-02-17",
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/92@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/243@2009-02-17",
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/246@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0088",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/212",
+        "lei-7-2009/215"
+      ],
+      "expected": [
+        "lei-7-2009/212"
+      ],
+      "allowed": [],
+      "text": "Compete ao empregador determinar o horário de trabalho do trabalhador, dentro dos limites da lei. (art. 212.º do CT) É também ao empregador que cabe a elaboração do mapa de horário de trabalho. (art. 215.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 212.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 215.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2977,
+        "completion_tokens": 83,
+        "thinking_tokens": 780,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "Identifica corretamente o empregador, mas omite a obrigação de consultar os representantes dos trabalhadores e os critérios de prioridade (segurança e conciliação familiar) mencionados na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/212@2009-02-17",
+        "lei-7-2009/200@2009-02-17",
+        "lei-7-2009/215@2009-02-17",
+        "lei-7-2009/216@2012-08-01",
+        "lei-7-2009/217@2009-02-17",
+        "lei-7-2009/97@2009-02-17",
+        "lei-7-2009/56@2015-09-06",
+        "lei-7-2009/198@2009-02-17",
+        "lei-7-2009/209@2023-05-01",
+        "lei-7-2009/208@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0089",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/278"
+      ],
+      "expected": [
+        "lei-7-2009/278"
+      ],
+      "allowed": [],
+      "text": "A retribuição vence-se por períodos certos e iguais, que são a semana, a quinzena ou o mês, salvo estipulação ou uso diverso. (art. 278.º do CT) O pagamento deve ser efetuado em dia útil, durante o período de trabalho ou imediatamente após o mesmo. (art. 278.º do CT) O montante da retribuição deve estar disponível para o trabalhador na data do vencimento ou no dia útil anterior. (art. 278.º do CT) Caso a retribuição seja variável e tenha um período de cálculo superior a 15 dias, o trabalhador pode exigir que o pagamento seja feito em prestações quinzenais. (art. 278.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 278.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2646,
+        "completion_tokens": 270,
+        "thinking_tokens": 96,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "O sistema apresenta corretamente todos os elementos essenciais da referência, mas acrescenta uma informação juridicamente incorreta sobre a retribuição variável que não consta na mesma.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/278@2023-05-01",
+        "lei-7-2009/276@2009-02-17",
+        "lei-7-2009/277@2023-05-01",
+        "lei-7-2009/258@2009-02-17",
+        "lei-7-2009/270@2009-02-17",
+        "lei-7-2009/261@2009-02-17",
+        "lei-7-2009/260@2009-02-17",
+        "lei-7-2009/272@2009-02-17",
+        "lei-7-2009/264@2012-08-01",
+        "lei-7-2009/324@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0091",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/120"
+      ],
+      "expected": [
+        "lei-7-2009/120"
+      ],
+      "allowed": [],
+      "text": "O empregador pode encarregar o trabalhador de exercer temporariamente funções não compreendidas na atividade contratada quando o interesse da empresa o exija, desde que tal não implique modificação substancial da posição do trabalhador. (art. 120.º do CT) A ordem de alteração deve ser justificada e indicar a duração previsível, que não pode exceder dois anos. (art. 120.º do CT) O trabalhador não pode sofrer diminuição da retribuição e tem direito às condições de trabalho mais favoráveis inerentes às novas funções. (art. 120.º do CT) O exercício destas funções temporárias não confere, salvo disposição em contrário, a categoria correspondente às mesmas. (art. 120.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 120.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2754,
+        "completion_tokens": 198,
+        "thinking_tokens": 104,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta informações complementares que não a contradizem.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/118@2009-02-17",
+        "lei-7-2009/120@2009-02-17",
+        "lei-7-2009/115@2009-02-17",
+        "lei-7-2009/326@2009-02-17",
+        "lei-7-2009/267@2009-02-17",
+        "lei-7-2009/129@2023-05-01",
+        "lei-7-2009/193@2009-02-17",
+        "lei-7-2009/101@2009-02-17",
+        "lei-7-2009/119@2009-02-17",
+        "lei-7-2009/247@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0097",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.2,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/343",
+        "lei-7-2009/346",
+        "lei-7-2009/344",
+        "lei-7-2009/345",
+        "lei-7-2009/117"
+      ],
+      "expected": [
+        "lei-7-2009/343"
+      ],
+      "allowed": [],
+      "text": "O contrato de trabalho caduca com o termo do contrato, pela impossibilidade absoluta e definitiva de prestar ou receber o trabalho, ou pela reforma do trabalhador por velhice ou invalidez (CT 343). (art. 343.º do CT) Verifica-se igualmente com a morte do empregador individual (caso não haja sucessão ou transmissão da empresa), a extinção da pessoa coletiva empregadora ou o encerramento total da empresa (CT 346). (art. 346.º do CT) Nos contratos a termo certo, a caducidade ocorre no final do prazo estipulado ou da sua renovação (CT 344). (art. 344.º do CT) Nos contratos a termo incerto, a caducidade dá-se quando o empregador comunica a cessação perante a ocorrência do termo (CT 345). (art. 345.º do CT) O contrato também caduca logo que as partes sejam notificadas de uma decisão definitiva que retire ao trabalhador o título profissional exigido para a sua atividade (CT 117). (art. 117.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 343.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 346.º (versão em vigor desde 01/08/2012)\n- Código do Trabalho, art. 344.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 345.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 117.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3231,
+        "completion_tokens": 384,
+        "thinking_tokens": 1115,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta inclui todos os elementos essenciais da referência e acrescenta outras causas de caducidade previstas na lei sem contradizer o texto de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/344@2023-05-01",
+        "lei-7-2009/345@2023-05-01",
+        "lei-7-2009/346@2012-08-01",
+        "dl-47344-1966/1051@2006-06-27",
+        "lei-7-2009/348@2009-02-17",
+        "lei-7-2009/340@2009-02-17",
+        "dl-47344-1966/1089@2006-06-27",
+        "lei-7-2009/117@2009-02-17",
+        "lei-7-2009/501@2023-04-04"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0099",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/364"
+      ],
+      "expected": [
+        "lei-7-2009/364"
+      ],
+      "allowed": [],
+      "text": "O trabalhador tem direito a um crédito de horas durante o aviso prévio, correspondente a dois dias de trabalho por semana, com direito a retribuição. (art. 364.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 364.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3968,
+        "completion_tokens": 64,
+        "thinking_tokens": 148,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta indica corretamente o direito e o número de dias, mas omite a condição de comunicação prévia de três dias de antecedência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/364@2009-02-17",
+        "lei-7-2009/408@2009-02-17",
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/360@2023-05-01",
+        "lei-7-2009/361@2023-05-01",
+        "lei-7-2009/359@2009-02-17",
+        "lei-7-2009/383@2023-05-01",
+        "lei-7-2009/422@2009-02-17",
+        "lei-7-2009/388@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0100",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.25,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/355",
+        "lei-7-2009/356",
+        "lei-7-2009/386",
+        "lei-7-2009/387"
+      ],
+      "expected": [
+        "lei-7-2009/355"
+      ],
+      "allowed": [],
+      "text": "O trabalhador dispõe de 10 dias úteis para consultar o processo e responder à nota de culpa, podendo deduzir por escrito elementos relevantes, juntar documentos e solicitar diligências probatórias. (art. 355.º do CT) Nos três dias úteis seguintes à receção da nota de culpa, o trabalhador pode indicar ao empregador qual a associação sindical que emitirá parecer sobre o processo. (art. 356.º do CT) Caso o empregador decida proceder ao despedimento, o trabalhador pode requerer a suspensão preventiva desse despedimento através de providência cautelar, num prazo de cinco dias úteis a contar da receção da comunicação. (art. 386.º do CT) Após a receção da comunicação de despedimento, o trabalhador pode ainda opor-se ao mesmo, apresentando requerimento em tribunal no prazo de 60 dias. (art. 387.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 355.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 356.º (versão em vigor desde 01/08/2012)\n- Código do Trabalho, art. 386.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 387.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2796,
+        "completion_tokens": 312,
+        "thinking_tokens": 116,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todo o conteúdo essencial da referência e acrescenta informações complementares corretas sobre as etapas subsequentes do processo.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/355@2009-02-17",
+        "lei-7-2009/353@2009-02-17",
+        "lei-7-2009/354@2023-05-01",
+        "lei-7-2009/382@2009-02-17",
+        "lei-7-2009/386@2009-02-17",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/387@2009-02-17",
+        "lei-7-2009/356@2012-08-01",
+        "lei-7-2009/357@2012-08-01",
+        "lei-7-2009/365@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0101",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [
+        "pesquisar «cessação contrato serviço doméstico insuficiência económica»: CT 343, CT 336, CT 399"
+      ],
+      "tokens": {
+        "calls": 2,
+        "prompt_tokens": 6626,
+        "completion_tokens": 194,
+        "thinking_tokens": 1102,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/400@2023-05-01",
+        "lei-7-2009/310@2009-02-17",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/401@2023-05-01",
+        "lei-7-2009/159@2023-05-01",
+        "lei-7-2009/345@2023-05-01",
+        "lei-7-2009/365@2009-02-17",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/364@2009-02-17",
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/336@2009-02-17",
+        "lei-7-2009/399@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não regulam a cessação de contrato por insuficiência económica superveniente, nem especificamente o contrato de serviço doméstico."
+    },
+    {
+      "id": "ct-0103",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4185,
+        "completion_tokens": 80,
+        "thinking_tokens": 111,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/283@2017-10-01",
+        "lei-7-2009/297@2009-02-17",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/106@2023-05-01",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/107@2023-05-01",
+        "lei-7-2009/281@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm a norma relativa ao prazo de comunicação do acidente de trabalho pelo trabalhador ao empregador."
+    },
+    {
+      "id": "ct-0104",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2686,
+        "completion_tokens": 118,
+        "thinking_tokens": 92,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/262@2009-02-17",
+        "lei-7-2009/396@2018-03-20",
+        "lei-7-2009/391@2009-02-17",
+        "lei-7-2009/283@2017-10-01",
+        "lei-7-2009/28@2009-02-17",
+        "lei-7-2009/399@2009-02-17",
+        "lei-7-2009/392@2009-02-17",
+        "lei-7-2009/271@2009-02-17",
+        "lei-7-2009/258@2009-02-17",
+        "lei-7-2009/390@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos dados estabelecem o direito à reparação por acidentes de trabalho, mas não especificam os critérios ou a base de cálculo para a indemnização monetária correspondente."
+    },
+    {
+      "id": "ct-0106",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4207,
+        "completion_tokens": 127,
+        "thinking_tokens": 140,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/281@2009-02-17",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/222@2009-02-17",
+        "lei-7-2009/186@2023-05-01",
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/99@2012-08-01",
+        "lei-7-2009/537@2009-02-17",
+        "lei-7-2009/72@2009-02-17",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/212@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos referem que a lei regula os serviços de segurança e saúde, mas não especificam os critérios ou situações em que o serviço deve ser obrigatoriamente interno."
+    },
+    {
+      "id": "ct-0110",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3213,
+        "completion_tokens": 77,
+        "thinking_tokens": 128,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/202@2009-02-17",
+        "lei-7-2009/29@2017-10-01",
+        "lei-7-2009/171@2022-01-01",
+        "lei-7-2009/284@2009-02-17",
+        "lei-7-2009/552@2009-02-17",
+        "lei-7-2009/87@2019-10-01",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/224@2009-02-17",
+        "lei-7-2009/470@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não mencionam valores limite de exposição nem o amianto."
+    },
+    {
+      "id": "ct-0111",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4110,
+        "completion_tokens": 81,
+        "thinking_tokens": 88,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/400@2023-05-01",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/57@2009-02-17",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/420@2009-02-17",
+        "lei-7-2009/438@2023-05-01",
+        "lei-7-2009/403@2009-02-17",
+        "lei-7-2009/167@2022-01-01",
+        "lei-7-2009/8@2009-02-17"
+      ],
+      "refusal_reason": "A legislação fornecida não aborda procedimentos ou autorizações específicas para trabalhos de demolição ou remoção de amianto."
+    },
+    {
+      "id": "ct-0112",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [
+        "pesquisar «quota de emprego de pessoas com deficiência»: CT 380, CT 32, CT 24"
+      ],
+      "tokens": {
+        "calls": 2,
+        "prompt_tokens": 6362,
+        "completion_tokens": 134,
+        "thinking_tokens": 1384,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/85@2019-10-01",
+        "lei-7-2009/84@2009-02-17",
+        "lei-7-2009/86@2019-10-01",
+        "lei-7-2009/88@2009-02-17",
+        "lei-7-2009/87@2019-10-01",
+        "lei-7-2009/275@2009-02-17",
+        "lei-7-2009/100@2009-02-17",
+        "lei-7-2009/152@2009-02-17",
+        "lei-7-2009/54@2009-02-17",
+        "lei-7-2009/366-A@2012-08-01",
+        "lei-7-2009/380@2009-02-17",
+        "lei-7-2009/32@2009-02-17",
+        "lei-7-2009/24@2023-05-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm informação sobre a existência de quotas de emprego para pessoas com deficiência."
+    },
+    {
+      "id": "ct-0113",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2942,
+        "completion_tokens": 40,
+        "thinking_tokens": 115,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/348@2009-02-17",
+        "lei-7-2009/318@2009-02-17",
+        "lei-7-2009/319@2009-02-17",
+        "lei-7-2009/322@2009-02-17",
+        "lei-6-2006/46@2012-11-12",
+        "lei-7-2009/343@2009-02-17",
+        "lei-6-2006/36@2023-10-07",
+        "lei-6-2006/50@2015-01-18",
+        "lei-6-2006/30@2015-01-18",
+        "lei-7-2009/321@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm informação sobre o procedimento ou a forma de pedir a reforma por velhice."
+    },
+    {
+      "id": "ct-0115",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3319,
+        "completion_tokens": 90,
+        "thinking_tokens": 130,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/281@2009-02-17",
+        "lei-7-2009/282@2009-02-17",
+        "lei-7-2009/551@2016-09-22",
+        "lei-7-2009/558@2009-02-17",
+        "lei-7-2009/101@2009-02-17",
+        "lei-7-2009/559@2009-02-17",
+        "lei-7-2009/222@2009-02-17",
+        "lei-7-2009/293@2009-02-17",
+        "lei-7-2009/446@2009-02-17",
+        "lei-7-2009/63@2023-05-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não tratam das funções ou competências de um coordenador de segurança em obra nem das incompatibilidades associadas a essa função."
+    },
+    {
+      "id": "ct-0116",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 30/09/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5135,
+        "completion_tokens": 77,
+        "thinking_tokens": 137,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/106@2023-05-01",
+        "lei-7-2009/107@2023-05-01",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/10@2023-05-01",
+        "lei-7-2009/334@2009-02-17",
+        "lei-7-2009/101@2009-02-17",
+        "lei-7-2009/11@2009-02-17",
+        "lei-7-2009/293@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não permitem responder à pergunta, uma vez que não fazem referência ao relatório único."
+    },
+    {
+      "id": "ct-0118",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/169-B"
+      ],
+      "expected": [
+        "lei-7-2009/169-B",
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [
+        "lei-7-2009/168"
+      ],
+      "text": "O empregador deve informar o trabalhador sobre as características e utilização dos sistemas de acompanhamento à distância e abster-se de o contactar durante o seu período de descanso. (art. 169.º-B do CT) Cabe-lhe reduzir o isolamento do trabalhador, promovendo contactos presenciais regulares com as chefias e outros colegas. (art. 169.º-B do CT) É também dever do empregador garantir ou custear a manutenção e correção de avarias dos equipamentos e sistemas, bem como facultar a formação necessária ao seu uso adequado. (art. 169.º-B do CT) Por fim, o empregador deve consultar o trabalhador, por escrito, antes de introduzir mudanças nos equipamentos, sistemas, funções ou características da atividade contratada. (art. 169.º-B do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 169.º-B (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4894,
+        "completion_tokens": 288,
+        "thinking_tokens": 1252,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema aborda todos os deveres essenciais listados na referência de forma precisa e sem contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/169-B@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/170-A@2022-01-01",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/169@2022-01-01",
+        "lei-7-2009/166@2022-01-01",
+        "lei-7-2009/171@2022-01-01",
+        "lei-7-2009/168@2023-05-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/167@2022-01-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0122",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/366",
+        "lei-7-2009/372",
+        "lei-7-2009/379"
+      ],
+      "expected": [
+        "lei-7-2009/366",
+        "lei-7-2009/372",
+        "lei-7-2009/379"
+      ],
+      "allowed": [],
+      "text": "Em todos os casos de despedimento coletivo, por extinção de posto de trabalho ou por inadaptação, o trabalhador tem direito a uma compensação de 14 dias de retribuição base e diuturnidades por cada ano completo de antiguidade. (arts. 366.º, 372.º e 379.º do CT) O valor diário é calculado dividindo a retribuição base mensal e diuturnidades por 30, sendo o montante calculado proporcionalmente para frações de ano. (art. 366.º do CT) A retribuição considerada não pode exceder 20 vezes a retribuição mínima mensal garantida. (art. 366.º do CT) O montante global da compensação não pode ultrapassar 12 vezes a retribuição base mensal e diuturnidades, ou 240 vezes a retribuição mínima mensal garantida, caso seja aplicável o limite referido anteriormente. (art. 366.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 366.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 372.º (versão em vigor desde 01/08/2012)\n- Código do Trabalho, art. 379.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3960,
+        "completion_tokens": 256,
+        "thinking_tokens": 114,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo os limites de valor e a proporcionalidade, sem apresentar erros ou contradições.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/366@2023-05-01",
+        "lei-7-2009/396@2018-03-20",
+        "lei-7-2009/368@2014-06-01",
+        "lei-7-2009/391@2009-02-17",
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/392@2009-02-17",
+        "lei-7-2009/363@2023-05-01",
+        "lei-7-2009/372@2012-08-01",
+        "lei-7-2009/379@2012-08-01",
+        "lei-7-2009/376@2012-08-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0126",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/101-C",
+        "lei-7-2009/101-D",
+        "lei-7-2009/56",
+        "lei-7-2009/101-G",
+        "lei-7-2009/166-A",
+        "lei-7-2009/101-B"
+      ],
+      "expected": [
+        "lei-7-2009/101-C",
+        "lei-7-2009/101-D",
+        "lei-7-2009/101-G"
+      ],
+      "allowed": [
+        "lei-7-2009/101-E"
+      ],
+      "text": "O trabalhador cuidador tem direito a trabalhar a tempo parcial pelo período máximo de quatro anos, podendo o período normal de trabalho corresponder a metade do praticado a tempo completo. (art. 101.º-C do CT) Este trabalhador tem direito a exercer funções em regime de horário flexível enquanto se verificar a necessidade de assistência, não podendo ser penalizado na avaliação e progressão na carreira por essa escolha. (arts. 101.º-D, 101.º-C e 56.º do CT) É-lhe igualmente reconhecido o direito a não prestar trabalho suplementar enquanto persistir a necessidade de assistência. (art. 101.º-G do CT) Adicionalmente, o trabalhador cuidador pode exercer a atividade em regime de teletrabalho, pelo período máximo de quatro anos, desde que compatível com a função e o empregador disponha de meios. (art. 166.º-A do CT) Por fim, tem direito a uma licença anual de cinco dias úteis para assistência à pessoa cuidada, a ser gozada de modo consecutivo. (art. 101.º-B do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 101.º-C (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 101.º-D (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 56.º (versão em vigor desde 06/09/2015)\n- Código do Trabalho, art. 101.º-G (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 166.º-A (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 101.º-B (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3192,
+        "completion_tokens": 287,
+        "thinking_tokens": 100,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite que a proteção contra penalização na avaliação e progressão na carreira se aplica também à opção pelo tempo parcial, mencionando-a apenas para o horário flexível.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/101-C@2023-05-01",
+        "lei-7-2009/101-B@2023-05-01",
+        "lei-7-2009/101-D@2023-05-01",
+        "lei-7-2009/101-E@2023-05-01",
+        "lei-7-2009/101-A@2023-05-01",
+        "lei-7-2009/101-G@2023-05-01",
+        "lei-7-2009/101-F@2023-05-01",
+        "lei-7-2009/101-H@2023-05-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/56@2015-09-06"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0130",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/378"
+      ],
+      "expected": [
+        "lei-7-2009/378"
+      ],
+      "allowed": [
+        "lei-7-2009/375",
+        "lei-7-2009/376",
+        "lei-7-2009/377"
+      ],
+      "text": "Após a receção dos pareceres ou o termo do prazo para o efeito, o empregador dispõe de 30 dias para decidir o despedimento, mediante decisão fundamentada e por escrito. (art. 378.º do CT) A decisão deve indicar o motivo da cessação, confirmar os requisitos legais, especificar o montante e pagamento da compensação e dos créditos devidos, e fixar a data da cessação do contrato. (art. 378.º do CT) O aviso prévio para a comunicação da decisão ao trabalhador varia consoante a sua antiguidade: 15 dias (menos de um ano), 30 dias (de um a cinco anos), 60 dias (de cinco a 10 anos) ou 75 dias (igual ou superior a 10 anos). (art. 378.º do CT) A decisão é comunicada, por cópia ou transcrição, ao trabalhador e às entidades competentes, com a antecedência mínima referida. (art. 378.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 378.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4034,
+        "completion_tokens": 257,
+        "thinking_tokens": 113,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo prazos, requisitos da decisão e os períodos de aviso prévio corretos.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/378@2012-08-01",
+        "lei-7-2009/373@2009-02-17",
+        "lei-7-2009/376@2012-08-01",
+        "lei-7-2009/375@2014-06-01",
+        "lei-7-2009/379@2012-08-01",
+        "lei-7-2009/377@2012-08-01",
+        "lei-7-2009/374@2012-08-01",
+        "lei-7-2009/380@2009-02-17",
+        "lei-7-2009/385@2012-08-01",
+        "lei-7-2009/371@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0135",
+      "type": "temporal",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 0.6666666666666666,
+      "version_right": null,
+      "cited": [],
+      "expected": [
+        "lei-7-2009/366",
+        "lei-7-2009/372",
+        "lei-7-2009/379"
+      ],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/06/2015, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4279,
+        "completion_tokens": 196,
+        "thinking_tokens": 1468,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/366@2013-10-01",
+        "lei-7-2009/390@2009-02-17",
+        "lei-7-2009/396@2009-02-17",
+        "lei-7-2009/392@2009-02-17",
+        "lei-7-2009/368@2014-06-01",
+        "lei-7-2009/391@2009-02-17",
+        "lei-7-2009/379@2012-08-01",
+        "lei-7-2009/369@2012-08-01",
+        "lei-7-2009/375@2014-06-01",
+        "lei-7-2009/359@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos fornecidos não definem o valor ou a fórmula de cálculo da compensação devida em caso de extinção de posto de trabalho."
+    },
+    {
+      "id": "ct-0140",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.4,
+      "recall": 0.6666666666666666,
+      "given_recall": 0.6666666666666666,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/35",
+        "lei-7-2009/65",
+        "lei-7-2009/49",
+        "lei-7-2009/249",
+        "lei-7-2009/38-A"
+      ],
+      "expected": [
+        "lei-7-2009/49",
+        "lei-7-2009/50",
+        "lei-7-2009/38-A"
+      ],
+      "allowed": [],
+      "text": "O regime da parentalidade contempla a falta para assistência inadiável e imprescindível a filho ou a neto (CT 35, CT 65). (arts. 35.º e 65.º do CT) A falta para assistência a filho permite ausências por doença ou acidente, com limites temporais que variam de acordo com a idade e as condições da criança (CT 49). (art. 49.º do CT) Prevê-se igualmente a falta justificada por motivo de luto gestacional, que pode ser gozada até três dias consecutivos pela mãe ou pelo pai (CT 249, CT 38-A, CT 65). (arts. 249.º, 38.º-A e 65.º do CT) Existe também a falta motivada pelo acompanhamento de grávida que se desloque a unidade hospitalar localizada fora da ilha de residência para realização de parto (CT 249). (art. 249.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 35.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 65.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 49.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 249.º (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 38.º-A (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5072,
+        "completion_tokens": 310,
+        "thinking_tokens": 1698,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "O sistema identifica os tipos de faltas, mas omite os prazos e condições específicas (números de dias e regras de acumulação) que a referência considera essenciais.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/39@2009-02-17",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/35@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/51@2023-05-01",
+        "lei-7-2009/43@2023-05-01",
+        "lei-7-2009/33@2009-02-17",
+        "lei-7-2009/40@2023-05-01",
+        "lei-7-2009/49@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0141",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.6666666666666666,
+      "recall": 0.6666666666666666,
+      "given_recall": 0.6666666666666666,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/55",
+        "lei-7-2009/56",
+        "lei-7-2009/57",
+        "lei-7-2009/58",
+        "lei-7-2009/54",
+        "lei-7-2009/47"
+      ],
+      "expected": [
+        "lei-7-2009/54",
+        "lei-7-2009/55",
+        "lei-7-2009/56",
+        "lei-7-2009/58",
+        "lei-7-2009/59",
+        "lei-7-2009/60"
+      ],
+      "allowed": [],
+      "text": "Os trabalhadores com filho menor de 12 anos ou com deficiência/doença crónica têm direito a trabalhar a tempo parcial ou em regime de horário flexível. (arts. 55.º e 56.º do CT) O trabalhador pode solicitar o regime de trabalho a tempo parcial ou horário flexível, cabendo ao empregador a decisão dentro de prazos específicos. (art. 57.º do CT) É vedado a trabalhadores grávidas, puérperas ou lactantes prestar trabalho em regimes de adaptabilidade, banco de horas ou horário concentrado. (art. 58.º do CT) Progenitores de menores com deficiência ou doença crónica com idade não superior a um ano têm direito à redução de cinco horas do período normal de trabalho semanal. (art. 54.º do CT) Existe direito a dispensa diária para amamentação ou aleitação, gozada em dois períodos com duração máxima de uma hora cada. (art. 47.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 55.º (versão em vigor desde 06/09/2015)\n- Código do Trabalho, art. 56.º (versão em vigor desde 06/09/2015)\n- Código do Trabalho, art. 57.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 58.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 54.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 47.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5142,
+        "completion_tokens": 247,
+        "thinking_tokens": 128,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta omite a dispensa de trabalho suplementar e a dispensa de trabalho noturno mencionados na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/57@2009-02-17",
+        "lei-7-2009/56@2015-09-06",
+        "lei-7-2009/51@2023-05-01",
+        "lei-7-2009/58@2009-02-17",
+        "lei-7-2009/55@2015-09-06",
+        "lei-7-2009/35@2023-05-01",
+        "lei-7-2009/40@2023-05-01",
+        "lei-7-2009/54@2009-02-17",
+        "lei-7-2009/33@2009-02-17",
+        "lei-7-2009/47@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0142",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/29",
+        "lei-7-2009/331"
+      ],
+      "expected": [
+        "lei-7-2009/29",
+        "lei-7-2009/331"
+      ],
+      "allowed": [],
+      "text": "O denunciante e as testemunhas por si indicadas não podem ser sancionados disciplinarmente, exceto se atuarem com dolo, tendo por base declarações ou factos de processo de assédio até à decisão final. (art. 29.º do CT) Considera-se abusiva a sanção disciplinar motivada pelo facto de o trabalhador ter alegado ser vítima de assédio ou ser testemunha em processos judiciais ou contraordenacionais sobre o mesmo. (art. 331.º do CT) Presume-se abusiva a sanção aplicada até um ano após a denúncia ou exercício de direitos relativos a assédio. (art. 331.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 29.º (versão em vigor desde 01/10/2017)\n- Código do Trabalho, art. 331.º (versão em vigor desde 01/10/2019)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4054,
+        "completion_tokens": 241,
+        "thinking_tokens": 1375,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, incluindo a exceção por dolo, a proibição de sanções por ser vítima/testemunha e a presunção de abusividade no prazo de um ano.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/29@2017-10-01",
+        "lei-7-2009/331@2019-10-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-6-2006/13-A@2019-02-13",
+        "lei-7-2009/410@2009-02-17",
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/283@2017-10-01",
+        "lei-7-2009/540@2009-02-17",
+        "lei-7-2009/25@2023-05-01",
+        "lei-7-2009/406@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0145",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.6666666666666666,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/219",
+        "lei-7-2009/265",
+        "lei-7-2009/226"
+      ],
+      "expected": [
+        "lei-7-2009/219",
+        "lei-7-2009/214"
+      ],
+      "allowed": [
+        "lei-7-2009/265"
+      ],
+      "text": "A isenção de horário pode consistir na não sujeição aos limites máximos do período normal de trabalho, na possibilidade de um aumento desse período ou na observância do período normal acordado, aplicando-se a primeira modalidade na falta de estipulação (CT 219). (art. 219.º do CT) Esta isenção não prejudica os direitos ao descanso diário, feriado ou ao dia de descanso semanal (CT 219). (art. 219.º do CT) O trabalhador tem direito a uma retribuição específica, não inferior a uma hora de trabalho suplementar diária ou duas horas semanais, consoante a modalidade, podendo os titulares de cargos de administração ou direção renunciar a este pagamento (CT 265). (art. 265.º do CT) O trabalho realizado por trabalhador isento num dia normal de trabalho não é considerado trabalho suplementar, salvo se o acordo de isenção tiver estabelecido um limite máximo de prestação diária ou semanal (CT 226). (art. 226.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 219.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 265.º (versão em vigor desde 17/02/2009)\n- Código do Trabalho, art. 226.º (versão em vigor desde 01/08/2012)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3065,
+        "completion_tokens": 325,
+        "thinking_tokens": 1238,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência (modalidades e preservação de descansos) e acrescenta outros efeitos jurídicos relevantes sem contradizer o texto de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/219@2009-02-17",
+        "lei-7-2009/265@2009-02-17",
+        "lei-7-2009/218@2012-08-01",
+        "lei-7-2009/226@2012-08-01",
+        "lei-7-2009/87@2019-10-01",
+        "lei-7-2009/208@2012-08-01",
+        "lei-7-2009/200@2009-02-17",
+        "lei-7-2009/58@2009-02-17",
+        "lei-7-2009/56@2015-09-06",
+        "lei-7-2009/203@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0146",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 0.5,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/211"
+      ],
+      "expected": [
+        "lei-7-2009/211",
+        "lei-7-2009/207"
+      ],
+      "allowed": [],
+      "text": "A duração média do trabalho semanal, incluindo trabalho suplementar, não pode exceder 48 horas. (art. 211.º do CT) Este limite deve ser calculado num período de referência fixado por instrumento de regulamentação coletiva de trabalho que não ultrapasse 12 meses ou, na sua falta, de quatro meses (ou seis meses em casos específicos previstos na lei). (art. 211.º do CT) Para o cálculo desta média, os dias de férias são subtraídos ao período de referência, enquanto as ausências por doença ou licenças parentais são consideradas com base no período normal de trabalho. (art. 211.º do CT) Este limite não se aplica a trabalhadores isentos de horário de trabalho que ocupem cargos de administração, direção ou com poder de decisão autónomo. (art. 211.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 211.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3367,
+        "completion_tokens": 216,
+        "thinking_tokens": 132,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "O sistema contradiz a referência ao afirmar que o limite não se aplica a cargos de administração ou direção, quando a referência indica que estes estão sujeitos ao limite com um período de referência de seis meses.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/211@2023-05-01",
+        "lei-7-2009/203@2009-02-17",
+        "lei-7-2009/73@2009-02-17",
+        "lei-7-2009/204@2009-02-17",
+        "lei-7-2009/205@2009-02-17",
+        "lei-7-2009/228@2009-02-17",
+        "lei-7-2009/200@2009-02-17",
+        "lei-7-2009/208@2012-08-01",
+        "lei-7-2009/213@2012-08-01",
+        "lei-7-2009/210@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0147",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/246"
+      ],
+      "expected": [
+        "lei-7-2009/246"
+      ],
+      "allowed": [],
+      "text": "Se o empregador impedir culposamente o gozo de férias, o trabalhador tem direito a uma compensação no valor do triplo da retribuição correspondente ao período em falta. (art. 246.º do CT) Esse período de férias em falta deve ser gozado até 30 de abril do ano civil seguinte. (art. 246.º do CT) A violação desta obrigação constitui uma contraordenação grave. (art. 246.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 246.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3107,
+        "completion_tokens": 135,
+        "thinking_tokens": 99,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência e acrescenta informação adicional que não contradiz o conteúdo.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/246@2009-02-17",
+        "lei-7-2009/240@2009-02-17",
+        "lei-7-2009/237@2009-02-17",
+        "lei-7-2009/241@2009-02-17",
+        "lei-7-2009/264@2012-08-01",
+        "lei-7-2009/243@2009-02-17",
+        "lei-7-2009/245@2009-02-17",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/244@2009-02-17",
+        "lei-7-2009/247@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0154",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/256",
+        "lei-7-2009/351"
+      ],
+      "expected": [
+        "lei-7-2009/256"
+      ],
+      "allowed": [
+        "lei-7-2009/351"
+      ],
+      "text": "A falta injustificada determina a perda da retribuição correspondente ao período de ausência, não sendo este período contado na antiguidade do trabalhador. (art. 256.º do CT) A falta injustificada a um ou meio período normal de trabalho, quando imediatamente anterior ou posterior a dia ou meio dia de descanso ou a feriado, constitui uma infração grave. (art. 256.º do CT) Estas faltas podem constituir justa causa de despedimento caso determinem diretamente prejuízos ou riscos graves para a empresa, ou se o número de faltas atingir, num ano civil, cinco seguidas ou dez interpoladas. (art. 351.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 256.º (versão em vigor desde 01/08/2012)\n- Código do Trabalho, art. 351.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3222,
+        "completion_tokens": 217,
+        "thinking_tokens": 1426,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "O sistema omite a consequência da perda de retribuição do dia de descanso ou feriado e as regras relativas aos atrasos mencionadas na referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/256@2012-08-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/255@2023-05-01",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/248@2009-02-17",
+        "lei-7-2009/250@2023-05-01",
+        "lei-7-2009/409@2009-02-17",
+        "lei-7-2009/254@2023-05-01",
+        "lei-7-2009/541@2009-02-17",
+        "lei-7-2009/351@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0155",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/394",
+        "lei-7-2009/395"
+      ],
+      "expected": [
+        "lei-7-2009/394"
+      ],
+      "allowed": [
+        "lei-7-2009/29",
+        "lei-7-2009/395",
+        "lei-7-2009/396"
+      ],
+      "text": "O trabalhador pode fazer cessar imediatamente o contrato de trabalho ocorrendo justa causa, sendo a prática de assédio, pelo empregador ou por outros trabalhadores, um comportamento que constitui justa causa de resolução. (art. 394.º do CT) Para efetivar esta resolução do contrato, o trabalhador deve comunicar o facto ao empregador, por escrito, com a indicação sucinta dos factos que a justificam, nos 30 dias subsequentes ao conhecimento dos mesmos. (art. 395.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 394.º (versão em vigor desde 01/10/2019)\n- Código do Trabalho, art. 395.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4299,
+        "completion_tokens": 137,
+        "thinking_tokens": 99,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém o essencial da referência e acrescenta corretamente o procedimento de comunicação previsto na lei.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/29@2017-10-01",
+        "lei-7-2009/394@2019-10-01",
+        "lei-7-2009/395@2009-02-17",
+        "lei-7-2009/401@2023-05-01",
+        "lei-7-2009/331@2019-10-01",
+        "lei-7-2009/195@2009-02-17",
+        "lei-7-2009/400@2023-05-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/351@2009-02-17",
+        "lei-7-2009/403@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0162",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/252-B"
+      ],
+      "expected": [
+        "lei-7-2009/252-B"
+      ],
+      "allowed": [
+        "lei-7-2009/249"
+      ],
+      "text": "A trabalhadora tem direito a faltar justificadamente até três dias consecutivos por cada mês de prestação de trabalho, devido a dores graves e incapacitantes provocadas por endometriose ou adenomiose. (art. 252.º-B do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 252.º-B (versão em vigor desde 26/04/2025)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3663,
+        "completion_tokens": 76,
+        "thinking_tokens": 120,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém o número de dias e a condição corretos conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/252-B@2025-04-26",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/254@2023-05-01",
+        "lei-7-2009/38@2009-02-17",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/46-A@2019-09-09",
+        "lei-7-2009/252-A@2023-05-01",
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/253@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0001",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-6-2006/15",
+        "lei-6-2006/15-S"
+      ],
+      "expected": [
+        "lei-6-2006/15"
+      ],
+      "allowed": [],
+      "text": "O procedimento especial de despejo é um meio processual destinado a efetivar a cessação do arrendamento quando o arrendatário não desocupa o locado na data prevista na lei ou fixada por acordo. (art. 15.º do NRAU) Este procedimento tem natureza urgente. (art. 15.º-S do NRAU) O procedimento apenas pode ser utilizado para contratos cujo imposto do selo tenha sido liquidado ou cujas rendas tenham sido declaradas para efeitos de IRS ou IRC. (art. 15.º do NRAU) No âmbito deste procedimento, pode ser deduzido, cumulativamente com o pedido de despejo, o pedido de pagamento de rendas, encargos ou despesas em dívida. (art. 15.º do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)\n- NRAU, art. 15.º-S (versão em vigor desde 07/10/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5661,
+        "completion_tokens": 279,
+        "thinking_tokens": 102,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém a definição essencial e a possibilidade de pedido de pagamento de rendas, sem contradizer a referência.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12",
+        "lei-6-2006/14-B@2023-10-07",
+        "lei-6-2006/15-E@2023-10-07",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-D@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0002",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.5,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-6-2006/15-A",
+        "lei-6-2006/15"
+      ],
+      "expected": [
+        "lei-6-2006/15-A"
+      ],
+      "allowed": [
+        "lei-6-2006/15-B"
+      ],
+      "text": "O procedimento especial de despejo é tramitado no Balcão do Arrendatário e do Senhorio (BAS), que tem competência em todo o território nacional. (art. 15.º-A do NRAU) Os autos são distribuídos ao tribunal da situação do locado no primeiro momento processual em que se suscite uma questão sujeita a decisão judicial. (art. 15.º do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º-A (versão em vigor desde 07/10/2023)\n- NRAU, art. 15.º (versão em vigor desde 07/10/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5051,
+        "completion_tokens": 125,
+        "thinking_tokens": 112,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta identifica corretamente o BAS e a sua competência nacional, tal como na referência, sem contradizer o conteúdo.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12",
+        "lei-6-2006/15-A@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07",
+        "lei-6-2006/15-E@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0003",
+      "type": "simple",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
+      "cited": [],
+      "expected": [
+        "lei-6-2006/15"
+      ],
+      "allowed": [
+        "dl-47344-1966/1082",
+        "dl-47344-1966/1084",
+        "dl-47344-1966/1097",
+        "dl-47344-1966/1098",
+        "dl-47344-1966/1101",
+        "dl-47344-1966/1103"
+      ],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5664,
+        "completion_tokens": 270,
+        "thinking_tokens": 1069,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-E@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07",
+        "lei-6-2006/15-D@2023-10-07"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0004",
+      "type": "composite",
+      "refused": true,
+      "precision": null,
+      "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": null,
+      "cited": [],
+      "expected": [
+        "lei-6-2006/15",
+        "lei-6-2006/15-C"
+      ],
+      "allowed": [
+        "lei-6-2006/15-B"
+      ],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 01/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5369,
+        "completion_tokens": 417,
+        "thinking_tokens": 1378,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "recusou: errada sem perguntar ao juiz",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/15-C@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-E@2023-10-07",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0005",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-6-2006/15-S"
+      ],
+      "expected": [
+        "lei-6-2006/15-S"
+      ],
+      "allowed": [
+        "lei-6-2006/15-F"
+      ],
+      "text": "No procedimento especial de despejo, a constituição de advogado é obrigatória apenas para a dedução de oposição ao requerimento de despejo. (art. 15.º-S do NRAU) Adicionalmente, as partes devem fazer-se representar por advogado em todos os atos processuais subsequentes à distribuição do procedimento. (art. 15.º-S do NRAU)\n\nFontes (lei em vigor a 01/10/2026):\n- NRAU, art. 15.º-S (versão em vigor desde 07/10/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5427,
+        "completion_tokens": 108,
+        "thinking_tokens": 101,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e as mesmas condições indicadas na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/15-S@2023-10-07",
+        "lei-6-2006/15-B@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07",
+        "lei-6-2006/15-EA@2023-10-07",
+        "lei-6-2006/15-E@2023-10-07",
+        "lei-6-2006/14@2023-10-07",
+        "lei-6-2006/15-R@2012-11-12",
+        "lei-6-2006/15-G@2023-10-07",
+        "lei-6-2006/15-F@2023-10-07"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0011",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1069"
+      ],
+      "expected": [
+        "dl-47344-1966/1069"
+      ],
+      "allowed": [],
+      "text": "Sim, o contrato de arrendamento urbano deve ser celebrado por escrito. (art. 1069.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1069.º (versão em vigor desde 13/02/2019)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2242,
+        "completion_tokens": 46,
+        "thinking_tokens": 140,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta é direta e contém a informação essencial solicitada pela pergunta, em conformidade com a referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1069@2019-02-13",
+        "dl-47344-1966/1070@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1066@2006-06-27",
+        "dl-47344-1966/1095@2024-01-01",
+        "lei-6-2006/9@2017-06-15",
+        "dl-47344-1966/1067@2006-06-27",
+        "dl-47344-1966/1080@2012-11-12",
+        "dl-47344-1966/1077@2006-06-27",
+        "dl-47344-1966/1088@2006-06-27"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0012",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1069"
+      ],
+      "expected": [
+        "dl-47344-1966/1069"
+      ],
+      "allowed": [],
+      "text": "O contrato de arrendamento urbano deve ser celebrado por escrito apenas quando tiver uma duração superior a seis meses. (art. 1069.º do CC)\n\nFontes (lei em vigor a 01/06/2010):\n- Código Civil, art. 1069.º (versão em vigor desde 27/06/2006)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2121,
+        "completion_tokens": 53,
+        "thinking_tokens": 103,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente a mesma informação essencial e condição da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1069@2006-06-27",
+        "dl-47344-1966/1070@2006-06-27",
+        "dl-47344-1966/1094@2006-06-27",
+        "dl-47344-1966/1066@2006-06-27",
+        "dl-47344-1966/1095@2006-06-27",
+        "dl-47344-1966/1077@2006-06-27",
+        "lei-6-2006/9@2006-06-27",
+        "lei-6-2006/27@2006-06-27",
+        "lei-6-2006/62@2006-06-27",
+        "dl-47344-1966/1067@2006-06-27"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0014",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1083"
+      ],
+      "expected": [
+        "dl-47344-1966/1083"
+      ],
+      "allowed": [
+        "dl-47344-1966/1084"
+      ],
+      "text": "O senhorio pode resolver o contrato se a mora no pagamento da renda for igual ou superior a três meses. (art. 1083.º do CC) Também é fundamento de resolução a mora superior a oito dias no pagamento da renda, verificada por mais de quatro vezes, seguidas ou interpoladas, num período de 12 meses. (art. 1083.º do CC) Neste último caso, o senhorio apenas pode resolver o contrato se tiver informado o arrendatário, por carta registada com aviso de receção, após o terceiro atraso no pagamento. (art. 1083.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1083.º (versão em vigor desde 13/02/2019)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4417,
+        "completion_tokens": 224,
+        "thinking_tokens": 1355,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta apresenta corretamente os dois fundamentos de resolução (mora de três meses ou mora superior a oito dias por mais de quatro vezes com aviso prévio) descritos na referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1083@2019-02-13",
+        "dl-47344-1966/1101@2019-02-13",
+        "dl-47344-1966/1041@2019-02-13",
+        "dl-47344-1966/1098@2019-02-13",
+        "dl-47344-1966/1084@2017-06-15",
+        "lei-6-2006/14@2023-10-07",
+        "dl-47344-1966/1048@2012-11-12",
+        "dl-47344-1966/1042@2006-06-27",
+        "lei-6-2006/13-B@2019-02-13",
+        "dl-47344-1966/1100@2012-11-12"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0015",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1066"
+      ],
+      "expected": [
+        "dl-47344-1966/1066"
+      ],
+      "allowed": [],
+      "text": "Um arrendamento misto ocorre quando um contrato engloba tanto uma parte urbana como uma parte rústica. (art. 1066.º do CC) O contrato é considerado urbano se essa for a vontade dos contratantes, ou caso surjam dúvidas sobre o fim principal ou a renda atribuída a cada parte. (art. 1066.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1066.º (versão em vigor desde 27/06/2006)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1605,
+        "completion_tokens": 147,
+        "thinking_tokens": 110,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém a definição correta e os critérios de classificação para o arrendamento urbano de forma fiel à referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1066@2006-06-27",
+        "lei-6-2006/55@2012-11-12",
+        "dl-47344-1966/1023@1967-06-01",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1067@2006-06-27",
+        "dl-47344-1966/1028@1967-06-01",
+        "dl-47344-1966/1024@2006-06-27",
+        "dl-47344-1966/1065@2006-06-27",
+        "lei-6-2006/56@2012-11-12"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0019",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1105"
+      ],
+      "expected": [
+        "dl-47344-1966/1105"
+      ],
+      "allowed": [],
+      "text": "Em caso de divórcio, o destino do arrendamento da casa de morada de família é decidido por acordo dos cônjuges, que podem optar pela transmissão ou pela concentração do contrato a favor de um deles (art. 1105.º do CC) Na falta de acordo, a decisão cabe ao tribunal, que terá em consideração a necessidade de cada cônjuge, os interesses dos filhos e outros fatores relevantes (art. 1105.º do CC) A transferência ou concentração acordada e homologada, ou a decisão judicial, são notificadas oficiosamente ao senhorio (art. 1105.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1105.º (versão em vigor desde 27/06/2006)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2413,
+        "completion_tokens": 204,
+        "thinking_tokens": 144,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e todos os elementos essenciais da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1105@2006-06-27",
+        "lei-6-2006/12@2017-06-15",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1106@2019-02-13",
+        "lei-6-2006/57@2019-02-13",
+        "lei-6-2006/15-N@2023-10-07",
+        "dl-47344-1966/1113@2006-06-27",
+        "dl-47344-1966/1107@2006-06-27",
+        "lei-6-2006/14-B@2023-10-07",
+        "lei-6-2006/15-U@2023-10-07"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0020",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1875,
+        "completion_tokens": 89,
+        "thinking_tokens": 104,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1069@2019-02-13",
+        "lei-6-2006/55@2012-11-12",
+        "dl-47344-1966/1066@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1070@2006-06-27",
+        "lei-7-2009/110@2009-02-17",
+        "lei-6-2006/9@2017-06-15",
+        "dl-47344-1966/1088@2006-06-27",
+        "dl-47344-1966/1025@1967-06-01",
+        "lei-7-2009/477@2009-02-17"
+      ],
+      "refusal_reason": "Os artigos disponibilizados referem-se apenas a arrendamento urbano ou misto, não existindo informação sobre arrendamento rural."
+    },
+    {
+      "id": "ar-0021",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1749,
+        "completion_tokens": 42,
+        "thinking_tokens": 134,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1022@1967-06-01",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1023@1967-06-01",
+        "lei-7-2009/288@2009-02-17",
+        "dl-47344-1966/1060@1967-06-01",
+        "dl-47344-1966/1109@2006-06-27",
+        "lei-7-2009/162@2009-02-17",
+        "dl-47344-1966/1027@1967-06-01",
+        "lei-7-2009/11@2009-02-17",
+        "dl-47344-1966/1031@1967-06-01"
+      ],
+      "refusal_reason": "Os artigos facultados não contêm a definição ou referência ao contrato de comodato."
+    },
+    {
+      "id": "ar-0022",
+      "type": "simple",
+      "refused": false,
+      "precision": 0.3333333333333333,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1038",
+        "dl-47344-1966/1043",
+        "dl-47344-1966/1078"
+      ],
+      "expected": [
+        "dl-47344-1966/1038"
+      ],
+      "allowed": [
+        "dl-47344-1966/1083"
+      ],
+      "text": "O inquilino deve pagar a renda, facultar ao senhorio o exame do imóvel e não aplicar o mesmo a fim diverso do destinado ou fazer uma utilização imprudente. (art. 1038.º do CC) É obrigado a tolerar reparações urgentes ou obras públicas, não ceder a posição jurídica sem autorização e comunicar ao senhorio eventuais cedências permitidas. (art. 1038.º do CC) Deve avisar imediatamente o senhorio sobre vícios, perigos ou direitos de terceiros, e restituir o imóvel findo o contrato. (art. 1038.º do CC) Na falta de convenção, o inquilino deve manter e restituir a coisa no estado em que a recebeu, salvo deteriorações por uso prudente. (art. 1043.º do CC) O inquilino assume os encargos correntes com o fornecimento de bens ou serviços relativos ao local arrendado. (art. 1078.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1038.º (versão em vigor desde 01/06/1967)\n- Código Civil, art. 1043.º (versão em vigor desde 01/06/1967)\n- Código Civil, art. 1078.º (versão em vigor desde 27/06/2006)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2345,
+        "completion_tokens": 253,
+        "thinking_tokens": 104,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta abrange todos os pontos essenciais da referência e acrescenta obrigações adicionais juridicamente corretas sem contradizer o texto original.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1038@1967-06-01",
+        "dl-47344-1966/1031@1967-06-01",
+        "dl-47344-1966/1043@1967-06-01",
+        "dl-47344-1966/1078@2006-06-27",
+        "dl-47344-1966/1039@1967-06-01",
+        "dl-47344-1966/1030@1967-06-01",
+        "dl-47344-1966/1044@1967-06-01",
+        "dl-47344-1966/1041@2019-02-13",
+        "dl-47344-1966/1071@2006-06-27",
+        "dl-47344-1966/1050@1967-06-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0023",
+      "type": "composite",
+      "refused": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1047"
+      ],
+      "expected": [
+        "dl-47344-1966/1083",
+        "dl-47344-1966/1084"
+      ],
+      "allowed": [],
+      "text": "A resolução do contrato de arrendamento pode ser feita judicial ou extrajudicialmente. (art. 1047.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1047.º (versão em vigor desde 27/06/2006)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5062,
+        "completion_tokens": 239,
+        "thinking_tokens": 1232,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta acerta na conclusão, mas não menciona as condições e os fundamentos que determinam se a resolução é judicial ou extrajudicial, conforme a referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1084@2017-06-15",
+        "dl-47344-1966/1047@2006-06-27",
+        "dl-47344-1966/1083@2019-02-13",
+        "lei-6-2006/14@2023-10-07",
+        "dl-47344-1966/1101@2019-02-13",
+        "dl-47344-1966/1087@2012-11-12",
+        "lei-6-2006/9@2017-06-15",
+        "lei-6-2006/15@2023-10-07",
+        "dl-47344-1966/1098@2019-02-13",
+        "dl-47344-1966/1103@2019-02-13"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0028",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "dl-47344-1966/1075"
+      ],
+      "expected": [
+        "dl-47344-1966/1075"
+      ],
+      "allowed": [],
+      "text": "Na falta de convenção em contrário, a primeira renda vence-se no momento da celebração do contrato. (art. 1075.º do CC) Cada uma das restantes rendas vence-se no 1.º dia útil do mês imediatamente anterior àquele a que diga respeito. (art. 1075.º do CC)\n\nFontes (lei em vigor a 06/10/2026):\n- Código Civil, art. 1075.º (versão em vigor desde 27/06/2006)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2905,
+        "completion_tokens": 97,
+        "thinking_tokens": 464,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente as mesmas regras de vencimento da primeira renda e das rendas subsequentes indicadas na referência.",
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1039@1967-06-01",
+        "dl-47344-1966/1075@2006-06-27",
+        "dl-47344-1966/1094@2017-06-15",
+        "dl-47344-1966/1077@2006-06-27",
+        "dl-47344-1966/1069@2019-02-13",
+        "lei-6-2006/31@2015-01-18",
+        "dl-47344-1966/1078@2006-06-27",
+        "lei-6-2006/24@2006-06-27",
+        "dl-47344-1966/1076@2023-01-01",
+        "dl-47344-1966/1058@1967-06-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0032",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "given_recall": 0.3333333333333333,
+      "version_right": 1.0,
+      "cited": [
+        "lei-6-2006/14"
+      ],
+      "expected": [
+        "dl-47344-1966/1083",
+        "lei-6-2006/14",
+        "dl-47344-1966/1084"
+      ],
+      "allowed": [],
+      "text": "O senhorio deve recorrer à acção de despejo sempre que a lei imponha o recurso à via judicial para promover a cessação do arrendamento. (art. 14.º do NRAU)\n\nFontes (lei em vigor a 06/10/2026):\n- NRAU, art. 14.º (versão em vigor desde 07/10/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3879,
+        "completion_tokens": 63,
+        "thinking_tokens": 106,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta apresenta a regra geral, mas omite os exemplos de casos específicos de incumprimento (higiene, sossego, etc.) que a referência utiliza para responder à pergunta.",
+      "verdicts": [],
+      "given": [
+        "lei-6-2006/14@2023-10-07",
+        "dl-47344-1966/1101@2019-02-13",
+        "lei-6-2006/15@2023-10-07",
+        "lei-6-2006/14-B@2023-10-07",
+        "dl-47344-1966/1087@2012-11-12",
+        "lei-6-2006/15-G@2023-10-07",
+        "dl-47344-1966/1102@2012-11-12",
+        "dl-47344-1966/1098@2019-02-13",
+        "lei-6-2006/15-E@2023-10-07",
+        "dl-47344-1966/1081@2006-06-27"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0035",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2193,
+        "completion_tokens": 171,
+        "thinking_tokens": 112,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1051@2006-06-27",
+        "dl-47344-1966/1089@2006-06-27",
+        "dl-47344-1966/1085@2012-11-12",
+        "lei-7-2009/343@2009-02-17",
+        "lei-7-2009/387@2009-02-17",
+        "dl-47344-1966/1053@2006-06-27",
+        "dl-47344-1966/1052@1978-04-01",
+        "dl-47344-1966/1048@2012-11-12",
+        "lei-7-2009/398@2009-02-17",
+        "dl-47344-1966/1056@1967-06-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos descrevem causas e prazos de caducidade em contextos contratuais e laborais, mas não abordam se o tribunal pode ou não conhecer da caducidade oficiosamente."
+    },
+    {
+      "id": "ar-0036",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 02/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2941,
+        "completion_tokens": 101,
+        "thinking_tokens": 181,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1063@1967-06-01",
+        "dl-47344-1966/1041@2019-02-13",
+        "lei-6-2006/15-LA@2023-10-07",
+        "dl-47344-1966/1042@2006-06-27",
+        "lei-6-2006/14-A@2019-02-13",
+        "dl-47344-1966/1030@1967-06-01",
+        "lei-6-2006/55@2012-11-12",
+        "dl-47344-1966/1033@1967-06-01",
+        "lei-6-2006/15-F@2023-10-07",
+        "dl-47344-1966/1036@1967-06-01"
+      ],
+      "refusal_reason": "Faltam artigos sobre a fiança e o benefício da excussão prévia."
+    },
+    {
+      "id": "ar-0037",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [
+        "dl-47344-1966/1106",
+        "lei-6-2006/57",
+        "dl-47344-1966/1105",
+        "lei-6-2006/58"
+      ],
+      "expected": [],
+      "allowed": [],
+      "text": "No arrendamento para habitação, o contrato não caduca por morte do arrendatário, transmitindo-se a sua posição a certas pessoas que com ele viviam ou tinham laços familiares, nos termos e ordem previstos na lei (art. 1106.º do CC; art. 57.º do NRAU) O direito à transmissão por morte não se verifica se o beneficiário possuir outra casa própria ou arrendada na área dos concelhos de Lisboa ou do Porto e seus limítrofes, ou no respetivo concelho quanto ao resto do País (art. 1106.º do CC; art. 57.º do NRAU) O arrendamento para habitação pode também ser objeto de transmissão em vida entre cônjuges, em caso de divórcio ou separação judicial, por acordo ou decisão judicial (art. 1105.º do CC) No caso de arrendamento para fins não habitacionais, a posição do arrendatário pode transmitir-se por morte se existir sucessor que explore estabelecimento no local em comum com o arrendatário há mais de três anos (art. 58.º do NRAU)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1106.º (versão em vigor desde 13/02/2019)\n- NRAU, art. 57.º (versão em vigor desde 13/02/2019)\n- Código Civil, art. 1105.º (versão em vigor desde 27/06/2006)\n- NRAU, art. 58.º (versão em vigor desde 18/01/2015)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2664,
+        "completion_tokens": 277,
+        "thinking_tokens": 163,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1106@2019-02-13",
+        "lei-6-2006/57@2019-02-13",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1059@1967-06-01",
+        "dl-47344-1966/1105@2006-06-27",
+        "dl-47344-1966/1112@2006-06-27",
+        "dl-47344-1966/1057@1967-06-01",
+        "lei-6-2006/57-A@2017-06-24",
+        "lei-6-2006/58@2015-01-18",
+        "dl-47344-1966/1107@2006-06-27"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0038",
+      "type": "unanswerable",
+      "refused": false,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [
+        "dl-47344-1966/1091"
+      ],
+      "expected": [],
+      "allowed": [],
+      "text": "Os artigos fornecidos não preveem um direito de preferência dos condóminos na venda de uma fração autónoma. (art. 1091.º do CC)\n\nFontes (lei em vigor a 02/10/2026):\n- Código Civil, art. 1091.º (versão em vigor desde 30/10/2018)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3352,
+        "completion_tokens": 114,
+        "thinking_tokens": 100,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1091@2018-10-30",
+        "dl-47344-1966/1067-A@2019-02-13",
+        "dl-47344-1966/1068@2006-06-27",
+        "dl-47344-1966/1102@2012-11-12",
+        "dl-47344-1966/1112@2006-06-27",
+        "dl-47344-1966/1105@2006-06-27",
+        "dl-47344-1966/1106@2019-02-13",
+        "lei-6-2006/13@2006-06-27",
+        "dl-47344-1966/1097@2019-02-13",
+        "dl-47344-1966/1024@2006-06-27"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ar-0039",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 06/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 1523,
+        "completion_tokens": 33,
+        "thinking_tokens": 132,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1023@1967-06-01",
+        "dl-47344-1966/1022@1967-06-01",
+        "dl-47344-1966/1058@1967-06-01",
+        "dl-47344-1966/1109@2006-06-27",
+        "dl-47344-1966/1060@1967-06-01",
+        "dl-47344-1966/1024@2006-06-27",
+        "dl-47344-1966/1057@1967-06-01",
+        "dl-47344-1966/1031@1967-06-01",
+        "dl-47344-1966/1075@2006-06-27",
+        "dl-47344-1966/1027@1967-06-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não definem o conceito de locação financeira (leasing)."
+    },
+    {
+      "id": "ar-0040",
+      "type": "unanswerable",
+      "refused": true,
+      "precision": null,
+      "recall": null,
+      "given_recall": null,
+      "version_right": null,
+      "cited": [],
+      "expected": [],
+      "allowed": [],
+      "text": "Não encontrei, no Código do Trabalho nem na lei do arrendamento em vigor a 06/10/2026, base para responder a esta pergunta.",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2524,
+        "completion_tokens": 40,
+        "thinking_tokens": 129,
+        "thinking_unrecorded": 0
+      },
+      "verdict": null,
+      "reason": null,
+      "verdicts": [],
+      "given": [
+        "dl-47344-1966/1067-A@2019-02-13",
+        "dl-47344-1966/1094@2017-06-15",
+        "lei-6-2006/55@2012-11-12",
+        "lei-6-2006/31@2015-01-18",
+        "dl-47344-1966/1078@2006-06-27",
+        "lei-6-2006/38@2012-11-12",
+        "dl-47344-1966/1077@2006-06-27",
+        "lei-6-2006/42@2012-11-12",
+        "lei-6-2006/25@2012-11-12",
+        "dl-47344-1966/1062@1967-06-01"
+      ],
+      "refusal_reason": "Os artigos fornecidos não contêm qualquer informação sobre a taxa de imposto do selo aplicada ao arrendamento."
+    },
+    {
+      "id": "ct-0001",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [
+        "lei-7-2009/249"
+      ],
+      "text": "O trabalhador pode faltar justificadamente até cinco dias consecutivos por falecimento de parente no 1.º grau na linha reta, categoria onde se inclui o pai. (art. 251.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3707,
+        "completion_tokens": 66,
+        "thinking_tokens": 101,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém exatamente a informação da referência, confirmando corretamente o prazo e o grau de parentesco.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/255@2023-05-01",
+        "lei-7-2009/42@2023-05-01",
+        "lei-7-2009/254@2023-05-01",
+        "lei-7-2009/252-A@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0002",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [
+        "lei-7-2009/249"
+      ],
+      "text": "O trabalhador pode faltar justificadamente até 20 dias consecutivos por falecimento de filho. (art. 251.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4310,
+        "completion_tokens": 51,
+        "thinking_tokens": 110,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente a informação essencial presente na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/42@2023-05-01",
+        "lei-7-2009/255@2023-05-01",
+        "lei-7-2009/52@2009-02-17",
+        "lei-7-2009/38@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0003",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.5,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251",
+        "lei-7-2009/248"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar justificadamente por falecimento de familiar durante períodos de dias consecutivos, conforme os limites estabelecidos. (art. 251.º do CT) A lei não especifica que os fins de semana e feriados são excluídos da contagem desses dias consecutivos de falta. (art. 251.º do CT)\n\nFontes (lei em vigor a 29/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3719,
+        "completion_tokens": 96,
+        "thinking_tokens": 82,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "errada",
+      "reason": "A resposta do sistema afirma que a lei não especifica a exclusão de fins de semana e feriados, contradizendo a referência que estabelece que estes não são contabilizados.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/238@2012-08-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/248@2009-02-17",
+        "lei-7-2009/269@2023-05-01",
+        "lei-7-2009/256@2012-08-01",
+        "lei-7-2009/234@2016-04-02"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0011",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [],
+      "text": "O empregador tem o dever de se abster de contactar o trabalhador durante o seu período de descanso. (art. 199.º-A do CT) Esta regra apenas não se aplica em situações de força maior. (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3193,
+        "completion_tokens": 129,
+        "thinking_tokens": 754,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém exatamente o mesmo conteúdo jurídico e as mesmas condições da resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/199@2009-02-17",
+        "lei-7-2009/214@2009-02-17",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/232@2009-02-17",
+        "lei-7-2009/22@2009-02-17",
+        "lei-7-2009/213@2012-08-01",
+        "lei-7-2009/16@2009-02-17",
+        "lei-7-2009/233@2009-02-17",
+        "lei-7-2009/169-A@2022-01-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0012",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [],
+      "text": "O empregador tem o dever de se abster de contactar o trabalhador durante o período de descanso (CT 199-A, n.º 1). (art. 199.º-A do CT) A lei não prevê exceções baseadas no conteúdo da mensagem ou na dispensa de resposta, aplicando-se o dever de abstenção a qualquer contacto realizado nesse período (CT 199-A, n.º 1). (art. 199.º-A do CT) A única exceção prevista ao dever de abstenção de contacto são as situações de força maior (CT 199-A, n.º 1). (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3312,
+        "completion_tokens": 232,
+        "thinking_tokens": 1106,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da referência, incluindo a inexistência de exceção por falta de pedido de resposta e a única exceção de força maior.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/22@2009-02-17",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/219@2009-02-17",
+        "lei-7-2009/403@2009-02-17",
+        "lei-7-2009/265@2009-02-17",
+        "lei-7-2009/16@2009-02-17",
+        "lei-7-2009/253@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0014",
+      "type": "explicit_reference",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A"
+      ],
+      "allowed": [],
+      "text": "O empregador tem o dever de se abster de contactar o trabalhador durante o período de descanso, exceto em situações de força maior. (art. 199.º-A do CT) O tratamento menos favorável dado ao trabalhador por exercer este direito é considerado uma ação discriminatória. (art. 199.º-A do CT) A violação deste dever constitui uma contraordenação grave. (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 6250,
+        "completion_tokens": 130,
+        "thinking_tokens": 118,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os elementos essenciais da resposta de referência sem qualquer contradição.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/166-A@2023-05-01",
+        "lei-7-2009/169-B@2022-01-01",
+        "lei-7-2009/12-A@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/144@2023-05-01",
+        "lei-7-2009/127@2023-05-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/106@2023-05-01",
+        "lei-7-2009/196@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0015",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/551",
+        "lei-7-2009/199-A"
+      ],
+      "expected": [
+        "lei-7-2009/199-A",
+        "lei-7-2009/551"
+      ],
+      "allowed": [],
+      "text": "O empregador é o responsável pelas contraordenações laborais, mesmo quando estas são praticadas pelos seus trabalhadores ou superiores hierárquicos no exercício das respetivas funções. (art. 551.º do CT) O empregador tem o dever de se abster de contactar o trabalhador no período de descanso, sendo a violação deste dever uma contraordenação grave. (art. 199.º-A do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 551.º (versão em vigor desde 22/09/2016)\n- Código do Trabalho, art. 199.º-A (versão em vigor desde 01/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3605,
+        "completion_tokens": 117,
+        "thinking_tokens": 111,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, identificando corretamente o empregador como responsável e a natureza da contraordenação.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/199-A@2022-01-01",
+        "lei-7-2009/551@2016-09-22",
+        "lei-7-2009/169-A@2022-01-01",
+        "lei-7-2009/170@2022-01-01",
+        "lei-7-2009/329@2009-02-17",
+        "lei-7-2009/214@2009-02-17",
+        "lei-7-2009/233@2009-02-17",
+        "lei-7-2009/213@2012-08-01",
+        "lei-7-2009/229@2012-08-01",
+        "lei-7-2009/521@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0041",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "Um trabalhador pode faltar justificadamente até cinco dias consecutivos por falecimento de parente em 1.º grau na linha recta, categoria na qual se inclui um filho. (art. 251.º do CT)\n\nFontes (lei em vigor a 01/06/2021):\n- Código do Trabalho, art. 251.º (versão em vigor desde 17/02/2009)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4644,
+        "completion_tokens": 67,
+        "thinking_tokens": 106,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente o prazo de cinco dias consecutivos aplicável na data solicitada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2009-02-17",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/42@2020-04-01",
+        "lei-7-2009/252@2009-02-17",
+        "lei-7-2009/249@2019-10-04",
+        "lei-7-2009/53@2020-04-01",
+        "lei-7-2009/52@2009-02-17",
+        "lei-7-2009/65@2020-04-01",
+        "lei-7-2009/50@2009-02-17",
+        "lei-7-2009/38@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0042",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar justificadamente até cinco dias consecutivos por falecimento de cônjuge não separado de pessoas e bens. (art. 251.º do CT)\n\nFontes (lei em vigor a 01/06/2022):\n- Código do Trabalho, art. 251.º (versão em vigor desde 04/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3522,
+        "completion_tokens": 57,
+        "thinking_tokens": 120,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta indica corretamente o prazo de cinco dias que estava em vigor na data solicitada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2022-01-04",
+        "lei-7-2009/249@2019-10-04",
+        "lei-7-2009/252@2009-02-17",
+        "lei-7-2009/252-A@2019-10-04",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/255@2019-10-04",
+        "lei-7-2009/42@2020-04-01",
+        "lei-7-2009/346@2012-08-01",
+        "lei-7-2009/38@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0064",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/101-B",
+        "lei-7-2009/101-C"
+      ],
+      "expected": [
+        "lei-7-2009/101-B",
+        "lei-7-2009/101-C"
+      ],
+      "allowed": [],
+      "text": "O trabalhador cuidador está impedido de exercer outra atividade profissional incompatível com a finalidade da licença, como trabalho subordinado ou prestação continuada de serviços fora da sua residência habitual, durante o gozo da licença do cuidador. (art. 101.º-B do CT) O trabalhador cuidador também não pode exercer essas mesmas atividades incompatíveis enquanto estiver a trabalhar em regime de tempo parcial ao abrigo deste estatuto. (art. 101.º-C do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 101.º-B (versão em vigor desde 01/05/2023)\n- Código do Trabalho, art. 101.º-C (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 2737,
+        "completion_tokens": 131,
+        "thinking_tokens": 102,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta contém todos os elementos essenciais da referência, identificando corretamente as duas situações e as atividades incompatíveis.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/101-B@2023-05-01",
+        "lei-7-2009/101-H@2023-05-01",
+        "lei-7-2009/101-C@2023-05-01",
+        "lei-7-2009/101-E@2023-05-01",
+        "lei-7-2009/101-A@2023-05-01",
+        "lei-7-2009/101-G@2023-05-01",
+        "lei-7-2009/101-D@2023-05-01",
+        "lei-7-2009/101-F@2023-05-01",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/326@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0127",
+      "type": "composite",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "given_recall": 0.6666666666666666,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/44"
+      ],
+      "expected": [
+        "lei-7-2009/44",
+        "lei-7-2009/40",
+        "lei-7-2009/43"
+      ],
+      "allowed": [],
+      "text": "Em caso de adoção de menor de 15 anos, o candidato a adotante tem direito à licença parental inicial prevista para o nascimento de filho e à licença parental exclusiva do pai. (art. 44.º do CT) A licença tem início a partir da confiança judicial ou administrativa do menor. (art. 44.º do CT) No caso de adoções múltiplas, o período da licença é acrescido de 30 dias, e o da licença exclusiva do pai de 2 dias, por cada adoção além da primeira. (art. 44.º do CT) Em caso de internamento hospitalar do candidato a adotante ou do adotando, a licença suspende-se durante o tempo de duração do internamento. (art. 44.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 44.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 5147,
+        "completion_tokens": 203,
+        "thinking_tokens": 162,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "parcial",
+      "reason": "A resposta identifica os direitos e a regra para adoções múltiplas, mas omite os prazos da licença inicial e o período de transição.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/44@2023-05-01",
+        "lei-7-2009/45@2023-05-01",
+        "lei-7-2009/64@2023-05-01",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/39@2009-02-17",
+        "lei-7-2009/51@2023-05-01",
+        "lei-7-2009/35@2023-05-01",
+        "lei-7-2009/40@2023-05-01",
+        "lei-7-2009/33-A@2019-10-04",
+        "lei-7-2009/38@2009-02-17"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0153",
+      "type": "simple",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar até 20 dias consecutivos por falecimento de cônjuge não separado de pessoas e bens ou equiparado, filho ou enteado, aplicando-se o mesmo em caso de união de facto ou economia comum. (art. 251.º do CT) Em caso de falecimento de parente ou afim no 1.º grau na linha reta que não seja cônjuge, filho ou enteado, o trabalhador pode faltar até cinco dias consecutivos. (art. 251.º do CT) O trabalhador tem direito a faltar até dois dias consecutivos por falecimento de outro parente ou afim na linha reta ou no 2.º grau da linha colateral. (art. 251.º do CT)\n\nFontes (lei em vigor a 30/09/2026):\n- Código do Trabalho, art. 251.º (versão em vigor desde 01/05/2023)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 4381,
+        "completion_tokens": 192,
+        "thinking_tokens": 132,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os prazos e condições previstos na resposta de referência sem contradizer nada.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2023-05-01",
+        "lei-7-2009/38-A@2023-05-01",
+        "lei-7-2009/252@2023-05-01",
+        "lei-7-2009/249@2023-05-01",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/65@2023-05-01",
+        "lei-7-2009/50@2009-02-17",
+        "lei-7-2009/38@2009-02-17",
+        "lei-7-2009/42@2023-05-01",
+        "lei-7-2009/252-A@2023-05-01"
+      ],
+      "refusal_reason": ""
+    },
+    {
+      "id": "ct-0159",
+      "type": "temporal",
+      "refused": false,
+      "precision": 1.0,
+      "recall": 1.0,
+      "given_recall": 1.0,
+      "version_right": 1.0,
+      "cited": [
+        "lei-7-2009/251"
+      ],
+      "expected": [
+        "lei-7-2009/251"
+      ],
+      "allowed": [],
+      "text": "O trabalhador pode faltar até 20 dias consecutivos pelo falecimento de descendente ou afim no 1.º grau na linha reta. (art. 251.º do CT) Em caso de falecimento de cônjuge não separado de pessoas e bens ou de parente ou afim ascendente no 1.º grau na linha reta, o trabalhador pode faltar até cinco dias consecutivos, sendo este regime aplicável a quem viva em união de facto ou economia comum. (art. 251.º do CT) Por falecimento de outro parente ou afim na linha reta ou no 2.º grau da linha colateral, o trabalhador pode faltar até dois dias consecutivos. (art. 251.º do CT)\n\nFontes (lei em vigor a 01/06/2022):\n- Código do Trabalho, art. 251.º (versão em vigor desde 04/01/2022)",
+      "requests": [],
+      "tokens": {
+        "calls": 1,
+        "prompt_tokens": 3592,
+        "completion_tokens": 190,
+        "thinking_tokens": 116,
+        "thinking_unrecorded": 0
+      },
+      "verdict": "correta",
+      "reason": "A resposta do sistema contém todos os prazos, graus de parentesco e condições previstos na resposta de referência.",
+      "verdicts": [],
+      "given": [
+        "lei-7-2009/251@2022-01-04",
+        "lei-7-2009/252@2009-02-17",
+        "lei-7-2009/249@2019-10-04",
+        "lei-7-2009/49@2009-02-17",
+        "lei-7-2009/50@2009-02-17",
+        "lei-7-2009/252-A@2019-10-04",
+        "lei-7-2009/38@2009-02-17",
+        "lei-7-2009/255@2019-10-04",
+        "lei-7-2009/253@2009-02-17",
+        "lei-7-2009/346@2012-08-01"
+      ],
+      "refusal_reason": ""
+    }
+  ]
+}

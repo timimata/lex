@@ -131,7 +131,12 @@ versions for the date to Gemini 3.1 Flash-Lite: the demo's agent prompt, a citat
 with leave to ask for more articles ([ADR 0018](decisions/0018-agent.md)); the same retrieval
 with the per-sentence prompt alone; and the reference retrieval with one answer and a list of
 citations. In every system a citation of an article not given is dropped, and an answer left with
-none becomes a refusal.
+none becomes a refusal. BGE-M3 fine-tuned on 2,277 synthetic questions about the corpus gained
+nothing beyond the noise on dev behind the reranker (recall@5 0.87 against 0.86, p = 1.00) and
+was dropped ([ADR 0024](decisions/0024-fine-tuned-embeddings.md)). Giving the demo's agent 10
+articles instead of 5 raised composite answers judged correct on dev from 0.46 to 0.54, 5
+items against 3 (p = 0.73), within the noise; it keeps 5
+([ADR 0018](decisions/0018-agent.md), amended).
 
 ## Results on test
 

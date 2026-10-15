@@ -2,7 +2,7 @@
 
 Date: 2026-10-06
 Status: accepted; amended 2026-10-06 (the coverage instruction alone), 2026-10-07 (the agent
-becomes the demo's system) and 2026-10-08 (the noise, item by item)
+becomes the demo's system), 2026-10-08 (the noise, item by item) and 2026-10-15 (ten articles)
 
 ## Context
 
@@ -95,3 +95,14 @@ ar-0002 right only in the first; ct-0006, ct-0056, ct-0099 and ar-0001 only in t
 sign test p of 1.00. A total can hide that much movement: a comparison between two systems is
 read on the items they disagree on, and `regress` calls a regression only what a sign test puts
 beyond chance (ROADMAP, Phase 10).
+
+## Amendment, 2026-10-15: ten articles instead of five
+
+Composite questions are where answers are lost, and with 5 articles the model is given 0.71 of
+what they should cite. The demo's agent on v4's dev with 10 (`--k 10`) is given 0.83 of it, and
+its answers are judged correct for 0.75 of the 81 answerable questions against 0.72 with 5: 12
+right only with 10, 9 only with 5, p = 0.66. On composite questions, 0.54 against 0.46 (5
+against 3, p = 0.73). It refuses 4 answerable questions against 1, and 20 of 24 unanswerable
+against 22. No difference is beyond the noise, so k stays 5
+([results/dev/](../../results/dev/), the run named `+k10`). Its prompts are twice as long: at
+paid prices $0.001721 a question, its thinking counted.

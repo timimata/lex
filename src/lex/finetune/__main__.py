@@ -106,6 +106,8 @@ def train(questions: Path = QUESTIONS, out: Path = MODEL) -> str:
     pairs = [(r["question"], docs[r["article"]]) for r in rows if r["article"] in docs]
     model = SentenceTransformer(BGE_M3, revision=BGE_M3_REVISION, device="cpu")
     model.max_seq_length = MAX_LENGTH
+    # The same updates in less memory: a batch's activations, kept whole, outgrow 31 GB of RAM.
+    model.gradient_checkpointing_enable()
     loss_of = MultipleNegativesRankingLoss(model)
     order = torch.randperm(len(pairs)).tolist()
     batches = [[pairs[i] for i in order[n : n + BATCH]] for n in range(0, len(order), BATCH)]

@@ -591,6 +591,8 @@ def answer_run(
         if format == "agent"  # Phase 7: it may ask for more articles first
         else ReferenceSystem(retriever, read, model, k=k, format=format)
     )
+    if k != K:  # kept apart from the run with the default k, which it would overwrite
+        system.name += f"+k{k}"
     if repeat:
         system.name += f"+repeat-{repeat}"
     # On dev, another judging is kept apart from the run of record; a test run is the run of

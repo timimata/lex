@@ -1,8 +1,7 @@
 # 0024. BGE-M3 fine-tuned on synthetic questions about the corpus
 
 Date: 2026-10-10
-Status: proposed (accepted or dropped by its dev run; not run when the project closed,
-2026-10-15)
+Status: dropped 2026-10-15: no gain on dev beyond the noise (see Result)
 
 ## Context
 
@@ -38,3 +37,23 @@ cannot be used: dev is where the model is measured, and test is never read.
   articles: a gain could partly be the model learning that family's phrasing. Only dev, written
   by people at public bodies, says whether it carries to real questions.
 - A test run of a fine-tuned system waits for the next milestone.
+
+## Result (2026-10-15)
+
+`generate` wrote 2,277 questions in 76 requests; `train` ran 143 steps on the CPU, with
+gradient checkpointing (the same updates; a batch's activations kept whole outgrew 31 GB of
+RAM), to weights `dd3dab6608b7`. On v4's dev, 81 answerable questions, item by item with the
+sign test of ADR 0018 ([results/dev/](../../results/dev/)):
+
+| | recall@1 | recall@5 | recall@10 |
+|---|---|---|---|
+| `dense` (BGE-M3) | 0.59 | 0.72 | 0.75 |
+| `dense-ft` | 0.53 | 0.76 | 0.79 |
+| `dense+rerank+refs` (the reference system) | 0.74 | 0.86 | 0.93 |
+| `dense-ft+rerank+refs` | 0.74 | 0.87 | 0.93 |
+
+Alone, the fine-tuned model puts the right article first less often (better on 4 items, worse
+on 11, p = 0.12) and in the top 5 more often (7 against 4, p = 0.55); behind the reranker it
+changes almost nothing (top 5: 2 against 1, p = 1.00). No difference is beyond the noise, so
+the reference system keeps BGE-M3 as published, and the code stays to repeat the experiment
+on a larger benchmark.
