@@ -12,7 +12,7 @@ import time
 from collections.abc import Callable
 from typing import Protocol
 
-from lex import domain
+from lex import domain, tracing
 from lex.domain import DIPLOMAS, Answer, Citation, Retriever
 from lex.generation.llm import DEFAULT_PARAMS, Completion, Llm, spent
 from lex.retrieval.references import Reference, find_references, normalise_article
@@ -301,10 +301,12 @@ class ReferenceSystem:
         self._calls: list[Completion] = []
         started = time.perf_counter()
         given = []
-        for citation in self.retriever.search(question, as_of, self.k):
-            version = self.articles(citation, as_of)
-            if version is not None:
-                given.append((citation, version))
+        with tracing.span("retrieve", {"retriever": self.retriever.name, "k": self.k}) as span:
+            for citation in self.retriever.search(question, as_of, self.k):
+                version = self.articles(citation, as_of)
+                if version is not None:
+                    given.append((citation, version))
+            span.set(given=[f"{c.diploma}:{c.article}" for c, _ in given])
         retrieved = time.perf_counter()
         answer = self._from_model(question, as_of, given) if given else refusal(as_of)
         timings = {

@@ -9,6 +9,7 @@ POST {"question", "as_of"} and answers {"answer": {...}} with the same fields.
 """
 
 import datetime as dt
+import hashlib
 import json
 import urllib.request
 from collections.abc import Iterable, Mapping
@@ -30,6 +31,36 @@ def answer_from(row: Mapping[str, Any]) -> Answer:
         cited_versions=dated,
         given=[Version.model_validate(v) for v in row.get("given", [])],
     )
+
+
+def sample(items: Iterable[Item], per_type: int) -> list[Item]:
+    """A fixed sample for a system scored by hand (ADR 0022): of each question type, the
+    `per_type` items whose ids hash lowest, so nobody picks the questions. Dev items only."""
+    by_type: dict[str, list[Item]] = {}
+    for item in items:
+        by_type.setdefault(item.type, []).append(item)
+    chosen = []
+    for group in by_type.values():
+        group.sort(key=lambda i: hashlib.sha256(i.id.encode()).hexdigest())
+        chosen += group[:per_type]
+    return sorted(chosen, key=lambda i: i.id)
+
+
+def template(items: Iterable[Item]) -> str:
+    """One line per item for a person to fill with an outside tool's answer: the question and
+    its date to ask, and the fields `FileSystem` reads, empty."""
+    rows = [
+        {
+            "id": i.id,
+            "question": i.question,
+            "as_of": i.as_of.isoformat(),
+            "text": "",
+            "refused": False,
+            "citations": [],
+        }
+        for i in items
+    ]
+    return "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows)
 
 
 class FileSystem:

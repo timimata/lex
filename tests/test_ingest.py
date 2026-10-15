@@ -234,6 +234,21 @@ def test_texts_the_pgdl_credits_to_a_republication_are_credited_as_the_dr_lists(
     assert report.problems == [] and [r.split(":")[0] for r in report.relabelled] == ["9"]
 
 
+def test_a_version_marked_from_the_dr_keeps_the_drs_text() -> None:
+    """ADR 0005: where the PGDL and the DR give a version's text differently, codes.py can keep
+    the DR's (`from_dr`), read from its history; unread, it is a build problem."""
+    current, old, reference = _nrau_9()
+    marked = dataclasses.replace(
+        NRAU, from_dr={("9", dt.date(2012, 11, 12)): (dt.date(2013, 1, 1), "numbered apart")}
+    )
+    texts = {("9", dt.date(2012, 11, 12)): "1 - Texto de 2012, como o DR o dá."}
+    versions, report = build(current, old, {"9": reference}, dt.date(2026, 10, 1), marked, texts)
+    assert [v.text for v in versions][1] == "1 - Texto de 2012, como o DR o dá."
+    assert report.from_dr == ["9 from 2012-11-12: numbered apart"]
+    _, unread = build(current, old, {"9": reference}, dt.date(2026, 10, 1), marked)
+    assert unread.problems == ["9 from 2012-11-12: the DR's text was not read"]
+
+
 def test_a_change_the_pgdl_lacks_cuts_the_history_before_it() -> None:
     """The Código Civil's art. 1080.º: revoked in 1975 and restored by the NRAU in 2006, but the
     PGDL goes from the 1966 text straight to the 2006 one."""

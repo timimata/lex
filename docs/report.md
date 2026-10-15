@@ -161,7 +161,9 @@ articles the model is given hold 0.97 of what the demo should cite (0.90 for the
 system), so most of what is lost is lost by the answer, not by retrieval; composite questions,
 which combine several articles, are where it shows. At paid prices the demo's answer costs
 $0.00103781 a question, the model's thinking and the question's embedding counted; the judge's
-tokens are not priced, as Gemma 4 has no paid tier.
+tokens are not priced, as Gemma 4 has no paid tier. The demo's first request to a new
+instance took 3.07 s at the median and 3.40 s at worst over 18 probe runs, 2026-10-09 to
+2026-10-15, timed from GitHub's runner ([results/probe/](../results/probe/probe.jsonl)).
 
 ## Limits
 

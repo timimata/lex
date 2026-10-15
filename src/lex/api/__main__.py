@@ -19,6 +19,7 @@ from typing import Any
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
+from lex import tracing
 from lex.api.app import Limits, create_app, leaderboard
 from lex.domain import Answer, Citation
 from lex.generation import llm
@@ -139,6 +140,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--results", type=Path, default=ROOT / "results" / "test")
     args = parser.parse_args(argv)
     load_dotenv(ROOT / ".env")
+    if tracing.configure("lex-api"):  # OTEL_EXPORTER_OTLP_ENDPOINT set (ADR 0023)
+        print("tracing to " + os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"])
 
     import uvicorn  # the optional `api` extra
 

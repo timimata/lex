@@ -13,6 +13,7 @@ reference system; the loop is a few lines, no framework (CLAUDE.md).
 import datetime as dt
 import time
 
+from lex import tracing
 from lex.domain import Answer, Citation, Retriever
 from lex.generation.answer import (
     CLAIMS_SYSTEM,
@@ -126,7 +127,9 @@ class AgentSystem:
             seconds[stage] += time.perf_counter() - started
 
         started = time.perf_counter()
-        given = self._in_force(self.retriever.search(question, as_of, self.k), as_of, [])
+        with tracing.span("retrieve", {"retriever": self.retriever.name, "k": self.k}) as span:
+            given = self._in_force(self.retriever.search(question, as_of, self.k), as_of, [])
+            span.set(given=self._ids(given))
         timed("retrieval", started)
         answer = refusal(as_of) if not given else None
         asked: list[str] = []

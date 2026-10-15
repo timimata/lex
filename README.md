@@ -110,7 +110,10 @@ flowchart LR
   thinking and the question's embedding counted), so the 400 a day the demo allows itself
   (`LEX_ANSWERS_PER_DAY`) bound it at $0.415124 a day. It answered in 3.93 s at the median and 6.12 s at
   p95 when timed on 2026-10-01, on the labour corpus (14 dev questions from Portugal after a
-  first, possibly cold one; `results/dev/`).
+  first, possibly cold one; `results/dev/`). A cold start, the first request to a new
+  instance, took 3.07 s at the median and 3.40 s at worst over the 18 probe runs from
+  2026-10-09 to 2026-10-15, every one of which met a new instance, timed from GitHub's
+  runner (`results/probe/`, `python -m lex.probe --cold`).
 - **Operations** (ROADMAP, Phase 8): CI fails when the demo's prompts change without a new dev
   run, and `python -m lex.eval regress` compares a change with the committed one against the
   noise measured; `/api/usage` counts an instance's answers by outcome, with latency, tokens
@@ -120,7 +123,7 @@ flowchart LR
   its versions, what changed between two dates, search, answers).
 - **What changed:** the page's Changes view lists, for a diploma and a period, every article the
   law changed, added or revoked, grouped by the amending law, each opening on its redline.
-- 21 decisions are written down in [docs/decisions/](docs/decisions/), from the store to why the
+- 24 decisions are written down in [docs/decisions/](docs/decisions/), from the store to why the
   demo has no reranker, what leaves the machine and the budgets the demo keeps.
 
 ## Layout

@@ -421,9 +421,18 @@ Chosen by what the numbers and job ads say:
   with 0 requests, and since 2026-10-07 it is the demo's system, with a 9 s budget on any request
   (ADR 0018, amended). The documents' own format for Gemini Embedding 2 changed nothing in the
   top 5 the model reads (ADR 0014, amended 2026-10-07);
-- tracing (Langfuse), model routing, cost per question;
+- tracing (Langfuse), model routing, cost per question. **Tracing done 2026-10-10**
+  ([ADR 0023](decisions/0023-tracing.md)): OpenTelemetry spans for each answer, retrieval and
+  model call, exported over OTLP to Langfuse or any backend when `OTEL_EXPORTER_OTLP_ENDPOINT` is
+  set (the `trace` extra), off otherwise; a visitor's question only with `LEX_TRACE_CONTENT=1`
+  (tested). Cost per question is in every run (10.9); model routing is not built;
 - a local model for the answers on a Raspberry Pi (ADR 0012 has the quality; speed not measured);
 - a hand-scored comparison with Lia and TogaAI on a small dev subset, after checking their terms.
+  **Prepared 2026-10-10** ([ADR 0022](decisions/0022-outside-tools.md)): TogaAI needs a paid
+  subscription and is left out; Lia needs an account on the DR, and its terms are read at
+  registration. A fixed sample of 20 dev items (4 per type, by id hash) waits in
+  `docs/comparison/lia.jsonl` for a person to ask Lia and fill in; `answers --from ...
+  --only-answered` and `label` score it.
 
 ## Phase 8: Operating the demo (done 2026-10-07)
 
@@ -890,7 +899,10 @@ and the phase ends with a test run only if `compare` (10.2) finds that dev moved
    tree, corpus fingerprint and versions, time); `/api/health` returns it with the instance's
    `started_at`; `--record` appends each run's timings and whether it met a cold start, which
    the workflow keeps as an artifact for 90 days (tested). The measured cold start follows the
-   deploy and a week of runs.
+   deploy and a week of runs. **Measured 2026-10-15:** the 18 recorded runs since the deploy
+   are in `results/probe/probe.jsonl`; all met a new instance (six hours apart, none stays
+   warm), and the first request took 3.07 s at the median and 3.40 s at worst
+   (`python -m lex.probe --cold`, tested). The README and ADR 0014 say so.
 10. **Test the untested paths.** No test exercises the `Fetcher` (its cache, offline mode,
     interval and backoff), `ApiEmbedder`'s rate-limit loop, the `Gate`'s change of day, or the
     integrity gates of `src/lex/eval/__main__.py` (756 lines; none of its seven `SystemExit`s,
@@ -1060,18 +1072,27 @@ report drafted from v4's runs.
 
 ## Open
 
-What waits on no phase, or on someone other than the code:
+The project closed on 2026-10-15 with Phases 0 to 12 done. What waits on no phase, or on
+someone other than the code:
 
 - **The legal review** (Phase 6): a law student or lecturer of the Faculdade de Direito,
   Universidade Lusófona, signing items off with `python -m lex.bench review`. 0 of 201 validated.
 - ~~Where the judge runs on test, and a billed key~~: decided 2026-10-09, Tiago accepts the
   free tier for test runs; the judge stays Gemma 4 on Google's API, at temperature 0 (ADR 0016,
   amended 2026-10-09).
-- **Phase 7's options:** fine-tuned embeddings, tracing, a local answer model on a Raspberry Pi
-  (its speed not measured), and a hand-scored comparison with Lia and TogaAI on a small dev subset.
+- **Phase 7's options:** tracing is done (ADR 0023). Fine-tuned embeddings are written and
+  tested but not run: no synthetic questions, no model, no dev number (ADR 0024, proposed).
+  The comparison with Lia waits on a person asking it the 20 questions of
+  `docs/comparison/lia.jsonl` (ADR 0022). A local answer model on a Raspberry Pi: its speed
+  not measured.
+- **Composite questions:** the per-type rows show them as where answers are lost; giving the
+  agent more articles (`--k 10`) on dev is the experiment named, not run.
 - **Art. 127.º, 2015 to 2017:** the spot check of 2026-10-08 found its paragraphs 5 to 7
-  numbered one way by the PGDL and another by the DR; a person reads Lei n.º 120/2015 to say
-  which holds, and a correction follows (ADR 0005: the DR wins).
+  numbered one way by the PGDL and another by the DR. Decided 2026-10-10: no one reads Lei n.º
+  120/2015; ADR 0005 keeps the DR's text. `codes.py` can now take a version's text from the DR
+  (`from_dr`, tested); the entry for art. 127.º from 2015-09-06 goes in with the next corpus
+  rebuild, because the text changes the corpus fingerprint and so calls for new test runs, and no
+  benchmark item asks about that article in that period.
 - **More law:** the Código do IRS waits ([ADR 0017](decisions/0017-tenancy.md)).
 
 ## Open decisions

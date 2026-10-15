@@ -27,6 +27,8 @@ llm = ["openai==3.26.0"]
 api = ["fastapi==0.142.2", "uvicorn==0.54.0"]
 # Lex's article store as tools for an agent: python -m lex.mcp_server.
 mcp = ["mcp==2.3.0"]
+# Only for tracing answers to an OTLP backend such as Langfuse (ADR 0023); off without it.
+trace = ["opentelemetry-sdk==1.45.1", "opentelemetry-exporter-otlp-proto-http==1.45.1"]
 dev = [
     "httpx==0.28.1",  # FastAPI's TestClient
     "mypy==2.4.0",
@@ -51,7 +53,7 @@ strict = true
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["playwright.*", "sentence_transformers.*"]  # optional extras; CI checks without them
+module = ["playwright.*", "sentence_transformers.*", "torch", "torch.*"]  # optional; CI has none
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

@@ -94,3 +94,29 @@ def test_an_endpoint_on_test_needs_its_operators_agreement() -> None:
     with pytest.raises(SystemExit):
         results.ensure_private("test", {"answers": {"url": "https://x", "tier": "unagreed"}})
     results.ensure_private("test", {"answers": {"url": "https://x", "tier": "agreed"}})
+
+
+def test_a_hand_scored_sample_is_fixed_by_type_and_read_back(tmp_path: Path) -> None:
+    from lex.eval.outside import sample, template
+
+    simple = [item(f"ct-{n:04d}", str(n)) for n in range(1, 9)]
+    temporal = [item(f"ct-{n:04d}", str(n), "2011-06-01") for n in range(11, 19)]
+    chosen = sample(simple + temporal, 2)
+    assert sorted(i.type for i in chosen) == ["simple", "simple", "temporal", "temporal"]
+    assert sample(list(reversed(simple + temporal)), 2) == chosen  # whatever the order given
+
+    path = tmp_path / "lia.jsonl"
+    path.write_text(template(chosen), encoding="utf-8")
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    assert [r["id"] for r in rows] == [i.id for i in chosen] and rows[0]["text"] == ""
+    system = FileSystem(path, simple + temporal, "lia")
+    assert sorted(system.missing) == sorted(i.id for i in simple + temporal if i not in chosen)
+
+
+def test_only_answered_is_refused_on_test(tmp_path: Path) -> None:
+    import lex.eval.__main__ as cli
+
+    path = tmp_path / "lia.jsonl"
+    path.write_text("", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        cli.main(["answers", "--split", "test", "--from", str(path), "--only-answered"])

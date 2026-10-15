@@ -37,6 +37,10 @@ class Code:
     read_from_diploma: Mapping[tuple[str, str], dt.date] = field(default_factory=dict)
     # (diploma, article) -> (entry into force, why), where the DR's own note is wrong.
     corrections: Mapping[tuple[str, str], tuple[dt.date, str]] = field(default_factory=dict)
+    # (article, first day of a version) -> (the day of the DR's history to read, why): versions
+    # whose text the PGDL and the DR give differently, where the DR's is kept (ADR 0005: the DR
+    # is the reference). Read from data/raw/dr/<key>_as_of_<day>.txt.
+    from_dr: Mapping[tuple[str, dt.date], tuple[dt.date, str]] = field(default_factory=dict)
 
 
 CT = Code(

@@ -3,6 +3,7 @@ with [--offline]"""
 
 import argparse
 import dataclasses
+import datetime as dt
 import json
 import sys
 import time
@@ -63,7 +64,19 @@ def ingest_code(code: Code, offline: bool) -> int:
             text, page = fetch(pgdl.old_version_url(article_id, ref.number, code.nid))
             old[(article_id, ref.number)] = (pgdl.parse_old_version(text), page)
 
-    versions, report = build(current, old, reference, dr_fetched, code)
+    # Versions whose text is the DR's (codes.py, `from_dr`), read from its history as cached.
+    dr_texts: dict[tuple[str, dt.date], str] = {}
+    for (number, start), (day, _) in code.from_dr.items():
+        history, _ = dr.cached_render(
+            code.dr_url,
+            DATA / "raw" / "dr" / f"{code.key}_as_of_{day}.txt",
+            as_of=day,
+            offline=offline,
+        )
+        found = dr.parse_code(history, code.start, code.stop, code.quotes).get(number)
+        if found is not None:
+            dr_texts[(number, start)] = found.text
+    versions, report = build(current, old, reference, dr_fetched, code, dr_texts)
     out.mkdir(parents=True, exist_ok=True)
     with (out / "versions.jsonl").open("w", encoding="utf-8", newline="\n") as f:
         f.writelines(v.model_dump_json() + "\n" for v in versions)

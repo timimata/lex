@@ -51,7 +51,8 @@ from lex.eval.harness import (
     summarise,
     summarise_answers,
 )
-from lex.eval.outside import FileSystem, HttpSystem
+from lex.eval.outside import FileSystem, HttpSystem, sample, template
+from lex.finetune.model import MODEL, weights_sha
 from lex.generation import llm
 from lex.generation.agent import AGENT_SYSTEM, AgentSystem, agent_prompt
 from lex.generation.answer import (
@@ -68,12 +69,15 @@ from lex.retrieval.bm25 import Bm25
 from lex.retrieval.crossrefs import PER_ARTICLE, TOP, WithCrossReferences
 from lex.retrieval.decompose import Decomposed
 from lex.retrieval.dense import (
+    BGE_M3,
+    BGE_M3_REVISION,
     GEMINI_DOCUMENT,
     GEMINI_QUERY,
     PLAIN_DOCUMENT,
     ApiEmbedder,
     BgeM3,
     Dense,
+    FineTuned,
     embed_missing,
 )
 from lex.retrieval.hybrid import Hybrid
@@ -221,6 +225,29 @@ def hybrid(stores: Stores) -> Built:
     return on_postgres(stores, retriever, config)
 
 
+def dense_ft(stores: Stores) -> Built:
+    """BGE-M3 fine-tuned on synthetic questions (ADR 0024), from data/models/."""
+    if not MODEL.exists():
+        raise SystemExit(f"no model in {MODEL}: python -m lex.finetune generate, then train")
+    sha = weights_sha(MODEL)
+    embedder = FineTuned(MODEL, sha)
+    embedded = embed_missing(stores.conn, embedder)
+    print(f"embedded {embedded} article versions that had no up-to-date embedding")
+    config = {"model": embedder.name, "base": f"{BGE_M3}@{BGE_M3_REVISION[:7]}", "weights": sha}
+    return on_postgres(stores, Dense(stores.conn, embedder), config)
+
+
+def reranked(base: Callable[[Stores], Built]) -> Callable[[Stores], Built]:
+    def build(stores: Stores) -> Built:
+        semantic = base(stores)
+        scorer = BgeReranker()
+        retriever = Reranked(semantic.retriever, scorer, stores.conn)
+        config = {**semantic.config, "reranker": scorer.name, "rerank_depth": retriever.depth}
+        return on_postgres(stores, retriever, config)
+
+    return build
+
+
 def dense_reranked(stores: Stores) -> Built:
     semantic = dense(stores)
     scorer = BgeReranker()
@@ -236,6 +263,8 @@ RETRIEVERS: dict[str, Callable[[Stores], Built]] = {
     "dense+refs": with_references(dense),
     "hybrid+refs": with_references(hybrid),
     "dense+rerank+refs": with_references(dense_reranked),
+    "dense-ft": dense_ft,  # ADR 0024
+    "dense-ft+rerank+refs": with_references(reranked(dense_ft)),
     "dense-gemini": dense_api,
     "dense-gemini+refs": with_references(dense_api),
     "dense-gemini-titled+refs": with_references(dense_api_titled),
@@ -835,6 +864,11 @@ def main(argv: list[str] | None = None) -> int:
     outside.add_argument("--http", help="an endpoint with /api/answer's contract")
     answers.add_argument("--name", help="the outside system's name in results/")
     answers.add_argument(
+        "--only-answered",
+        action="store_true",
+        help="--from on dev: score only the items the file answers (a hand-scored sample)",
+    )
+    answers.add_argument(
         "--operator-agrees", help="who agreed, for an --http system on test (ADR 0016)"
     )
     labeling = commands.add_parser("label", help="hand-label a system's dev answers")
@@ -843,6 +877,9 @@ def main(argv: list[str] | None = None) -> int:
     judging.add_argument("system", help="a results/dev/<system>.json answers run")
     judging.add_argument("--minimum", type=int, default=20, help="hand labels needed")
     commands.add_parser("judge-check", help="measure the judge on known-answer dev cases")
+    sampling = commands.add_parser("sample", help="a fixed dev sample to ask an outside tool")
+    sampling.add_argument("--per-type", type=int, default=4, help="items of each question type")
+    sampling.add_argument("--out", type=Path, required=True, help="the JSONL template to fill")
     commands.add_parser("check-results", help="check results/ against itself; no model, for CI")
     reporting = commands.add_parser("report", help="the README's results tables, from results/")
     reporting.add_argument("--write", action="store_true", help="rewrite them; else check them")
@@ -854,8 +891,16 @@ def main(argv: list[str] | None = None) -> int:
     timing.add_argument("url", help="e.g. https://lex-beryl.vercel.app")
     timing.add_argument("--n", type=int, default=15, help="questions (and quota) to spend")
     args = parser.parse_args(argv)
+    # A sample scored by hand (ADR 0022) is a file of dev answers, never a test score.
+    if getattr(args, "only_answered", False) and (args.split == "test" or not args.from_file):
+        parser.error("--only-answered is for a file of dev answers (--from, on dev)")
     load_dotenv(results.ROOT / ".env")
 
+    if args.command == "sample":  # an outside tool's sample, asked and scored by hand (ADR 0022)
+        chosen = sample(load("dev"), args.per_type)
+        args.out.write_text(template(chosen), encoding="utf-8", newline="\n")
+        print(f"wrote {len(chosen)} dev items to {args.out}: fill text, refused and citations")
+        return 0
     if args.command == "label":
         return label(args.system)
     if args.command == "judge":
@@ -907,10 +952,14 @@ def main(argv: list[str] | None = None) -> int:
                 if args.from_file
                 else HttpSystem(args.http, args.name)
             )
+            if args.only_answered and isinstance(outsider, FileSystem):  # checked: dev only
+                items = [i for i in items if i.id not in outsider.missing]
             run = outside_run(
                 items, args.split, outsider, args.judge, args.judge_samples, args.operator_agrees
             )
             retriever = None
+            if args.only_answered:
+                run.config["only_answered"] = len(items)  # a sample, not the whole split
             path = results.write(args.split, run.name, run.config, run.summary, run.items)
             print(f"{run.name} on {args.split}: {len(items)} items")
             table(

@@ -1,11 +1,13 @@
 """The deployed demo, probed from outside (Phase 8):
-`python -m lex.probe URL [--live] [--record FILE]`.
+`python -m lex.probe URL [--live] [--record FILE]`, or `python -m lex.probe --cold FILE`.
 
 Health, an article on a date, a word search, every page example's answer (made at deploy, so
 served from the cache and free of quota), an unknown path and the instance's usage, each timed.
 `--live` (once a day) also asks a question no cache holds, which spends one answer and is the
 only check that sees a revoked key or a model that no longer answers. `--record` appends what was
-measured, as one JSON line, so the cold starts it met can be counted (ROADMAP, Phase 11). Exits 1
+measured, as one JSON line, so the cold starts it met can be counted (ROADMAP, Phase 11);
+`--cold` reads the runs gathered into results/probe/ and says how long a cold first request took.
+Exits 1
 on an error or a request slower than its bar, which in a scheduled GitHub workflow is an email to
 the repository's owner: the alert. Standard library only, so the workflow installs nothing.
 """
@@ -128,12 +130,37 @@ def record(path: Path, base: str, checks: list[Check], health: dict[str, Any] | 
         f.write(json.dumps(line, ensure_ascii=False) + "\n")
 
 
+def cold_starts(path: Path) -> dict[str, Any]:
+    """The first request's seconds over the recorded runs that met a cold start: how many, the
+    median and the slowest. Measured from the runner, so the network is in it."""
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+    firsts = sorted(r["checks"][0]["seconds"] for r in rows if r["cold"] and r["checks"])
+    if not firsts:
+        return {"runs": len(rows), "cold": 0}
+    half = len(firsts) // 2
+    median = firsts[half] if len(firsts) % 2 else (firsts[half - 1] + firsts[half]) / 2
+    return {
+        "runs": len(rows),
+        "cold": len(firsts),
+        "from": min(r["at"] for r in rows),
+        "to": max(r["at"] for r in rows),
+        "median_s": round(median, 2),
+        "max_s": round(firsts[-1], 2),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m lex.probe")
-    parser.add_argument("url", help="e.g. https://lex-beryl.vercel.app")
+    parser.add_argument("url", nargs="?", help="e.g. https://lex-beryl.vercel.app")
     parser.add_argument("--live", action="store_true", help="also spend one real answer")
     parser.add_argument("--record", type=Path, help="append the measurements to this file")
+    parser.add_argument("--cold", type=Path, help="the cold starts in a recorded file, and exit")
     args = parser.parse_args(argv)
+    if args.cold:
+        print(json.dumps(cold_starts(args.cold)))
+        return 0
+    if not args.url:
+        parser.error("a URL, or --cold FILE")
     checks, usage, health = probe(args.url, args.live)
     for c in checks:
         mark = "FAIL" if c.problem else "ok"

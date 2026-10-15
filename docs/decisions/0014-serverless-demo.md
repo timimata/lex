@@ -39,7 +39,9 @@ BGE-M3 with the parser and 0.93 with the reranker; recall@1 0.78 against 0.81 an
 ## Consequences
 
 - The demo costs nothing, needs no card, and holds no model: a cold function starts in about a
-  second (0.91 s to import on this PC; on Vercel not measured yet).
+  second (0.91 s to import on this PC). On Vercel the first request to a new instance took
+  3.07 s at the median and 3.40 s at worst over 18 probe runs, 2026-10-09 to 2026-10-15,
+  timed from GitHub's runner (`results/probe/`).
 - The per-visitor limit lives in each function instance, so it is weak; the free quota is the
   real cap.
 - Answers from the demo are measured with the same code (`--retriever dense-gemini+refs`); see

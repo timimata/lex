@@ -32,6 +32,7 @@ Nothing else is guessed: a version whose date can't be resolved is reported, not
 import datetime as dt
 import re
 from collections import defaultdict
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 from lex.ingest import dr, pgdl
@@ -64,6 +65,8 @@ class Report:
     # Articles whose effects another diploma defers or suspends, in part or whole: their
     # versions start when the DR says the change entered into force, so these are listed.
     remarks: dict[str, list[str]] = field(default_factory=dict)
+    # Versions whose text is the DR's, not the PGDL's (codes.py, `from_dr`), and why.
+    from_dr: list[str] = field(default_factory=list)
 
 
 def normalise(text: str) -> str:
@@ -106,7 +109,9 @@ def build(
     reference: dict[str, dr.Article],
     reference_fetched: dt.date,
     code: Code = CT_CODE,
+    dr_texts: Mapping[tuple[str, dt.date], str] | None = None,
 ) -> tuple[list[ArticleVersion], Report]:
+    """`dr_texts`: (article, first day) -> the DR's text of that version, for `code.from_dr`."""
     versions: list[ArticleVersion] = []
     report = Report(articles=len(current))
     by_diploma = _unanimous_dates(reference)
@@ -195,6 +200,14 @@ def build(
             end = dated[n + 1][0] if n + 1 < len(dated) else None
             if end is not None and end <= start:
                 continue  # replaced the day it started, e.g. by a rectification
+            if (number, start) in code.from_dr:
+                if dr_texts is None or (number, start) not in dr_texts:
+                    report.problems.append(f"{number} from {start}: the DR's text was not read")
+                else:
+                    text = dr_texts[(number, start)]
+                    report.from_dr.append(
+                        f"{number} from {start}: {code.from_dr[(number, start)][1]}"
+                    )
             versions.append(
                 ArticleVersion(
                     diploma=code.diploma,

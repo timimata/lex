@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 # The disclaimer and Lisbon's date live in lex.domain, which the MCP server shares without FastAPI.
+from lex import tracing
 from lex.domain import DISCLAIMER, LISBON, Answer, System, lisbon_today
 from lex.generation import llm
 from lex.store.memory import excerpt
@@ -408,10 +409,26 @@ def create_app(
     )
 
     def run(question: str, as_of: dt.date) -> Answer:
-        if not serial:
-            return system.answer(question, as_of)
-        with one_at_a_time:
-            return system.answer(question, as_of)
+        """The system's answer, traced as an `answer` span (ADR 0023): the question's text only
+        where LEX_TRACE_CONTENT=1."""
+        attributes: dict[str, Any] = {
+            "system": system.name,
+            "as_of": as_of.isoformat(),
+            "question_chars": len(question),
+        }
+        if tracing.content():
+            attributes["question"] = question
+        with tracing.span("answer", attributes) as span:
+            if serial:
+                with one_at_a_time:
+                    result = system.answer(question, as_of)
+            else:
+                result = system.answer(question, as_of)
+            span.set(
+                refused=result.refused,
+                cited=[f"{c.diploma}:{c.article}" for c in result.citations],
+            )
+            return result
 
     # When this instance started: a probe that finds it younger than its own requests met a
     # cold start (lex.probe). `build`: the commit and corpus deployed (vercel/assemble.py).

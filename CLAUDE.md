@@ -91,7 +91,7 @@ ahead of the current phase. Reply to Tiago in European Portuguese.
 
 ## Commands
 ```bash
-uv sync --locked --extra dev --extra llm --extra api   # as CI installs; add ingest, dense, mcp
+uv sync --locked --extra dev --extra llm --extra api   # add ingest, dense, mcp, trace as needed
 uv export --locked --extra llm --extra api --no-dev --no-hashes --no-emit-project --no-header -o vercel/requirements.txt
 ruff check . && ruff format --check .
 mypy
@@ -116,6 +116,7 @@ python -m lex.eval answers --fresh  # asks model and judge again: milestones ans
 python -m lex.api                   # the reference system over HTTP, on 127.0.0.1:8000
 python -m lex.api --demo            # the deployed demo's system (ADR 0014), no Postgres
 python -m lex.eval label SYSTEM     # hand-label a system's dev answers (a person, never a model)
+python -m lex.eval sample --out F   # a fixed dev sample to ask an outside tool (ADR 0022)
 python -m lex.eval judge SYSTEM     # judge dev answers, measure agreement with the labels
 python -m lex.eval judge-check      # or measure the judge on known-answer dev cases
 python -m lex.eval check-results    # results/ adds up and test runs share a split (CI runs it)
@@ -124,6 +125,7 @@ python -m lex.eval latency URL      # time the deployed demo; spends its quota
 python -m lex.eval regress          # the demo's system on dev against its committed run
 python -m lex.probe URL             # the deployed demo from outside; no quota (CI, every 6 h)
 python -m lex.probe URL --live --record probe.jsonl   # one real answer; keeps the timings
+python -m lex.probe --cold results/probe/probe.jsonl  # cold starts, from the runs gathered
 python -m lex.mcp_server            # the code as MCP tools, over stdio
 python web/e2e.py                   # the page in Chromium, scripted answers, no quota
 python vercel/assemble.py --warm && cd build/vercel && npx vercel deploy --prod   # deploy; 4 calls

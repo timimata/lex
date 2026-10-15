@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-from lex import atomic
+from lex import atomic, tracing
 
 GEMINI_OPENAI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 DEFAULT_MODEL = "gemini-3.1-flash-lite"
@@ -129,6 +129,17 @@ class OpenAiCompatible:
         )
 
     def complete(self, system: str, user: str) -> Completion:
+        """One reply, traced as a `model` span with its tokens (ADR 0023)."""
+        with tracing.span("model", {"model": self.name}) as span:
+            completion = self._complete(system, user)
+            span.set(
+                prompt_tokens=completion.prompt_tokens,
+                completion_tokens=completion.completion_tokens,
+                thinking_tokens=completion.thinking_tokens,
+            )
+            return completion
+
+    def _complete(self, system: str, user: str) -> Completion:
         from openai import InternalServerError, RateLimitError
 
         messages = (

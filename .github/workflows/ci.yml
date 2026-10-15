@@ -33,7 +33,7 @@ jobs:
       # Every dependency as uv.lock pins it (ADR 0019); --locked fails if the lock is out of
       # date. Not dense: torch is too heavy for CI.
       - run: pip install uv==0.12.23
-      - run: uv export --locked --extra dev --extra llm --extra api --extra mcp --no-hashes -o requirements-ci.txt
+      - run: uv export --locked --extra dev --extra llm --extra api --extra mcp --extra trace --no-hashes -o requirements-ci.txt
       - run: pip install -r requirements-ci.txt
       # The demo installs what the lock says too.
       - run: uv export --locked --extra llm --extra api --no-dev --no-hashes --no-emit-project --no-header -o vercel-requirements.txt && diff vercel-requirements.txt vercel/requirements.txt

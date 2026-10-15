@@ -81,3 +81,27 @@ def test_a_recorded_probe_says_whether_it_met_a_cold_start(tmp_path: Any) -> Non
     first, second = (json.loads(line) for line in path.read_text(encoding="utf-8").splitlines())
     assert first["cold"] is True and first["build"] == {"commit": "c"}
     assert second["cold"] is False and second["checks"][0]["name"] == "health"
+
+
+def test_cold_starts_are_the_first_requests_of_cold_runs(tmp_path: Any) -> None:
+    import json
+
+    def run(at: str, cold: bool, first: float) -> str:
+        checks = [{"name": "health", "status": 200, "seconds": first, "problem": ""}]
+        return json.dumps({"at": at, "cold": cold, "checks": checks})
+
+    path = tmp_path / "probe.jsonl"
+    lines = [
+        run("2026-10-10", True, 3.0),
+        run("2026-10-11", False, 0.2),
+        run("2026-10-12", True, 2.0),
+    ]
+    path.write_text("".join(line + "\n" for line in lines), encoding="utf-8")
+    assert probe.cold_starts(path) == {
+        "runs": 3,
+        "cold": 2,
+        "from": "2026-10-10",
+        "to": "2026-10-12",
+        "median_s": 2.5,
+        "max_s": 3.0,
+    }

@@ -6,6 +6,7 @@ import hashlib
 import json
 import time
 import urllib.request
+from pathlib import Path
 from typing import Protocol
 
 import psycopg
@@ -39,6 +40,17 @@ class BgeM3:
     def encode(self, texts: list[str]) -> list[list[float]]:
         vectors = self.model.encode(texts, normalize_embeddings=True, batch_size=8)
         return [[float(x) for x in v] for v in vectors]
+
+
+class FineTuned(BgeM3):
+    """BGE-M3 fine-tuned on synthetic questions (ADR 0024), loaded from its folder. Its name
+    holds a hash of its weights, so its vectors never mix with another model's."""
+
+    def __init__(self, path: Path, sha: str) -> None:
+        from sentence_transformers import SentenceTransformer  # the optional `dense` extra
+
+        self.name = f"lex/bge-m3-ft@{sha[:7]}"
+        self.model = SentenceTransformer(str(path), device="cpu")
 
 
 GEMINI_OPENAI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
