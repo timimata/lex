@@ -177,9 +177,10 @@ instance took 3.07 s at the median and 3.40 s at worst over 18 probe runs, 2026-
 - **Contamination.** 74 of the 105 dev items come from the ACT's portal, and of the 60 drawn
   from its FAQ, 37 keep the ACT's question word for word
   ([bench/DATASET_CARD.md](../bench/DATASET_CARD.md)): a model may have read them with the ACT's
-  answers. Test runs send test questions and reference answers to Google's API on its free tier,
-  whose terms let Google use prompts to improve its products, a risk the project accepted on
-  2026-10-09 ([ADR 0016](decisions/0016-licences-and-hidden-test.md), amended); every run records
+  answers. Test runs send test questions and reference answers to Google's API on its free tier;
+  for a developer in the EEA, Google's terms apply its paid data terms to the free tier, so it
+  logs them for a limited period and does not use them to improve its products
+  ([ADR 0016](decisions/0016-licences-and-hidden-test.md), amended 2026-10-16); every run records
   each endpoint's tier.
 - **One source dominates**, one model family answers and one judge judges; the judge is checked on
   clear errors, not on hand labels.

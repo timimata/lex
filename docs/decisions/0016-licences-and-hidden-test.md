@@ -1,7 +1,7 @@
 # 0016. Licences, and a test split that stays private
 
 Date: 2026-10-01
-Status: accepted; amended 2026-10-08 (what leaves the machine; a paid key for test runs) and 2026-10-09 (the free tier accepted for test runs)
+Status: accepted; amended 2026-10-08 (what leaves the machine; a paid key for test runs), 2026-10-09 (the free tier accepted for test runs) and 2026-10-16 (Google's terms from the EEA)
 
 ## Context
 
@@ -124,3 +124,23 @@ and accepts that a provider may train on what test runs send it.
   is not published; it is no longer kept from the providers the runs call.
 - `FREE_TIER_ON_TEST = False` restores the rule of 2026-10-08 for the runs that follow; it cannot
   call back what was sent.
+
+## Amendment, 2026-10-16: what Google's terms do with what is sent from the EEA
+
+Read 2026-10-16: the Gemini API Additional Terms of Service (effective 2026-03-23, updated
+2026-04-28) say that for a developer in the European Economic Area, Switzerland or the United
+Kingdom, the paid services' data terms "apply to all Services, including Google AI Studio and
+unpaid quota in the Gemini API, even though they are offered free of charge". Under those terms
+Google does not use prompts or responses to improve its products; it logs them for a limited
+period, to detect violations of its prohibited use policy and for required legal or regulatory
+disclosures ([the terms](https://ai.google.dev/gemini-api/terms)). Lex's runs are made from
+Portugal, and the judge (Gemma 4) is called through the same API.
+
+- The risk accepted on 2026-10-09, that test questions enter a provider's training data, does
+  not follow from Google's terms for these runs: test questions and reference answers still reach
+  Google, and are logged for that limited period. The amendment of 2026-10-09 stands for any
+  other provider on a free tier.
+- The dataset card, the report and the page said Google may use what it is sent to improve its
+  products; they now say what the terms say. The page's privacy notice (About, "Privacidade")
+  says what the demo sends where.
+

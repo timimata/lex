@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import { systemLabel } from "./labels";
 import * as links from "./links";
 import { useWords } from "./words";
 
 export default function About({ demoSystem }: { demoSystem: string }) {
   const { lang, t } = useWords();
+  // The footer links to the notice (/sobre#privacidade): the page draws after the browser
+  // has looked for the anchor, so it is scrolled to here.
+  useEffect(() => {
+    const target = window.location.hash.slice(1);
+    if (target) document.getElementById(target)?.scrollIntoView();
+  }, []);
   return (
     <article className="prose">
       <h1>{t.about.title}</h1>
@@ -45,6 +52,22 @@ export default function About({ demoSystem }: { demoSystem: string }) {
       <p>
         {t.about.authorLine} {links.AUTHOR}.
       </p>
+      <h2 id="privacidade">{t.about.privacyTitle}</h2>
+      {t.about.privacy.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+      <p>
+        {t.about.privacyContact} <a href={`mailto:${links.CONTACT}`}>{links.CONTACT}</a>. {t.about.privacyRights}{" "}
+        <a href={links.CNPD}>{t.about.cnpd}</a>.
+      </p>
+      <ul>
+        <li>
+          <a href={links.GEMINI_TERMS}>{t.about.geminiTerms}</a>
+        </li>
+        <li>
+          <a href={links.VERCEL_PRIVACY}>{t.about.vercelPrivacy}</a>
+        </li>
+      </ul>
     </article>
   );
 }

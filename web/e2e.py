@@ -109,12 +109,22 @@ def check(page: Page, shots: Path | None) -> None:
     shot("1-home")
     audit(page, "home")
 
-    # A shared link asks its question on arrival, on its date, and the answer says how long.
+    # An empty question is not sent: the button presses, and the page says what to enter,
+    # beside the field, rather than greying the button out.
+    submit.click()
+    expect(page.locator("#question-error")).to_contain_text("Escreva a sua pergunta")
+    expect(page.locator("#question")).to_have_attribute("aria-invalid", "true")
+    expect(page.locator("#question")).to_be_focused()
+    audit(page, "home, an empty question")
+    page.locator("#question").fill("Fé")
+    expect(page.locator("#question-error")).to_have_count(0)  # typing clears it
+
+    # A shared link asks its question on arrival, on its date. The page keeps the model's
+    # workings (its requests, calls and tokens) out of sight: plain answers only.
     page.goto(URL + "?q=Quantos+dias+de+f%C3%A9rias%3F&d=2011-06-01&lang=pt")
     expect(page.locator(".answer-text")).to_contain_text("01/06/2011")
-    expect(page.locator(".answer-details")).to_contain_text(" s")
-    expect(page.locator(".answer-details")).to_contain_text("2 chamadas ao modelo, 2340 tokens")
-    expect(page.locator(".requests li")).to_have_text(["pesquisar «majoração das férias»: CT 238"])
+    expect(page.locator("#answer")).not_to_contain_text("tokens")
+    expect(page.locator("#answer")).not_to_contain_text("majoração")
     assert "d=2011-06-01" in page.url, page.url
     expect(page.locator(".examples")).to_have_count(0)  # the answer took the examples' place
 
@@ -133,9 +143,9 @@ def check(page: Page, shots: Path | None) -> None:
     shot("2-changes")
     audit(page, "an answer, its article's changes open")
 
-    # The same question again comes from the cache, and the page says so.
+    # The same question again comes back, from the cache, as any answer.
     submit.click()
-    expect(page.locator(".kicker")).to_contain_text("resposta guardada")
+    expect(page.locator(".answer-text")).to_contain_text("01/06/2011")
 
     # Articles, with no model: by number on a date, by words, and from a link. The page has a
     # path of its own, and the title follows.
@@ -222,6 +232,17 @@ def check(page: Page, shots: Path | None) -> None:
     page.go_back()
     expect(page.locator("table").first).to_be_visible()  # the browser's back button works
 
+    # The privacy notice, from every page's footer: no cookies, where a question goes, and who
+    # answers for it.
+    page.goto(URL + "?lang=pt")
+    page.locator(".site-footer").get_by_role("link", name="Privacidade").click()
+    page.wait_for_url(re.compile(r"/sobre#privacidade$"))
+    expect(page.locator("#privacidade")).to_be_in_viewport()
+    expect(page.locator(".prose")).to_contain_text("não usa cookies")
+    expect(page.locator(".prose")).to_contain_text("timimata1@gmail.com")
+    audit(page, "the privacy notice")
+    shot("8-privacy")
+
     # What changed between two dates: Lei n.º 13/2019 in the Código Civil, its articles opening
     # on their changes (the late-rent fee, 50 % before, 20 % after).
     page.goto(URL + "alteracoes?dip=CC&de=2019-01-01&ate=2019-12-31&lang=pt")
@@ -237,10 +258,10 @@ def check(page: Page, shots: Path | None) -> None:
     tab("Alterações").click()
     expect(page.locator(".change-group").first).to_be_visible()  # kept across a reload of view
 
-    # The home page shows the demo's own numbers, once it has a judged test run.
+    # The home page says how often the demo was right, once it has a judged test run.
     page.goto(URL + "?lang=pt")
     if any(r["system"] == Scripted.name for r in leaderboard(ROOT / "results" / "test")):
-        expect(page.locator(".figures dt").first).to_be_visible()
+        expect(page.locator(".score")).to_contain_text("julgadas corretas")
 
     # Results and About render in both languages, and an answer survives the tabs.
     page.goto(URL + "?q=Quantos+dias+de+f%C3%A9rias%3F&d=2011-06-01&lang=pt")

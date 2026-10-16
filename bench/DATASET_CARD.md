@@ -109,10 +109,10 @@ pages are behind it, temporal items ask about the law of an earlier date, and a 
 on citing the right versions, which the ACT's pages do not give. A score on these items may still
 be higher than on questions no model has seen, and is read that way. Test questions and their
 reference answers are also sent to Google's Gemini API on its free tier by test runs (the
-judge, and the answer model where a run says so), on terms that let Google use prompts to improve
-its products: every run in `results/test/` records each model's endpoint and tier. A model trained
-on those prompts may score higher on test than it would on unseen questions (ADR 0016, amended
-2026-10-09).
+judge, and the answer model where a run says so). For a developer in the EEA, Google's terms
+apply its paid data terms to the free tier: it logs prompts for a limited period, to detect
+abuse, and does not use them to improve its products. Every run in `results/test/` records each
+model's endpoint and tier (ADR 0016, amended 2026-10-16).
 
 ## Personal data
 

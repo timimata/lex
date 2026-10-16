@@ -45,11 +45,12 @@ const pt = {
   // Ask
   askTitle: "Pergunte à lei do trabalho e do arrendamento",
   askLead:
-    "A resposta assenta apenas nos artigos em vigor na data que indicar, e cada frase cita o seu artigo. Quando os artigos não permitem responder, o Lex di-lo.",
-  question: "Pergunta",
-  placeholder: "Escreva a sua pergunta sobre trabalho ou arrendamento",
+    "A resposta cita os artigos em vigor na data que escolher. Se a lei não responder, o Lex diz-lho.",
+  enterQuestion: "Escreva a sua pergunta.",
+  questionTooShort: "A pergunta tem de ter pelo menos 3 caracteres.",
+  errorPrefix: "Erro:",
   privacyNote:
-    "A pergunta é enviada à API Gemini da Google, no nível gratuito, cujos termos deixam a Google usá-la para melhorar os seus produtos. Não escreva dados pessoais.",
+    "A pergunta é enviada à Google (API Gemini) para ser respondida. Não escreva dados pessoais.",
   lawInForceOn: "Lei em vigor a",
   ask: "Perguntar",
   asking: "A consultar…",
@@ -79,6 +80,8 @@ const pt = {
   precisionShare: "citações corretas",
   testQuestions: "perguntas de teste, nunca usadas para afinar",
   seeResults: "Ver os resultados",
+  scoreLine: (percent: number, items: number) =>
+    `Em ${items} perguntas de teste que o Lex nunca tinha visto, ${percent}% das respostas foram julgadas corretas.`,
   runOf: "Execução de",
   howTitle: "Como responde",
   howShort: [
@@ -130,7 +133,8 @@ const pt = {
   browseIntro:
     "Qualquer artigo na versão em vigor numa data, com o histórico de versões e as alterações. Esta consulta não usa modelos de linguagem.",
   browseLabel: "Artigo ou palavras",
-  browsePlaceholder: "Ex.: 238, 199-A, NRAU 9, 1083 CC, férias, renda",
+  browseHint: "Um número de artigo, como 238, 199-A, NRAU 9 ou 1083 CC, ou palavras, como férias ou renda.",
+  enterBrowse: "Escreva um número de artigo ou palavras.",
   browse: "Consultar",
   nothingFound: "Nenhum artigo em vigor nessa data contém essas palavras.",
   // Results
@@ -192,6 +196,7 @@ const pt = {
   footerLicences: "Licenças",
   footerLicenceText: "Código sob licença MIT; benchmark sob CC BY 4.0.",
   footerBy: "Por",
+  privacyLink: "Privacidade",
   systemOfDemo: "Sistema desta demonstração",
   // About
   about: {
@@ -222,6 +227,18 @@ const pt = {
     codeLink: "Código, corpus e avaliação",
     datasetLink: "Benchmark, divisão de desenvolvimento",
     authorLine: "Feito por",
+    privacyTitle: "Privacidade",
+    privacy: [
+      "O Lex não usa cookies nem conta visitas. Se escolher a língua da página, a escolha fica guardada no seu browser até fechar o separador.",
+      "Ao fazer uma pergunta, o texto e a data seguem para a Google (API Gemini), que gera a resposta. Nos termos que a Google aplica a este uso, as perguntas não servem para melhorar os seus produtos e ficam guardadas durante um período limitado, para detetar abusos e cumprir obrigações legais. Não escreva dados pessoais na pergunta.",
+      "O servidor do Lex guarda em memória a pergunta e a resposta, para repetir a resposta sem voltar à Google, e o endereço IP, para limitar quantas perguntas cada visitante faz por hora. Nada disto é escrito em disco nem nos registos, que guardam só o resultado, o tempo e os tokens de cada resposta, e tudo desaparece quando a instância do servidor termina. Consultar artigos e alterações não envia nada à Google.",
+      "O site está alojado na Vercel. A Google e a Vercel podem tratar estes dados fora da União Europeia, com as garantias descritas nas suas políticas. A base destes tratamentos é o interesse legítimo em responder ao que pergunta e em evitar abusos (artigo 6.º, n.º 1, alínea f), do RGPD).",
+    ],
+    privacyContact: "Responsável: Tiago Machado,",
+    privacyRights: "Pode pedir informação sobre os seus dados ou o seu apagamento, e apresentar queixa à",
+    cnpd: "Comissão Nacional de Proteção de Dados",
+    geminiTerms: "Termos da API Gemini (Google)",
+    vercelPrivacy: "Política de privacidade da Vercel",
   },
 };
 
@@ -267,11 +284,12 @@ const en: Strings = {
   loading: "Loading",
   askTitle: "Ask the labour and tenancy law",
   askLead:
-    "The answer rests only on the articles in force on the date you give, and every sentence cites its article. When the articles do not support an answer, Lex says so.",
-  question: "Question (in Portuguese)",
-  placeholder: "Type a question about work or renting, in Portuguese",
+    "Write in Portuguese. The answer cites the articles in force on the date you choose. If the law does not answer it, Lex tells you.",
+  enterQuestion: "Enter your question.",
+  questionTooShort: "The question must be at least 3 characters long.",
+  errorPrefix: "Error:",
   privacyNote:
-    "Your question is sent to Google's Gemini API, on its free tier, whose terms let Google use it to improve its products. Do not write personal data.",
+    "Your question is sent to Google (the Gemini API) to be answered. Do not write personal data.",
   lawInForceOn: "Law in force on",
   ask: "Ask",
   asking: "Consulting…",
@@ -300,6 +318,8 @@ const en: Strings = {
   precisionShare: "correct citations",
   testQuestions: "test questions, never used for tuning",
   seeResults: "See the results",
+  scoreLine: (percent: number, items: number) =>
+    `On ${items} test questions Lex had never seen, ${percent}% of its answers were judged correct.`,
   runOf: "Run of",
   howTitle: "How it answers",
   howShort: [
@@ -349,7 +369,8 @@ const en: Strings = {
   browseIntro:
     "Any article as in force on a date, with its version history and changes. No language model is involved.",
   browseLabel: "Article or words (in Portuguese)",
-  browsePlaceholder: "E.g. 238, 199-A, NRAU 9, 1083 CC, férias, renda",
+  browseHint: "An article number, such as 238, 199-A, NRAU 9 or 1083 CC, or words in Portuguese, such as férias or renda.",
+  enterBrowse: "Enter an article number or words.",
   browse: "Look up",
   nothingFound: "No article in force on that date contains those words.",
   loadingResults: "Loading results…",
@@ -409,6 +430,7 @@ const en: Strings = {
   footerLicences: "Licences",
   footerLicenceText: "Code under the MIT licence; benchmark under CC BY 4.0.",
   footerBy: "By",
+  privacyLink: "Privacy",
   systemOfDemo: "This demo's system",
   about: {
     title: "About Lex",
@@ -438,17 +460,31 @@ const en: Strings = {
     codeLink: "Code, corpus builder and evaluation harness",
     datasetLink: "Benchmark, development split",
     authorLine: "Made by",
+    privacyTitle: "Privacy",
+    privacy: [
+      "Lex uses no cookies and counts no visits. If you choose the page's language, the choice stays in your browser until you close the tab.",
+      "When you ask a question, its text and date go to Google (the Gemini API), which writes the answer. Under the terms Google applies to this use, questions are not used to improve its products and are kept for a limited period, to detect abuse and meet legal obligations. Do not write personal data in your question.",
+      "Lex's server keeps the question and the answer in memory, to give the answer again without asking Google, and your IP address, to limit how many questions each visitor asks per hour. None of this is written to disk or to the logs, which keep only each answer's outcome, time and tokens, and all of it is gone when the server instance stops. Looking up articles and changes sends nothing to Google.",
+      "The site is hosted by Vercel. Google and Vercel may process this data outside the European Union, with the safeguards their policies describe. The basis for this processing is the legitimate interest in answering what you ask and in preventing abuse (GDPR, Article 6(1)(f)).",
+    ],
+    privacyContact: "Controller: Tiago Machado,",
+    privacyRights: "You can ask about your data or for its erasure, and complain to Portugal's data protection authority, the",
+    cnpd: "Comissão Nacional de Proteção de Dados",
+    geminiTerms: "Gemini API terms (Google)",
+    vercelPrivacy: "Vercel's privacy policy",
   },
 };
 
 export const STRINGS: Record<Lang, Strings> = { pt, en };
 
-/** The language to start in: the link's, then the visitor's last choice, then the browser's. */
+/** The language to start in: the link's, then the visitor's choice in this tab, then the
+ * browser's. Kept in sessionStorage, so nothing stays once the tab closes (no consent needed,
+ * and the privacy notice says so). */
 export function initialLang(): Lang {
   const fromLink = new URLSearchParams(window.location.search).get("lang");
   if (fromLink === "pt" || fromLink === "en") return fromLink;
   try {
-    const saved = window.localStorage.getItem("lex.lang");
+    const saved = window.sessionStorage.getItem("lex.lang");
     if (saved === "pt" || saved === "en") return saved;
   } catch {
     // storage blocked: fall through
@@ -458,7 +494,7 @@ export function initialLang(): Lang {
 
 export function saveLang(lang: Lang): void {
   try {
-    window.localStorage.setItem("lex.lang", lang);
+    window.sessionStorage.setItem("lex.lang", lang);
   } catch {
     // storage blocked: the choice lasts for this visit only
   }

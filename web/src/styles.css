@@ -1,54 +1,61 @@
-/* Lex. The law as a dated document: newsprint paper and ink, cobalt for what is interactive
-   or current, vermilion only for what was removed or refused. One typeface, the system's own
-   (San Francisco, Segoe UI, Roboto), so nothing is downloaded and the page reads like the
-   visitor's other pages; the law and the answers are told apart by size and indent, not by a
-   face. One type scale (12, 13, 14, 16, 18, 20, 24, 32, 40), two weights (400 and 600), no
-   tracking, no capitals, no decoration and no entrance animation; one spacing scale (4, 8, 12,
-   16, 24, 32, 48, 64). Every text colour meets 4.5:1 on every paper and every field border 3:1
-   (web/ROADMAP.md, "What the research says"). */
+/* Lex, a public reference tool. White paper and neutral ink; one colour for what can be
+   clicked or is current, the cobalt of azulejos (the project's own, not a framework's);
+   vermilion only for what was removed, refused or wrong; green only for text a law added;
+   a highlighter's yellow only for the words a search found. The system's typeface (Tiago's choice,
+   web/ROADMAP.md), weights 400 and 600, one modular scale: 1.2 from 17 px, so 14, 17, 20, 24,
+   29, nothing smaller. No cards: a surface has a tint or a border, never both, and a coloured
+   left border marks only an alert. Fields follow GOV.UK: the label above, hints outside the
+   field, errors said beside it. Every text colour meets 4.5:1 and every field border 3:1
+   (web/contrast.py). */
 
 :root {
-  --paper: #f4eee2;
-  --paper-2: #fbf8f2;
-  --paper-3: #ebe3d3;
-  --ink: #1b1813;
-  --ink-2: #463f35;
-  --muted: #625a4e;
-  --rule: #d8ccb6;
-  --rule-2: #bfb29a;
-  --field: #857a66; /* field borders: 3:1 against the papers */
+  --paper: #ffffff;
+  --paper-2: #f5f5f5; /* the reader: a tint, no border */
+  --paper-3: #efefef; /* the notice */
+  --ink: #1b1b1b;
+  --ink-2: #3b3b3b;
+  --muted: #5b5b5b;
+  --rule: #dcdcdc;
+  --rule-2: #b5b5b5;
+  --field: #6d6d6d; /* field borders: 3:1 and more against the papers */
   --cobalt: #1f4a9b;
   --cobalt-strong: #173a7c; /* hover and pressed states of what is cobalt */
-  --cobalt-deep: #173a7c; /* the header's ground */
+  --cobalt-deep: #ffffff; /* the header's ground: the paper */
   --cobalt-wash: rgba(31, 74, 155, 0.1);
-  --on-cobalt: #f4eee2;
-  --on-accent: #fbf8f2;
-  --vermilion: #b8341a;
-  --vermilion-wash: rgba(192, 56, 29, 0.1);
+  --on-cobalt: #1b1b1b; /* the header's text: the ink */
+  --on-accent: #ffffff;
+  --vermilion: #b3311a;
+  --vermilion-wash: rgba(179, 49, 26, 0.08);
+  --green: #2e7d46; /* the underline of added text */
+  --green-wash: #e3f1e6; /* its ground */
+  --highlight: #fff0a3; /* a search's matches */
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
 
-/* The night edition. */
+/* Designed for the dark, not inverted: neutral greys, no pure black or white, pastel accents. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #0e1320;
-    --paper-2: #141b2b;
-    --paper-3: #1a2336;
-    --ink: #ece4d4;
-    --ink-2: #cdc4b2;
-    --muted: #9c9382;
-    --rule: #283247;
-    --rule-2: #3a4660;
-    --field: #5f7094;
+    --paper: #151515;
+    --paper-2: #1d1d1d;
+    --paper-3: #222222;
+    --ink: #e8e8e8;
+    --ink-2: #c9c9c9;
+    --muted: #a3a3a3;
+    --rule: #2f2f2f;
+    --rule-2: #474747;
+    --field: #7b7b7b;
     --cobalt: #8fb0f0;
     --cobalt-strong: #b7cdf7;
-    --cobalt-deep: #0b1832;
+    --cobalt-deep: #151515;
     --cobalt-wash: rgba(143, 176, 240, 0.14);
-    --on-cobalt: #ece4d4;
-    --on-accent: #0e1320;
+    --on-cobalt: #e8e8e8;
+    --on-accent: #151515;
     --vermilion: #ff8a6c;
     --vermilion-wash: rgba(255, 138, 108, 0.14);
+    --green: #7fd19b;
+    --green-wash: #1f3326;
+    --highlight: #4d4200;
     color-scheme: dark;
   }
 }
@@ -69,7 +76,7 @@ body {
   color: var(--ink);
   background: var(--paper);
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -165,7 +172,7 @@ b {
 .tag {
   margin-left: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -185,6 +192,7 @@ b {
 /* ---------- header ---------- */
 
 .topbar {
+  border-bottom: 1px solid var(--rule);
   background: var(--cobalt-deep);
   color: var(--on-cobalt);
 }
@@ -205,33 +213,25 @@ b {
   text-decoration: none;
 }
 
+/* The one mark of the place: an azulejo, in the accent. */
 .mark {
   flex: none;
-  color: var(--on-cobalt);
+  color: var(--cobalt);
 }
 
 .mark-ground {
-  fill: var(--cobalt-deep);
+  fill: var(--paper);
 }
 
 .mark-ring {
   fill: none;
-  stroke: var(--cobalt-deep);
+  stroke: var(--paper);
 }
 
 .wordmark-name {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1;
-}
-
-.wordmark-tagline {
-  overflow: hidden;
-  font-size: 14px;
-  font-style: italic;
-  opacity: 0.85;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .nav {
@@ -244,7 +244,7 @@ b {
   position: relative;
   padding: 18px 10px 16px;
   color: var(--on-cobalt);
-  font-size: 16px;
+  font-size: 17px;
   opacity: 0.85;
   text-decoration: none;
 }
@@ -263,15 +263,15 @@ b {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 0;
-  height: 3px;
-  background: var(--on-cobalt);
+  bottom: -1px;
+  height: 2px;
+  background: var(--cobalt);
 }
 
 .lang-switch {
   display: inline-flex;
   flex: none;
-  border: 1px solid color-mix(in srgb, var(--on-cobalt) 45%, transparent);
+  border: 1px solid var(--rule-2);
 }
 
 .lang-switch button {
@@ -279,13 +279,13 @@ b {
   background: none;
   padding: 3px 9px;
   color: var(--on-cobalt);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   opacity: 0.8;
 }
 
 .lang-switch button + button {
-  border-left: 1px solid color-mix(in srgb, var(--on-cobalt) 45%, transparent);
+  border-left: 1px solid var(--rule-2);
 }
 
 .lang-switch button.on {
@@ -300,7 +300,7 @@ b {
   border-bottom: 1px solid var(--rule);
   background: var(--paper-3);
   color: var(--ink-2);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .notice .wrap {
@@ -327,9 +327,9 @@ b {
 .prose h1 {
   text-wrap: balance;
   margin: 0 0 12px;
-  font-size: 40px;
+  font-size: 29px;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .lead {
@@ -337,14 +337,14 @@ b {
   max-width: 60ch;
   margin: 0;
   color: var(--ink-2);
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.5;
 }
 
 .note {
   margin: 12px 0 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -398,92 +398,22 @@ b {
 /* ---------- home ---------- */
 
 .home {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: 64px;
-  align-items: start;
+  max-width: 720px;
 }
 
 .home.answered {
-  display: block;
+  max-width: none;
 }
 
 .home-main {
   min-width: 0;
 }
 
-/* Beside the question: what the page is, with the demo's numbers from the leaderboard. */
-.measured {
-  padding: 24px 0 0;
-  border-top: 3px double var(--ink);
-}
-
-.measured-lead {
-  text-wrap: pretty;
-  margin: 0 0 16px;
-  font-size: 18px;
-  line-height: 1.5;
-}
-
-.figures {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 0 0 16px;
-  padding: 16px 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-
-.figures div {
-  min-width: 0;
-}
-
-.figures dt {
-  font-size: 32px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-.figures dd {
-  margin: 6px 0 0;
-  color: var(--ink-2);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.measured p {
-  margin: 0 0 24px;
-}
-
-.measured-run {
+/* Under the examples: how often the demo was right, one line. */
+.score {
+  margin: 24px 0 0;
   color: var(--muted);
-  font-size: 13px;
-}
-
-.how {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: step;
-  color: var(--ink-2);
   font-size: 14px;
-}
-
-.how li {
-  position: relative;
-  margin: 0 0 6px;
-  padding-left: 24px;
-  counter-increment: step;
-}
-
-.how li::before {
-  content: counter(step) ".";
-  position: absolute;
-  left: 0;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- forms ---------- */
@@ -492,11 +422,38 @@ b {
   max-width: 720px;
 }
 
+/* The question is the page's heading: its label, at the heading's size. */
+.page-head h1 label {
+  cursor: text;
+}
+
+.field-error {
+  margin: 0 0 8px;
+  color: var(--vermilion);
+  font-weight: 600;
+}
+
+textarea[aria-invalid="true"] {
+  border: 2px solid var(--vermilion);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 .field-label {
   display: block;
   margin-bottom: 6px;
   color: var(--ink-2);
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
 }
 
@@ -506,7 +463,7 @@ input[type="date"],
 .select-field select {
   border: 1px solid var(--field);
   border-radius: 0;
-  background: var(--paper-2);
+  background: var(--paper);
   color: var(--ink);
   font: inherit;
 }
@@ -515,7 +472,7 @@ textarea {
   display: block;
   width: 100%;
   padding: 12px 14px;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.45;
   resize: vertical;
 }
@@ -528,18 +485,18 @@ textarea::placeholder,
 .text-input {
   flex: 1 1 280px;
   padding: 10px 12px;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 input[type="date"] {
   padding: 9px 11px;
-  font-size: 16px;
+  font-size: 17px;
   font-variant-numeric: tabular-nums;
 }
 
 .select-field select {
   padding: 9px 11px;
-  font-size: 15px;
+  font-size: 17px;
 }
 
 textarea:focus,
@@ -547,8 +504,8 @@ textarea:focus,
 input[type="date"]:focus,
 .select-field select:focus {
   border-color: var(--cobalt);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--cobalt-wash);
+  outline: 2px solid var(--cobalt);
+  outline-offset: 0;
 }
 
 .query-row {
@@ -599,7 +556,7 @@ input[type="date"]:focus,
   border: 0;
   border-radius: 0;
   padding: 10px 24px;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
 }
@@ -619,8 +576,8 @@ input[type="date"]:focus,
 }
 
 .button:disabled {
-  opacity: 0.45;
-  cursor: default;
+  cursor: progress;
+  opacity: 0.75;
   box-shadow: none;
 }
 
@@ -649,13 +606,13 @@ input[type="date"]:focus,
 
 .examples li {
   margin: 0 0 8px;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.4;
 }
 
 .examples .muted {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .example {
@@ -663,7 +620,7 @@ input[type="date"]:focus,
   background: none;
   padding: 0;
   color: var(--cobalt);
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.4;
   text-align: left;
   text-decoration: underline;
@@ -697,8 +654,7 @@ input[type="date"]:focus,
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--rule);
+  margin-bottom: 16px;
   color: var(--muted);
   font-size: 14px;
 }
@@ -709,10 +665,10 @@ input[type="date"]:focus,
 }
 
 .answer-question {
-  margin: 20px 0 12px;
+  margin: 0 0 4px;
   font-size: 24px;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .answer-question + .note {
@@ -721,7 +677,7 @@ input[type="date"]:focus,
 
 .answer-text {
   text-wrap: pretty;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.6;
 }
 
@@ -778,14 +734,13 @@ input[type="date"]:focus,
   flex-wrap: wrap;
   align-items: baseline;
   gap: 2px 12px;
-  padding: 8px 12px;
-  border-left: 3px solid transparent;
+  padding: 8px 0;
 }
 
-.basis li.on,
-.hits li.on {
-  border-left-color: var(--cobalt);
-  background: var(--paper-2);
+.basis li.on .cite,
+.hits li.on .cite {
+  color: var(--ink);
+  text-decoration-thickness: 2px;
 }
 
 .cite {
@@ -793,7 +748,7 @@ input[type="date"]:focus,
   background: none;
   padding: 0;
   color: var(--cobalt);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   text-align: left;
   text-decoration: underline;
@@ -802,34 +757,12 @@ input[type="date"]:focus,
 }
 
 .basis .muted {
-  font-size: 13px;
-}
-
-/* What the agent asked for before answering: a quiet list, the requests as the model wrote them. */
-.requests {
-  margin-top: 16px;
-}
-
-.requests ol {
-  margin: 0;
-  padding-left: 20px;
-  color: var(--ink-2);
   font-size: 14px;
-}
-
-.requests li + li {
-  margin-top: 4px;
-}
-
-.answer-details {
-  margin: 16px 0 0;
-  color: var(--muted);
-  font-size: 13px;
 }
 
 .hit-heading {
   color: var(--ink-2);
-  font-size: 18px;
+  font-size: 17px;
   font-style: italic;
 }
 
@@ -840,10 +773,10 @@ input[type="date"]:focus,
   font-size: 14px;
 }
 
+/* The words found, as a highlighter marks them: not cobalt, which means a link. */
 .hit-excerpt mark {
-  background: var(--cobalt-wash);
+  background: var(--highlight);
   color: var(--ink);
-  font-weight: 600;
 }
 
 /* ---------- reader: an article set as in the Diário da República ---------- */
@@ -851,7 +784,6 @@ input[type="date"]:focus,
 .reader {
   min-width: 0;
   padding: 24px 32px 28px;
-  border: 1px solid var(--rule);
   background: var(--paper-2);
 }
 
@@ -874,7 +806,7 @@ input[type="date"]:focus,
   margin-bottom: 20px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--rule);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .reader-code {
@@ -889,7 +821,7 @@ input[type="date"]:focus,
 
 .reader-close {
   margin-left: auto;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .reader-title {
@@ -902,7 +834,7 @@ input[type="date"]:focus,
 .reader-heading {
   margin: 4px 0 0;
   color: var(--ink-2);
-  font-size: 18px;
+  font-size: 17px;
   font-style: italic;
   line-height: 1.3;
 }
@@ -913,7 +845,7 @@ input[type="date"]:focus,
   gap: 4px 16px;
   margin: 12px 0 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -932,7 +864,7 @@ input[type="date"]:focus,
 }
 
 .legal-text {
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.6;
 }
 
@@ -951,14 +883,16 @@ input[type="date"]:focus,
   text-indent: -1.7em;
 }
 
-/* Amendments as a reviser marks them: added in cobalt, underlined; removed in vermilion, struck. */
+/* Amendments as a diff marks them: added on green, underlined; removed in vermilion, struck.
+   Added text keeps the ink, so it never reads as a link. */
 .diff ins,
 .note ins {
-  color: var(--cobalt);
+  color: var(--ink);
   text-decoration: underline;
-  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--green);
+  text-decoration-thickness: 2px;
   text-underline-offset: 3px;
-  background: var(--cobalt-wash);
+  background: var(--green-wash);
 }
 
 .diff del,
@@ -1044,7 +978,7 @@ input[type="date"]:focus,
   text-wrap: pretty;
   max-width: 60ch;
   margin: 0 0 16px;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.5;
 }
 
@@ -1063,7 +997,7 @@ input[type="date"]:focus,
   border-top: 2px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
   text-align: left;
@@ -1129,7 +1063,7 @@ input[type="date"]:focus,
 
 .data td.run {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -1145,7 +1079,7 @@ summary {
 
 .by-type h3 {
   margin: 24px 0 8px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
 }
 
@@ -1163,7 +1097,7 @@ summary {
 
 .prose p,
 .prose li {
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.6;
 }
 
@@ -1178,41 +1112,17 @@ summary {
 /* ---------- footer ---------- */
 
 .site-footer {
-  border-top: 3px double var(--ink);
-  background: var(--paper-3);
-  color: var(--ink-2);
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--muted);
   font-size: 14px;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: 32px;
-  padding-top: 32px;
-  padding-bottom: 24px;
-}
-
-.footer-col p {
-  margin: 0 0 6px;
-}
-
-.footer-about {
-  color: var(--ink);
-  font-size: 18px;
-  line-height: 1.45;
-}
-
-.footer-head {
-  margin: 0 0 8px;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
 }
 
 .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
   margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .footer-links li {
@@ -1220,23 +1130,27 @@ summary {
 }
 
 .footer-legal {
-  padding-top: 16px;
+  padding-top: 24px;
   padding-bottom: 32px;
-  border-top: 1px solid var(--rule);
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
+}
+
+/* Touch targets of 24px and more (WCAG 2.5.8). */
+.footer-links a {
+  display: inline-block;
+  padding: 4px 0;
 }
 
 .footer-legal p {
-  margin: 0 0 4px;
+  margin: 0 0 8px;
 }
 
 /* ---------- narrow screens ---------- */
 
 @media (max-width: 960px) {
   .home,
-  .workspace.split,
-  .footer-grid {
+  .workspace.split {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1258,9 +1172,6 @@ summary {
     display: inline;
   }
 
-  .wordmark-tagline {
-    display: none;
-  }
 }
 
 @media (max-width: 600px) {
@@ -1289,7 +1200,7 @@ summary {
 
   .nav a {
     padding: 10px 8px 12px;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .nav a.on::after {
@@ -1307,15 +1218,6 @@ summary {
 
   .page-head h1,
   .prose h1 {
-    font-size: 32px;
-  }
-
-  .figures {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .figures dt {
     font-size: 24px;
   }
 
@@ -1353,7 +1255,7 @@ summary {
 /* What the version did, as a remark in words: no chips (web/ROADMAP.md, stage 2). */
 .change-kind {
   color: var(--ink-2);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .change-kind::before {
@@ -1379,19 +1281,16 @@ summary {
   }
 
   /* The controls go; the brand, the dated notice, the content and the full disclaimer stay. */
-  .skip,
+.skip,
   .nav,
   .lang-switch,
   .ask form,
   .browse form,
   .examples,
-  .measured,
-  .how,
   .button,
   .text-button,
   .reader-back,
-  .reader-actions,
-  .footer-grid {
+  .reader-actions {
     display: none !important;
   }
 
@@ -1432,13 +1331,12 @@ summary {
 /* The DR's notes on a version's effects, above its text (ROADMAP, Phase 11). */
 .reader-notes {
   margin: 12px 0;
-  padding: 10px 12px;
-  border-left: 3px solid var(--cobalt);
-  background: var(--paper);
+  padding: 4px 0 4px 12px;
+  border-left: 3px solid var(--rule-2);
 }
 
 .reader-notes ul {
   margin: 4px 0 0;
   padding-left: 18px;
-  font-size: 15px;
+  font-size: 14px;
 }

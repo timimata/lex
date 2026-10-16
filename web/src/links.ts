@@ -7,3 +7,7 @@ export const DECISIONS = `${REPO}/tree/main/docs/decisions`;
 export const DR = "https://diariodarepublica.pt/dr/legislacao-consolidada/lei/2009-34546475";
 export const PGDL = "https://www.pgdlisboa.pt/leis/lei_mostra_articulado.php?nid=1047&tabela=leis";
 export const AUTHOR = "Tiago Machado";
+export const CONTACT = "timimata1@gmail.com"; // the controller's, in the privacy notice
+export const GEMINI_TERMS = "https://ai.google.dev/gemini-api/terms";
+export const VERCEL_PRIVACY = "https://vercel.com/legal/privacy-policy";
+export const CNPD = "https://www.cnpd.pt/";

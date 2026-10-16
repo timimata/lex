@@ -12,8 +12,6 @@ import {
   articleNumberLabel,
   day,
   diplomaLabel,
-  number,
-  systemLabel,
   today,
 } from "./labels";
 import * as links from "./links";
@@ -294,7 +292,6 @@ export default function App() {
           >
             <Mark />
             <span className="wordmark-name">Lex</span>
-            <span className="wordmark-tagline">{t.tagline}</span>
           </a>
           <nav className="nav" aria-label="Lex">
             {VIEWS.map((v) => (
@@ -355,102 +352,43 @@ export default function App() {
       </main>
 
       <footer className="site-footer">
-        <div className="wrap footer-grid">
-          <div className="footer-col">
-            <p className="footer-about">{t.footerAbout}</p>
-            <p>{t.footerSources}</p>
-          </div>
-          <div className="footer-col">
-            <h2 className="footer-head">{t.footerLinks}</h2>
-            <ul className="footer-links">
-              <li>
-                <a href={links.REPO}>{t.footerCode}</a>
-              </li>
-              <li>
-                <a href={links.DATASET}>{t.footerDataset}</a>
-              </li>
-              <li>
-                <a href={links.DR}>{t.footerDR}</a>
-              </li>
-              <li>
-                <a href={links.PGDL}>{t.footerPGDL}</a>
-              </li>
-            </ul>
-          </div>
-          <div className="footer-col">
-            <h2 className="footer-head">{t.footerLicences}</h2>
-            <p>{t.footerLicenceText}</p>
-            <p>
-              {t.footerBy} {links.AUTHOR}.
-            </p>
-          </div>
-        </div>
         <div className="wrap footer-legal">
           <p>{t.disclaimer}</p>
-          {demoSystem && (
-            <p>
-              {t.systemOfDemo}: {systemLabel(demoSystem, lang)}.
-            </p>
-          )}
+          <p className="footer-links">
+            <a href={links.REPO}>{t.footerCode}</a>
+            <a href={links.DATASET}>{t.footerDataset}</a>
+            <a href={links.DR}>{t.footerDR}</a>
+            <a href={links.PGDL}>{t.footerPGDL}</a>
+            <a href={`${PATHS.about}#privacidade`}>{t.privacyLink}</a>
+          </p>
+          <p>
+            {t.footerBy} {links.AUTHOR}. {t.footerLicenceText}
+          </p>
         </div>
       </footer>
     </Words.Provider>
   );
 }
 
-/** Beside the question: what the page is, and the demo's own numbers from the leaderboard. */
-function Measured({ run, onResults }: { run: Run | null; onResults: () => void }) {
-  const { lang, t } = useWords();
+/** One line under the examples: how often the demo's answers were right on the test split. */
+function Score({ run, onResults }: { run: Run | null; onResults: () => void }) {
+  const { t } = useWords();
   const correct = run?.correctness?.answerable?.correta;
-  const precision = run?.summary.answerable?.citation_precision;
   const answerable = run?.summary.answerable?.items;
-  const unanswerable = run?.summary.unanswerable?.items;
-  const total = answerable != null && unanswerable != null ? answerable + unanswerable : null;
-  const figures = [
-    { value: correct != null ? number(correct, lang) : null, label: t.correctShare },
-    { value: precision != null ? number(precision, lang) : null, label: t.precisionShare },
-    { value: total != null ? String(total) : null, label: t.testQuestions },
-  ].filter((f) => f.value !== null);
+  if (correct == null || answerable == null) return null;
   return (
-    <aside className="measured" aria-label={t.measuredTitle}>
-      {figures.length > 0 && (
-        <>
-          <h2 className="section-label">{t.measuredTitle}</h2>
-          <p className="measured-lead">{t.measuredLead}</p>
-          <dl className="figures">
-            {figures.map((f) => (
-              <div key={f.label}>
-                <dt>{f.value}</dt>
-                <dd>{f.label}</dd>
-              </div>
-            ))}
-          </dl>
-          <p>
-            <a
-              href={PATHS.results}
-              onClick={(e) => {
-                e.preventDefault();
-                onResults();
-              }}
-            >
-              {t.seeResults}
-            </a>
-            {run && (
-              <span className="measured-run">
-                {" "}
-                · {t.runOf} {day(run.run_at.slice(0, 10))}
-              </span>
-            )}
-          </p>
-        </>
-      )}
-      <h2 className="section-label">{t.howTitle}</h2>
-      <ol className="how">
-        {t.howShort.map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-    </aside>
+    <p className="score">
+      {t.scoreLine(Math.round(correct * 100), answerable)}{" "}
+      <a
+        href={PATHS.results}
+        onClick={(e) => {
+          e.preventDefault();
+          onResults();
+        }}
+      >
+        {t.seeResults}
+      </a>
+    </p>
   );
 }
 
@@ -469,9 +407,16 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
   const [busy, setBusy] = useState(false);
   const [open, setOpen] = useState<Citation | null>(null);
   const [copied, setCopied] = useState(false);
+  // Said beside the field, as GOV.UK does, rather than a button that will not press.
+  const [fieldError, setFieldError] = useState("");
 
   async function submit(q = question, date = asOf) {
-    if (q.trim().length < 3) return;
+    if (q.trim().length < 3) {
+      setFieldError(q.trim() ? t.questionTooShort : t.enterQuestion);
+      document.getElementById("question")?.focus();
+      return;
+    }
+    setFieldError("");
     setBusy(true);
     setError("");
     setReply(null);
@@ -502,26 +447,6 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
     }
   }
 
-  const fmt = (n: number) => n.toLocaleString(lang === "pt" ? "pt-PT" : "en", { maximumFractionDigits: 2 });
-  const stages = reply?.answer.timings;
-  const timing =
-    reply && !reply.cached
-      ? `${t.answered} ${fmt(reply.seconds)} s` +
-        (stages?.retrieval !== undefined && stages.generation !== undefined
-          ? ` (${t.retrievalShort} ${fmt(stages.retrieval)} s, ${t.modelShort} ${fmt(stages.generation)} s)`
-          : "")
-      : "";
-  const used = reply?.answer.tokens;
-  const spent =
-    used?.calls
-      ? `${t.modelCalls(used.calls)}, ${(
-          (used.prompt_tokens ?? 0) +
-          (used.completion_tokens ?? 0) +
-          (used.thinking_tokens ?? 0)
-        ).toLocaleString(lang === "pt" ? "pt-PT" : "en")} tokens`
-      : "";
-  const details = [timing, spent].filter(Boolean).join(" · ");
-  const requests = reply?.answer.requests ?? [];
   const { body, sources } = reply ? splitSources(reply.answer.text) : { body: "", sources: [] };
   const toggle = (c: Citation) => setOpen(same(open, c) ? null : c);
   const idle = !reply && !busy;
@@ -531,8 +456,12 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
       <div className={idle ? "home" : "home answered"}>
         <div className="home-main">
           <header className="page-head">
-            <h1>{t.askTitle}</h1>
-            <p className="lead">{t.askLead}</p>
+            <h1>
+              <label htmlFor="question">{t.askTitle}</label>
+            </h1>
+            <p id="question-hint" className="lead">
+              {t.askLead}
+            </p>
           </header>
           <form
             className="query"
@@ -541,17 +470,23 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
               submit();
             }}
           >
-            <label htmlFor="question" className="field-label">
-              {t.question}
-            </label>
+            {fieldError && (
+              <p id="question-error" className="field-error">
+                <span className="visually-hidden">{t.errorPrefix} </span>
+                {fieldError}
+              </p>
+            )}
             <textarea
               id="question"
               value={question}
               maxLength={1000}
-              rows={2}
-              placeholder={t.placeholder}
-              aria-describedby="question-note"
-              onChange={(e) => setQuestion(e.target.value)}
+              rows={3}
+              aria-describedby={`question-hint${fieldError ? " question-error" : ""} question-note`}
+              aria-invalid={fieldError ? true : undefined}
+              onChange={(e) => {
+                setQuestion(e.target.value);
+                if (fieldError) setFieldError("");
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -573,7 +508,7 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
                   }}
                 />
               </label>
-              <button type="submit" className="button primary" disabled={busy || question.trim().length < 3}>
+              <button type="submit" className="button primary" disabled={busy}>
                 {busy ? t.asking : t.ask}
               </button>
             </div>
@@ -610,6 +545,7 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
                   </li>
                 ))}
               </ul>
+              <Score run={demoRun} onResults={onResults} />
             </div>
           )}
 
@@ -624,23 +560,21 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
             </p>
           )}
         </div>
-        {idle && <Measured run={demoRun} onResults={onResults} />}
       </div>
 
       {reply && (
         <div className={open ? "workspace split" : "workspace"}>
           <article id="answer" className={reply.answer.refused ? "answer refused" : "answer"}>
+            <h2 className="answer-question">{reply.question}</h2>
             <div className="kicker">
-              <span className="label">{reply.answer.refused ? t.noAnswer : t.answer}</span>
+              {reply.answer.refused && <span className="label">{t.noAnswer}</span>}
               <span className="kicker-meta">
-                {t.lawOn} {day(reply.as_of)}
-                {reply.cached && ` · ${t.cached}`}
+                {t.lawInForceOn} {day(reply.as_of)}
               </span>
               <button type="button" className="text-button" onClick={copy}>
                 {copied ? t.copied : t.copyLink}
               </button>
             </div>
-            <h2 className="answer-question">{reply.question}</h2>
             {t.answerLanguage && <p className="note">{t.answerLanguage}</p>}
             <div className="answer-text" lang="pt-PT">
               {body.split("\n").map((line, i) =>
@@ -668,17 +602,6 @@ function Ask({ latest, demoRun, onResults }: { latest: string; demoRun: Run | nu
                 </ol>
               </section>
             )}
-            {requests.length > 0 && (
-              <section className="requests">
-                <h3 className="section-label">{t.requestsTitle}</h3>
-                <ol lang="pt-PT">
-                  {requests.map((r) => (
-                    <li key={r}>{r}</li>
-                  ))}
-                </ol>
-              </section>
-            )}
-            {details && <p className="answer-details">{details}</p>}
           </article>
           {open && <Reader citation={open} asOf={reply.as_of} backTo="#answer" onClose={() => setOpen(null)} />}
         </div>
@@ -706,6 +629,10 @@ function Browse({ latest }: { latest: string }) {
   const [error, setError] = useState("");
 
   async function go() {
+    if (!query.trim()) {
+      setError(t.enterBrowse);
+      return;
+    }
     setError("");
     setHits(null);
     const found = articleRef(query);
@@ -762,7 +689,7 @@ function Browse({ latest }: { latest: string }) {
               id="browse"
               className="text-input"
               value={query}
-              placeholder={t.browsePlaceholder}
+              aria-describedby="browse-hint"
               onChange={(e) => setQuery(e.target.value)}
             />
           </label>
@@ -790,10 +717,13 @@ function Browse({ latest }: { latest: string }) {
               }}
             />
           </label>
-          <button type="submit" className="button primary" disabled={!query.trim()}>
+          <button type="submit" className="button primary">
             {t.browse}
           </button>
         </div>
+        <p id="browse-hint" className="query-note">
+          {t.browseHint}
+        </p>
       </form>
       {error && (
         <p className="error" role="alert">
@@ -914,7 +844,7 @@ function ChangesPage({ latest }: { latest: string }) {
                   <h2 className="change-law">
                     {diplomaLabel(g.introduced_by, diploma)}{" "}
                     <span className="muted">
-                      {t.changesInForce} {day(g.valid_from)} · {t.changesCount(g.articles.length)}
+                      {t.changesInForce} {day(g.valid_from)}, {t.changesCount(g.articles.length)}
                     </span>
                   </h2>
                   <ol className="hits">

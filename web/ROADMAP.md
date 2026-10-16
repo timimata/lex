@@ -313,6 +313,59 @@ not-found page. None has a violation. Checked that it would see one: an image wi
 a button without a name, put on the page on purpose, are both reported. A path that is no page
 gets the page with a 404 and "Página não encontrada"; the API's own 404s stay JSON.
 
+### Stage 12: a public reference tool (done 2026-10-15)
+
+Asked for the simplest page, the least like a generated one. A second search found that the
+fingerprint has moved: once Inter and the purple gradient are banned, generated pages land on a
+"second wave" that this page wore, a warm cream paper near `#F4F1EA` with hairline and double
+rules ("warm editorial", "broadsheet cosplay"); and a first pass at simplifying it (2026-10-15,
+same day) had swapped it for Tailwind's default greys and blue (`#111827`, `#e5e7eb`,
+`#1d4ed8`), another default nobody chose. Every source agrees on the cause, a default not
+decided, and on the fix: a direction from the subject, a few colours each with one role, and a
+subtraction pass against the list of tells. The model here is a public reference tool:
+GOV.UK's patterns, and legislation.gov.uk, which shows the law as in force on a date.
+
+Done:
+
+- **Colours with roles, none a framework's:** white paper and neutral ink; the azulejo's cobalt
+  for what can be clicked or is current, and nothing else; vermilion for removed text, refusals
+  and errors; green for text a law added (it was cobalt and read as a link); a highlighter's
+  yellow for a search's matches (it was a cobalt wash). The dark scheme is designed, not
+  inverted: neutral greys, pastel accents.
+- **One type scale, a ratio of 1.2 from 17 px** (14, 17, 20, 24, 29), nothing under 14 px,
+  where fifteen labels were at 13; reading text at 17 px keeps the answer's and the article's
+  lines near 60 characters (Butterick: 45 to 90). The system's typeface stays, Tiago's choice of
+  2026-10-02, though Butterick and the tell lists count system stacks among the defaults.
+- **The GOV.UK question pattern:** the question is the page's heading and the field's label; what
+  the answer does and where the question goes are hints outside the field; no placeholder (it
+  vanishes when typing starts and reads as filled in, NN/g); no disabled button (GOV.UK: poor
+  contrast, no reason given): pressing with nothing typed says "Escreva a sua pergunta" beside
+  the field, marked `aria-invalid`. Articles' syntax examples moved from the placeholder to a
+  hint under the fields, and an empty search says what to enter.
+- **Subtraction:** the model's workings (requests, calls, tokens, timings, "stored answer") and
+  the panel of figures left the answer and the home page, the figures as one sentence under the
+  examples; a surface has a tint or a border, never both (the reader keeps its tint); no
+  coloured left border but an alert's; the open article in a list is marked by its link, not a
+  tinted box; no middle-dot meta strings; the footer in three short lines. The azulejo mark
+  returns beside the name: the one element from the subject's world, and the favicon's.
+
+Checked: `web/e2e.py` (now also: an empty question is not sent and the error is announced) and
+axe with no violation; `web/contrast.py` with the three new pairs; screenshots at 1280 and 390
+px, light and dark.
+
+Sources: [Capital and Compute, tell by tell](https://capitalandcompute.net/blog/fix-ai-slop-design/),
+[the ux-skill slop checklist](https://github.com/Laith0003/ux-skill/wiki/How-to-detect-AI-slop-in-your-design),
+[Anthropic's frontend-design skill](https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md),
+[Robots on Payroll on the vibe-coded look](https://robotsonpayroll.substack.com/p/how-to-avoid-that-vibe-coded-look),
+[925 Studios' guide](https://www.925studios.co/blog/ai-slop-web-design-guide),
+[on Tailwind and shadcn defaults](https://www.designsystemscollective.com/is-anyone-else-tired-of-every-tailwind-shadcn-app-looking-the-same-69c545e73114),
+[GOV.UK buttons](https://design-system.service.gov.uk/components/button/),
+[textarea](https://design-system.service.gov.uk/components/textarea/) and
+[type scale](https://design-system.service.gov.uk/styles/type-scale/),
+[NN/g on placeholders](https://www.nngroup.com/articles/form-design-placeholders/),
+[Butterick's key rules](https://practicaltypography.com/summary-of-key-rules.html),
+[legislation.gov.uk](https://www.legislation.gov.uk/ukpga/1996/18/section/1).
+
 ## What is not planned
 
 - A chat interface. One question, one answer, one legal basis is the product.

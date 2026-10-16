@@ -37,6 +37,9 @@ PAIRS = [
     ("focus ring (cobalt) on paper", "cobalt", "paper", 3.0),
     ("focus ring (cobalt) on paper-2", "cobalt", "paper-2", 3.0),
     ("the share bar (cobalt) on its track", "cobalt", "rule", 3.0),
+    ("added text on its ground", "ink", "green-wash", 4.5),
+    ("added text's underline on its ground", "green", "green-wash", 3.0),
+    ("a search's matches on the highlighter", "ink", "highlight", 4.5),
 ]
 
 
