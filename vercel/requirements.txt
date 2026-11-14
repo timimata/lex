@@ -31,7 +31,7 @@ numpy==2.5.3
     # via lex
 openai==3.26.0
     # via lex
-opentelemetry-api==1.45.1
+opentelemetry-api==1.45.2
     # via fastapi
 psycopg==3.3.6
     # via lex

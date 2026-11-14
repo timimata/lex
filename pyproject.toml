@@ -34,7 +34,7 @@ dev = [
     "mypy==2.4.0",
     "pytest==9.1.1",
     "ruff==0.16.10",
-    "uv==0.12.23",  # locks every dependency in uv.lock and installs from it (ADR 0019)
+    "uv==0.13.4",  # locks every dependency in uv.lock and installs from it (ADR 0019)
 ]
 
 [tool.hatch.build.targets.wheel]
